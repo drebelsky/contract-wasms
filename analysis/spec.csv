@@ -1327,6 +1327,7 @@ file,result,message,entries,has docs,size
 3da9edcabd7491b2245920551bf7cce020c70114e219216b948ae3dd3af2e49c.wasm,ok,_,19,false,7.3 KiB
 3dad79585c6bef820984c18c7465454a2e1113a686e787a0b6ed1b562fb1e20e.wasm,ok,_,20,false,6.8 KiB
 3dcd913e4583eb1bf5cf5dc0de197c5a77d944057cc7b4d7faf0379c2cb1b348.wasm,ok,_,10,true,5.8 KiB
+3dd675c06a1f9b27b336347d7c7745d20845b6c1f35acfe4cd2ca93ab1db49c3.wasm,ok,_,7,true,23.6 KiB
 3dedff985dce28f210bd359afa9b7f5bd137bd69337cd5db9076be80ad388096.wasm,ok,_,21,true,10.2 KiB
 3e0ef75cbee62cf119eea6e29da01e672010727ea68a88edfd82da98ce8b6bed.wasm,ok,_,49,false,25.8 KiB
 3e10a07ab2c17f5ed6c557b9a0869049aaf6d6ee1d23c47895f69d4ad9cf57da.wasm,ok,_,6,false,2 KiB
@@ -1362,6 +1363,7 @@ file,result,message,entries,has docs,size
 3f427b964f842b2a0b024fc00ed668b28e985f291ee4815fbbc4e52d500ba0d7.wasm,ok,_,9,false,4 KiB
 3f42cfc31109f0a7db35129c19933cc858e317d359adbd2bb6d9b8ebd563e21e.wasm,ok,_,19,false,6 KiB
 3f573f5a168aa7069ce189b56a361c5556adbee57073b21121bbb5174460a7dd.wasm,ok,_,36,false,23 KiB
+3f594a127d75a4d449a4a6ea2ed20031ebe2d662f9894c41b495457468b53aa0.wasm,err,contract spec not found,_,_,_
 3f605ed5a9e5e0ed3aaeb879d46376a9bcbba9a8e4023eb33e00022b2181ac40.wasm,ok,_,21,false,7.5 KiB
 3f7792e289df95d3199ed9db35a0cf2a5154aa64cd7298a8c441b7170230635b.wasm,ok,_,37,true,20 KiB
 3f7882ccee842e8010f1ca102f6fae8d49baa3458deec4e534e93196b2c0c26b.wasm,ok,_,72,true,46.7 KiB
@@ -5371,6 +5373,6 @@ ffd2249433d021c6a215e08d21b834ee985e92b8e6dccb816849033fa4523ab9.wasm,ok,_,20,fa
 ffd799287d904c23c6ca086a9d517df50f860f504502e917660b8730cbe915b5.wasm,ok,_,8,true,19.3 KiB
 ffddf40e7c479975864512a0e40dd43e0fe5ee0c8b8ea47329d973ba7477138e.wasm,ok,_,17,false,6 KiB
 ffefe2374b3552b58991c1483d030063bc3fb92410dae2719c3ed8749cb22da7.wasm,ok,_,25,true,15.7 KiB
-Contracts with specs: 5364 (99.851074%),_,_,_,_,_
-Contracts with specs and docs: 3141 (58.469845%),_,_,_,_,_
-Contracts without specs: 8 (0.14892033%),_,_,_,_,_
+Contracts with specs: 5365 (99.83253%),_,_,_,_,_
+Contracts with specs and docs: 3142 (58.46669%),_,_,_,_,_
+Contracts without specs: 9 (0.16747302%),_,_,_,_,_
