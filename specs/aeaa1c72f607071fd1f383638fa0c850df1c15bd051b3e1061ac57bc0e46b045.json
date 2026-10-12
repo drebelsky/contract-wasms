@@ -1,0 +1,173 @@
+[
+  {
+    "event_v0": {
+      "doc": "USDC left `from` for `recipient` on the CCTP domain `destination_domain`.",
+      "lib": "",
+      "name": "Exit",
+      "prefix_topics": [
+        "exit"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "destination_domain",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "HubError",
+      "cases": [
+        {
+          "doc": "The amount must be positive and the fee limit must not be negative.",
+          "name": "BadAmount",
+          "value": 1
+        },
+        {
+          "doc": "Amounts must be whole millionths of a USDC: no seventh decimal.",
+          "name": "Dust",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sends `amount` of `from`'s USDC to `recipient` on the CCTP domain\\n`destination_domain`. Anyone may complete the transfer on the other\\nside. `amount` and `max_fee` are in Stellar units of 0.0000001 USDC.",
+      "name": "exit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "destination_domain",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "max_fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_finality_threshold",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploys the account of `owner` and returns its address. Anyone may\\ncall this, and calling it again changes nothing.",
+      "name": "deploy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": {
+            "bytes_n": {
+              "n": 20
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The Stellar account of an Ethereum address, whether or not it has\\nbeen deployed yet.",
+      "name": "address_of",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": {
+            "bytes_n": {
+              "n": 20
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`account_wasm` is the code every account runs, `usdc` the USDC token\\ncontract and `token_messenger` Circle's TokenMessengerMinter.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account_wasm",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "usdc",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_messenger",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  }
+]
