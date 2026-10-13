@@ -1,0 +1,2295 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "ramp",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Ramp"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Books a loan repayment: the cash, the registry record, and the PLUSD\\nfor the interest (to the vault, or to the Pocket for a carved-out loan)\\nand for the fees (staked into the vault for the treasury). Returns the\\nregistry's repayment id.",
+      "name": "repay",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "repayment",
+          "type_": {
+            "udt": {
+              "name": "RepaymentData"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sale_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns true if the contract is paused, and false otherwise.\\n\\n# Arguments\\n\\n* `e` - Access to Soroban environment.",
+      "name": "paused",
+      "inputs": [],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "unpause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "wire_in",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "WireIn"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Wires `amount` out to a borrower: takes it from `bank_cash` and records\\nthe disbursement on the loan registry. Returns the cash entry id.",
+      "name": "disburse",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Emits the current [`PoolState`]. Callable by anyone.",
+      "name": "snapshot",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "wire_out",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "WireOut"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "bank_cash",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns `Some(Address)` if ownership is set, or `None` if ownership has\\nbeen renounced.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.",
+      "name": "get_owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "in_flight",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Opens a USDC <-> bank ramp. Returns the ramp id.",
+      "name": "open_ramp",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "RampDirection"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "repayment",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "repayment_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Repayment"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "cash_entry",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "CashEntry"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Closes a ramp with what actually `received`; the shortfall is a loss\\nabsorbed by the vault and booked as an `Expense` entry.",
+      "name": "close_ramp",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "received",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "custodians",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pool_state",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "PoolState"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_treasury",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_treasury",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Custodian USDC (a failed read counts 0) + `bank_cash` + `in_flight` +\\nthe registry's outstanding.",
+      "name": "total_assets",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "# Arguments\\n\\n* `access_manager` - Owner of this contract, and of PLUSD, the vault\\nand the loan registry.\\n* `staked_plusd` - The sPLUSD vault; its underlying asset is taken as PLUSD.\\n* `loan_registry` - The loan registry this contract is the `minter` of.\\n* `treasury` - Receives the fee shares.\\n* `factory` - The deal-token factory whose `sync_debt` is called.\\n* `pocket` - The Pocket for carved-out loans.\\n* `usdc` - The USDC token the custodians hold.\\n* `rate_limit_config` - The mint budget.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "access_manager",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "staked_plusd",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "loan_registry",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "factory",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pocket",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "usdc",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "rate_limit_config",
+          "type_": {
+            "udt": {
+              "name": "RateLimitConfig"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Bank interest: books `delta` and mints it into the vault.",
+      "name": "record_income",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "delta",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "ref_hash_seen",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Undoes a `repay`: the cash, the registry record, the treasury's fee\\nshares, and the interest PLUSD.",
+      "name": "reverse_repay",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "repayment_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Stakes an escrowed wire's PLUSD into the vault for `receiver`.",
+      "name": "assign_wire_in",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "receiver",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Bank charges: takes `delta` out of `bank_cash` and burns it from the vault.",
+      "name": "record_expense",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "delta",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Records a bank wire received for `receiver`: books the cash and mints\\nPLUSD. An LP `receiver` is staked straight into the vault (shares to\\n`receiver`); the minter itself as `receiver` holds the PLUSD in escrow\\nuntil `assign_wire_in` / `return_wire_in`. Returns the wire id.",
+      "name": "record_wire_in",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "receiver",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns an escrowed wire: burns its PLUSD and takes the cash back out.",
+      "name": "return_wire_in",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sets the USDC custody wallets; each must hold a USDC trustline.",
+      "name": "set_custodians",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_custodians",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Gives the escrowed PLUSD back to the LP (who must not be frozen).",
+      "name": "cancel_wire_out",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The wire went out: burns the escrowed PLUSD and takes the cash out.",
+      "name": "settle_wire_out",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Accepts a pending ownership transfer.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n\\n# Errors\\n\\n* [`crate::role_transfer::RoleTransferError::NoPendingTransfer`] - If\\nthere is no pending transfer to accept.\\n\\n# Events\\n\\n* topics - `[\"ownership_transfer_completed\"]`\\n* data - `[new_owner: Address]`",
+      "name": "accept_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "addresses_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "AddressesConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Escrows `amount` of `lp`'s PLUSD for a bank withdrawal. Returns the id.",
+      "name": "request_wire_out",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "lp",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Reverses the whole of disbursement entry `original_id` (`amount` must\\nmatch it).",
+      "name": "reverse_disburse",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "original_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "unabsorbed_total",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "decrease_tx_limit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_tx_limit",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "increase_tx_limit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_tx_limit",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "rate_limit_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "RateLimitConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Signed `bank_cash`-only correction of a recorded entry.",
+      "name": "record_correction",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "delta",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "reason_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "original_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pulls `amount` from the vault and burns it, nothing else.",
+      "name": "correct_vault_mint",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Renounces ownership of the contract.\\n\\nPermanently removes the owner, disabling all functions gated by\\n`#[only_owner]`.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n\\n# Errors\\n\\n* [`OwnableError::TransferInProgress`] - If there is a pending ownership\\ntransfer.\\n* [`OwnableError::OwnerNotSet`] - If the owner is not set.\\n\\n# Notes\\n\\n* Authorization for the current owner is required.",
+      "name": "renounce_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Initiates a 2-step ownership transfer to a new address.\\n\\nRequires authorization from the current owner. The new owner must later\\ncall `accept_ownership()` to complete the transfer.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n* `new_owner` - The proposed new owner.\\n* `live_until_ledger` - Ledger number until which the new owner can\\naccept. A value of `0` cancels any pending transfer.\\n\\n# Errors\\n\\n* [`OwnableError::OwnerNotSet`] - If the owner is not set.\\n* [`crate::role_transfer::RoleTransferError::NoPendingTransfer`] - If\\ntrying to cancel a transfer that doesn't exist.\\n* [`crate::role_transfer::RoleTransferError::InvalidLiveUntilLedger`] -\\nIf the specified ledger is in the past.\\n* [`crate::role_transfer::RoleTransferError::InvalidPendingAccount`] -\\nIf the specified pending account is not the same as the provided `new`\\naddress.\\n\\n# Notes\\n\\n* Authorization for the current owner is required.",
+      "name": "transfer_ownership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "decrease_window_limit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_window_limit",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "increase_window_limit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_window_limit",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"wire_in\", id: u32]`",
+      "lib": "",
+      "name": "WireIn",
+      "prefix_topics": [
+        "wire_in"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "receiver",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The factory's `sync_debt` failed; the operation itself still went through.\\n\\n* topics - `[\"snapshot\", ledger: u32]`",
+      "lib": "",
+      "name": "Snapshot",
+      "prefix_topics": [
+        "snapshot"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "ledger",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": {
+            "udt": {
+              "name": "PoolState"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"cash_repaid\", loan_id: u32]`",
+      "lib": "",
+      "name": "CashRepaid",
+      "prefix_topics": [
+        "cash_repaid"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "repayment_id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sale_id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cash",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "interest_minted",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee_shares",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"ramp_closed\", id: u32]`",
+      "lib": "",
+      "name": "RampClosed",
+      "prefix_topics": [
+        "ramp_closed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "received",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "loss",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"ramp_opened\", id: u32]`",
+      "lib": "",
+      "name": "RampOpened",
+      "prefix_topics": [
+        "ramp_opened"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "RampDirection"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TxLimitSet",
+      "prefix_topics": [
+        "tx_limit_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_tx_limit",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TreasurySet",
+      "prefix_topics": [
+        "treasury_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"cash_recorded\", kind: CashReason]`",
+      "lib": "",
+      "name": "CashRecorded",
+      "prefix_topics": [
+        "cash_recorded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "CashReason"
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "entry_id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "delta",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted whenever a loss is pulled from the vault and burned.\\n\\n* topics - `[\"loss_absorbed\"]`\\n* data - `[requested: i128, pulled: i128]`",
+      "lib": "",
+      "name": "LossAbsorbed",
+      "prefix_topics": [
+        "loss_absorbed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "requested",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "pulled",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"cash_disbursed\", loan_id: u32]`",
+      "lib": "",
+      "name": "CashDisbursed",
+      "prefix_topics": [
+        "cash_disbursed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "entry_id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CustodiansSet",
+      "prefix_topics": [
+        "custodians_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "count",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"mint_corrected\"]`",
+      "lib": "",
+      "name": "MintCorrected",
+      "prefix_topics": [
+        "mint_corrected"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WindowLimitSet",
+      "prefix_topics": [
+        "window_limit_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_window_limit",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"wire_in_assigned\", id: u32]`",
+      "lib": "",
+      "name": "WireInAssigned",
+      "prefix_topics": [
+        "wire_in_assigned"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "receiver",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"wire_in_returned\", id: u32]`",
+      "lib": "",
+      "name": "WireInReturned",
+      "prefix_topics": [
+        "wire_in_returned"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"wire_out_settled\", id: u32]`",
+      "lib": "",
+      "name": "WireOutSettled",
+      "prefix_topics": [
+        "wire_out_settled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RateLimitApplied",
+      "prefix_topics": [
+        "rate_limit_applied"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "updated_window_cumulative_mint",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"wire_out_cancelled\", id: u32]`",
+      "lib": "",
+      "name": "WireOutCancelled",
+      "prefix_topics": [
+        "wire_out_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"wire_out_requested\", id: u32]`",
+      "lib": "",
+      "name": "WireOutRequested",
+      "prefix_topics": [
+        "wire_out_requested"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lp",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"cash_repayment_reversed\", loan_id: u32]`",
+      "lib": "",
+      "name": "CashRepaymentReversed",
+      "prefix_topics": [
+        "cash_repayment_reversed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "repayment_id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cash",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"cash_disbursement_reversed\", loan_id: u32]`",
+      "lib": "",
+      "name": "CashDisbursementReversed",
+      "prefix_topics": [
+        "cash_disbursement_reversed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "entry_id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "original_id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Ramp",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "closed",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "closed_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "RampDirection"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "opened_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "received",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WireIn",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "receiver",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "Zero = not returned.",
+          "name": "return_ref",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "status",
+          "type_": {
+            "udt": {
+              "name": "WireInStatus"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WireOut",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "lp",
+          "type_": "address"
+        },
+        {
+          "doc": "Zero until settled.",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "requested_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "status",
+          "type_": {
+            "udt": {
+              "name": "WireOutStatus"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One bank-cash movement worth referring back to. `Expense` entries booked\\nby `close_ramp` don't touch `bank_cash`.",
+      "lib": "",
+      "name": "CashEntry",
+      "fields": [
+        {
+          "doc": "",
+          "name": "delta",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "The entry this one reverses / corrects.",
+          "name": "original",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "CashReason"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "Set once a `Disbursed` entry has been reversed.",
+          "name": "reversed",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "value_date",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolState",
+      "fields": [
+        {
+          "doc": "",
+          "name": "bank_cash",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "custody",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "tuple": {
+                  "value_types": [
+                    "address",
+                    "i128"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "in_flight",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "outstanding_total",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "read_failed",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "total_assets",
+          "type_": "i128"
+        },
+        {
+          "doc": "The loan registry's plus this contract's.",
+          "name": "unabsorbed_total",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "What a recorded repayment did here, kept so `reverse_repay` can undo it.",
+      "lib": "",
+      "name": "Repayment",
+      "fields": [
+        {
+          "doc": "",
+          "name": "carved_out",
+          "type_": "bool"
+        },
+        {
+          "doc": "Added to `bank_cash`: `offtaker_received - equity_distributed`.",
+          "name": "cash",
+          "type_": "i128"
+        },
+        {
+          "doc": "Vault shares minted to the treasury for the fees.",
+          "name": "fee_shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "Senior interest minted (to the vault, or to the Pocket if carved out).",
+          "name": "interest_minted",
+          "type_": "i128"
+        },
+        {
+          "doc": "Principal repaid; for a carved-out loan, what the Pocket released.",
+          "name": "principal",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "reversed",
+          "type_": "bool"
+        },
+        {
+          "doc": "Zero = not a sale.",
+          "name": "sale_id",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CashReason",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Disbursed"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "DisbursementReversed"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Income"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Expense"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Correction"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WireInStatus",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Deposited straight into the vault for an LP.",
+            "name": "Direct"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "PLUSD held by the minter until `assign_wire_in` / `return_wire_in`.",
+            "name": "Escrowed"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Assigned"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Returned"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RampDirection",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "UsdcToBank"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "BankToUsdc"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WireOutStatus",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Pending"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Settled"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Cancelled"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The minter's single-address settings, read in one call.",
+      "lib": "",
+      "name": "AddressesConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "factory",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "loan_registry",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "plusd",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pocket",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "staked_plusd",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "usdc",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Mint budget: per-transaction and per-window (UTC-day bucket when\\n`window = 86_400`, `shift = 0`) caps. Same shape as deposit-manager's.",
+      "lib": "",
+      "name": "RateLimitConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "shift",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "tx_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "window",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "window_limit",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Mirrors `loan_registry::RepaymentData`.",
+      "lib": "",
+      "name": "RepaymentData",
+      "fields": [
+        {
+          "doc": "",
+          "name": "equity_distributed",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "mgmt_fee",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "oet_alloc",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "offtaker_received",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "perf_fee",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "senior_interest",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "senior_principal_repaid",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when an ownership transfer is initiated.",
+      "lib": "",
+      "name": "OwnershipTransfer",
+      "prefix_topics": [
+        "ownership_transfer"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when ownership is renounced.",
+      "lib": "",
+      "name": "OwnershipRenounced",
+      "prefix_topics": [
+        "ownership_renounced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when an ownership transfer is completed.",
+      "lib": "",
+      "name": "OwnershipTransferCompleted",
+      "prefix_topics": [
+        "ownership_transfer_completed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when the contract is paused.",
+      "lib": "",
+      "name": "Paused",
+      "prefix_topics": [
+        "paused"
+      ],
+      "params": [],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when the contract is unpaused.",
+      "lib": "",
+      "name": "Unpaused",
+      "prefix_topics": [
+        "unpaused"
+      ],
+      "params": [],
+      "data_format": "map"
+    }
+  }
+]

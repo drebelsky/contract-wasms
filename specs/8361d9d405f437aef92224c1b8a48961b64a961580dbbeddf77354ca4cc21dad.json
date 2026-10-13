@@ -1,0 +1,1832 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "lot",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Lot"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "lots",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "Lot"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns true if the contract is paused, and false otherwise.\\n\\n# Arguments\\n\\n* `e` - Access to Soroban environment.",
+      "name": "paused",
+      "inputs": [],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pledges a new lot against `loan_id`. Requires the loan to exist and\\nnot be `Closed`. Returns the assigned `lot_id`.",
+      "name": "pledge",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot",
+          "type_": {
+            "udt": {
+              "name": "PledgeLot"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Attaches a supporting document reference to a lot (up to 16; no removal).",
+      "name": "add_doc",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "DocKind"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sha256",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Releases `qty` of a lot back (payment, LC acceptance, substitution,\\nloss, ...). At zero remaining, the lot reaches its terminal stage.",
+      "name": "release",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "qty",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "ReleaseReason"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sets a lot's valuation mark at the current ledger time. A zero mark\\n(worthless collateral) is allowed; a negative one is not.",
+      "name": "revalue",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "value_per_unit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "benchmark",
+          "type_": "symbol"
+        },
+        {
+          "doc": "",
+          "name": "report_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "unpause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "operator",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`collateral_value / (outstanding + accrued_interest)`, in bps.\\n`u32::MAX` when the denominator is zero or the ratio overflows a `u32`.",
+      "name": "coverage",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Seconds since the oldest mark among the lots that count toward\\ncoverage (`control != None`). `u64::MAX` if one of them has no mark\\nyet; `0` if none count.",
+      "name": "mark_age",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "floor_bps",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns `Some(Address)` if ownership is set, or `None` if ownership has\\nbeen renounced.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.",
+      "name": "get_owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Forces a sale of `qty` of a lot on a `Default` loan. At zero\\nremaining, the lot reaches its terminal stage. The cash is booked\\nseparately, by the minter's `repay(sale_id)` flow. Returns the\\nassigned `sale_id`.",
+      "name": "liquidate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "qty",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sets a loan's minimum required coverage, in bps. Reverts for a loan the\\nregistry does not know (the coverage check reads it).",
+      "name": "set_floor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Moves a lot to a non-terminal stage of its own kind, in any order.\\nTerminal stages (`Delivered` / `Sold` / `Paid`) are only reachable via\\n`release` / `liquidate`.",
+      "name": "set_stage",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "stage",
+          "type_": {
+            "udt": {
+              "name": "LotStage"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "location",
+          "type_": {
+            "option": {
+              "value_type": {
+                "udt": {
+                  "name": "Location"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sets a lot's controlling document/possession state. Acknowledging a\\nreceivable also moves it from `Assigned` to `Acknowledged`.",
+      "name": "set_control",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "control",
+          "type_": {
+            "udt": {
+              "name": "Control"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sets a lot's forced-sale haircut, in bps (\\xe2\\x89\\xa4 10,000).",
+      "name": "set_haircut",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "* `owner` - Account granted ownership (intended to be the access-manager).\\n* `loan_registry` - The loan registry this contract reads (never writes to).",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "loan_registry",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "loan_registry",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sum of `quantity` across the loan's cargo lots (mirrored off-chain by\\nthe CARGO token's supply).",
+      "name": "cargo_quantity",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Emits [`event::MarginCall`] if `coverage(loan_id)` is currently below\\n`floor_bps`. Callable by anyone; every state-mutating method above\\nruns this same check at its end.",
+      "name": "check_coverage",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Corrects a lot's quantity to `new_qty` (a physical/valuation\\ncorrection; use `release` for a normal drawdown).",
+      "name": "adjust_quantity",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_qty",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "sha256",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Accepts a pending ownership transfer.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n\\n# Errors\\n\\n* [`crate::role_transfer::RoleTransferError::NoPendingTransfer`] - If\\nthere is no pending transfer to accept.\\n\\n# Events\\n\\n* topics - `[\"ownership_transfer_completed\"]`\\n* data - `[new_owner: Address]`",
+      "name": "accept_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sum, over lots with `control != None`, of\\n`quantity * value_per_unit * (10_000 - haircut_bps)`, divided once at\\nthe end by `10_000 * 1e7`. A qualifying lot with no mark yet\\ncontributes zero.",
+      "name": "collateral_value",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_loan_registry",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_loan_registry",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Renounces ownership of the contract.\\n\\nPermanently removes the owner, disabling all functions gated by\\n`#[only_owner]`.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n\\n# Errors\\n\\n* [`OwnableError::TransferInProgress`] - If there is a pending ownership\\ntransfer.\\n* [`OwnableError::OwnerNotSet`] - If the owner is not set.\\n\\n# Notes\\n\\n* Authorization for the current owner is required.",
+      "name": "renounce_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Initiates a 2-step ownership transfer to a new address.\\n\\nRequires authorization from the current owner. The new owner must later\\ncall `accept_ownership()` to complete the transfer.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n* `new_owner` - The proposed new owner.\\n* `live_until_ledger` - Ledger number until which the new owner can\\naccept. A value of `0` cancels any pending transfer.\\n\\n# Errors\\n\\n* [`OwnableError::OwnerNotSet`] - If the owner is not set.\\n* [`crate::role_transfer::RoleTransferError::NoPendingTransfer`] - If\\ntrying to cancel a transfer that doesn't exist.\\n* [`crate::role_transfer::RoleTransferError::InvalidLiveUntilLedger`] -\\nIf the specified ledger is in the past.\\n* [`crate::role_transfer::RoleTransferError::InvalidPendingAccount`] -\\nIf the specified pending account is not the same as the provided `new`\\naddress.\\n\\n# Notes\\n\\n* Authorization for the current owner is required.",
+      "name": "transfer_ownership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a new lot is pledged.\\n\\n* topics - `[\"pledged\", loan_id: u32, lot_id: u32]`",
+      "lib": "",
+      "name": "Pledged",
+      "prefix_topics": [
+        "pledged"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"doc_added\", loan_id: u32, lot_id: u32]`\\n* data - `[kind: DocKind, sha256: BytesN<32>]`",
+      "lib": "",
+      "name": "DocAdded",
+      "prefix_topics": [
+        "doc_added"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "DocKind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sha256",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"floor_set\", loan_id: u32]`\\n* data - `[bps: u32]`",
+      "lib": "",
+      "name": "FloorSet",
+      "prefix_topics": [
+        "floor_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "bps",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"released\", loan_id: u32, lot_id: u32]`\\n* data - `[qty: i128, reason: ReleaseReason, ref_hash: BytesN<32>]`",
+      "lib": "",
+      "name": "Released",
+      "prefix_topics": [
+        "released"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "qty",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "ReleaseReason"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ref_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"revalued\", loan_id: u32, lot_id: u32]`\\n* data - `[value_per_unit: i128, benchmark: Symbol, report_hash: BytesN<32>]`",
+      "lib": "",
+      "name": "Revalued",
+      "prefix_topics": [
+        "revalued"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "value_per_unit",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "benchmark",
+          "type_": "symbol",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "report_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"haircut_set\", loan_id: u32, lot_id: u32]`\\n* data - `[bps: u32]`",
+      "lib": "",
+      "name": "HaircutSet",
+      "prefix_topics": [
+        "haircut_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "bps",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"liquidated\", loan_id: u32, lot_id: u32]`\\n* data - `[sale_id: u32, qty: i128]`",
+      "lib": "",
+      "name": "Liquidated",
+      "prefix_topics": [
+        "liquidated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "sale_id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "qty",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted whenever `coverage(loan_id)` is below `floor_bps`. Every\\nstate-mutating method runs this check at its end; anyone may also call\\n`check_coverage` directly.\\n\\n* topics - `[\"margin_call\", loan_id: u32]`\\n* data - `[coverage_bps: u32, floor_bps: u32]`",
+      "lib": "",
+      "name": "MarginCall",
+      "prefix_topics": [
+        "margin_call"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "coverage_bps",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "floor_bps",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"stage_updated\", loan_id: u32, lot_id: u32]`\\n* data - `[stage: LotStage, location: Option<Location>]`",
+      "lib": "",
+      "name": "StageUpdated",
+      "prefix_topics": [
+        "stage_updated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "stage",
+          "type_": {
+            "udt": {
+              "name": "LotStage"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "location",
+          "type_": {
+            "option": {
+              "value_type": {
+                "udt": {
+                  "name": "Location"
+                }
+              }
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"control_updated\", loan_id: u32, lot_id: u32]`\\n* data - `[control: Control]`",
+      "lib": "",
+      "name": "ControlUpdated",
+      "prefix_topics": [
+        "control_updated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "control",
+          "type_": {
+            "udt": {
+              "name": "Control"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"loan_registry_set\"]`\\n* data - `[loan_registry: Address]`",
+      "lib": "",
+      "name": "LoanRegistrySet",
+      "prefix_topics": [
+        "loan_registry_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_registry",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"quantity_adjusted\", loan_id: u32, lot_id: u32]`\\n* data - `[old: i128, new: i128, reason: String, sha256: BytesN<32>]`",
+      "lib": "",
+      "name": "QuantityAdjusted",
+      "prefix_topics": [
+        "quantity_adjusted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "lot_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "old",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sha256",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A supporting document reference. Up to 16 per lot; no removal.",
+      "lib": "",
+      "name": "Doc",
+      "fields": [
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "DocKind"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sha256",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A pledged lot of collateral, keyed by `(loan_id, lot_id)`.\\n\\n`location` and `mark` are modeled as 0-or-1-element `Vec`s rather than\\n`Option<Location>` / `Option<Mark>`: this SDK version's `#[contracttype]`\\nderive cannot generate a spec for an `Option<T>` *field* of a custom\\nstruct `T` (a bare `Option<T>` function parameter/return is fine, as used\\nelsewhere in this contract).",
+      "lib": "",
+      "name": "Lot",
+      "fields": [
+        {
+          "doc": "",
+          "name": "control",
+          "type_": {
+            "udt": {
+              "name": "Control"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "docs",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Doc"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "Discount applied to `value_per_unit` for a forced sale, in bps (\\xe2\\x89\\xa4 10_000).",
+          "name": "haircut_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "LotKind"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "location",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Location"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "mark",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Mark"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "Units still pledged (cargo) or the receivable's face, 7dp, > 0 at\\npledge; decreases toward zero via `release` / `liquidate`.",
+          "name": "quantity",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "stage",
+          "type_": {
+            "udt": {
+              "name": "LotStage"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "unit",
+          "type_": {
+            "udt": {
+              "name": "Unit"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A valuation mark. `at` is the ledger time it was set; a USD lot is marked\\nat par (`10_000_000`, matching `quantity`'s 7dp scale) automatically by\\n`pledge`.",
+      "lib": "",
+      "name": "Mark",
+      "fields": [
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "benchmark",
+          "type_": "symbol"
+        },
+        {
+          "doc": "",
+          "name": "report_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "value_per_unit",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The unit a lot's `quantity` is denominated in. `Usd` iff the lot is a\\n`Receivable`; cargo lots on the same loan must all share one unit (there\\nis one CARGO token per loan).",
+      "lib": "",
+      "name": "Unit",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Dmt"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Mt"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Bbl"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Usd"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A lot's control state. `None` doesn't count toward coverage; a receivable\\ncounts only once `Acknowledged`.",
+      "lib": "",
+      "name": "Control",
+      "fields": [
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "ControlKind"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "reference",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Supporting-document category.",
+      "lib": "",
+      "name": "DocKind",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Ebl"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "WarehouseReceipt"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Assay"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Insurance"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "SupplyContract"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "OfftakeContract"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "NoticeOfAssignment"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "LC"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Inspection"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Other"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "What a lot represents: physical goods, or a buyer's payment obligation\\nassigned to the Trust.",
+      "lib": "",
+      "name": "LotKind",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Cargo",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CargoDetails"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Receivable",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ReceivableDetails"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Where the financed collateral currently sits. `None` for a receivable.",
+      "lib": "",
+      "name": "Location",
+      "fields": [
+        {
+          "doc": "",
+          "name": "identifier",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "location_type",
+          "type_": {
+            "udt": {
+              "name": "LocationType"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "tracking_url",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Lifecycle stage of a lot. Cargo uses the first five variants, receivables\\nthe last four; `set_stage` only ever moves within the lot's own kind, and\\nnever into a terminal one (`Delivered` / `Sold` / `Paid`), which only\\n`release` / `liquidate` can reach.",
+      "lib": "",
+      "name": "LotStage",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Pledged"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Afloat"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "InStorage"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Delivered"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Sold"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Assigned"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Acknowledged"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Presented"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Paid"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Caller-supplied fields for a new lot; the rest ([`Lot::stage`],\\n[`Lot::control`], [`Lot::docs`], [`Lot::mark`]) are set by `pledge`. See\\n[`Lot`] for why `location` is a 0-or-1-element `Vec`.",
+      "lib": "",
+      "name": "PledgeLot",
+      "fields": [
+        {
+          "doc": "",
+          "name": "haircut_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "LotKind"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "location",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Location"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "quantity",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "unit",
+          "type_": {
+            "udt": {
+              "name": "Unit"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The controlling document/possession backing a lot.",
+      "lib": "",
+      "name": "ControlKind",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "EblToOrderOfTrust"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "NegotiableWr"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Cma"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Acknowledged"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "None"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Physical-goods details for a `Cargo` lot.",
+      "lib": "",
+      "name": "CargoDetails",
+      "fields": [
+        {
+          "doc": "",
+          "name": "commodity",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "valuation_mode",
+          "type_": {
+            "udt": {
+              "name": "CargoValuationMode"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Physical custody type backing a cargo lot.",
+      "lib": "",
+      "name": "LocationType",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Vessel"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Warehouse"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "TankFarm"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Other"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Why collateral is being released back / reduced.",
+      "lib": "",
+      "name": "ReleaseReason",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Payment"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "LCAcceptance"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "LOIDischarge"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Substitution"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Loss"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "ConsentedSale"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The instrument backing a receivable lot.",
+      "lib": "",
+      "name": "ReceivableForm",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "OpenAccount"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "LC"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "BankGuarantee"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Payment-obligation details for a `Receivable` lot.",
+      "lib": "",
+      "name": "ReceivableDetails",
+      "fields": [
+        {
+          "doc": "",
+          "name": "due_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "form",
+          "type_": {
+            "udt": {
+              "name": "ReceivableForm"
+            }
+          }
+        },
+        {
+          "doc": "sha256 of the obligor's data-room id.",
+          "name": "obligor_ref",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "How a cargo lot's value is assessed.",
+      "lib": "",
+      "name": "CargoValuationMode",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "StandardGoods"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "MetalConcentrate"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when an ownership transfer is initiated.",
+      "lib": "",
+      "name": "OwnershipTransfer",
+      "prefix_topics": [
+        "ownership_transfer"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when ownership is renounced.",
+      "lib": "",
+      "name": "OwnershipRenounced",
+      "prefix_topics": [
+        "ownership_renounced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when an ownership transfer is completed.",
+      "lib": "",
+      "name": "OwnershipTransferCompleted",
+      "prefix_topics": [
+        "ownership_transfer_completed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when the contract is paused.",
+      "lib": "",
+      "name": "Paused",
+      "prefix_topics": [
+        "paused"
+      ],
+      "params": [],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when the contract is unpaused.",
+      "lib": "",
+      "name": "Unpaused",
+      "prefix_topics": [
+        "unpaused"
+      ],
+      "params": [],
+      "data_format": "map"
+    }
+  }
+]

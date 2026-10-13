@@ -1,0 +1,1982 @@
+[
+  {
+    "function_v0": {
+      "doc": "Cures a defaulted loan back to `WatchList`. The pocket stays open:\\nevery later repayment of this loan still goes to it.",
+      "name": "cure",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the token collection name.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.",
+      "name": "name",
+      "inputs": [],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "minter",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns true if the contract is paused, and false otherwise.\\n\\n# Arguments\\n\\n* `e` - Access to Soroban environment.",
+      "name": "paused",
+      "inputs": [],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pocket",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "status",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "LoanStatus"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the token collection symbol.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.",
+      "name": "symbol",
+      "inputs": [],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "approve",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "approver",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "approved",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the number of tokens owned by `account`.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n* `account` - The address for which the balance is being queried.",
+      "name": "balance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "unpause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "operator",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Draws `amount` against the senior tranche. The first call on a loan\\nopens interest epoch 0 and moves it `Approved` -> `Performing`;\\nsubsequent calls close and reopen the current epoch.",
+      "name": "disburse",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "u128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the owner of the token with `token_id`.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n* `token_id` - Token ID as a number.\\n\\n# Errors\\n\\n* [`NonFungibleTokenError::NonExistentToken`] - If the token does not\\nexist.",
+      "name": "owner_of",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Rolls a matured, non-defaulted loan onto new terms. Status is\\nunchanged.",
+      "name": "rollover",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_rate",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_maturity_timestamp",
+          "type_": "u64"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "transfer",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Draws a new loan in `Approved` status: validates economics, records\\norigination state (no epoch opened yet), and mints the soulbound loan\\ntoken to the configured `capital_wallet`. Returns the new loan ID.",
+      "name": "draw_loan",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "metadata_uri",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "economics",
+          "type_": {
+            "udt": {
+              "name": "ImmutableLoanData"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns `Some(Address)` if ownership is set, or `None` if ownership has\\nbeen renounced.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.",
+      "name": "get_owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "token_uri",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Closes a performing (or never-disbursed) loan. `Cancelled` requires\\nnet disbursed to be zero; `ScheduledMaturity`/`EarlyRepayment` require\\noutstanding to be zero. Any residual accrued interest up to\\n`max_residual` is waived.",
+      "name": "close_loan",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "ClosureReason"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "loan_money",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "LoanMoney"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_minter",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_minter",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Reverses `amount` of disbursed principal. Status is unchanged. Refused\\nonce the loan is carved out: the pocket holds PLUSD for the outstanding\\nat default, which could then never be released or burned.",
+      "name": "undisburse",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "u128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Writes down `amount` of a defaulted loan's outstanding balance,\\nburning it from the loan's pocket. What the pocket does not hold (the\\nvault could not cover it at default) is added to `unabsorbed_total`.\\nNo cash moves.",
+      "name": "write_down",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "u128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "max_fee_bps",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "outstanding",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "u128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Moves a `Performing`/`WatchList` loan into `Default`. The first time\\nonly, carves the loan's outstanding out of the vault into its pocket\\n(owned by the share holders at the end of this ledger). What the vault\\ncannot cover is not a loss yet (it may still be recovered): it reaches\\n`unabsorbed_total` only if written down. A cured loan defaulted again\\nkeeps its original pocket.",
+      "name": "set_default",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the account approved for the token with `token_id`.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n* `token_id` - Token ID as a number.\\n\\n# Errors\\n\\n* [`NonFungibleTokenError::NonExistentToken`] - If the token does not\\nexist.",
+      "name": "get_approved",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "max_residual",
+      "inputs": [],
+      "outputs": [
+        "u128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "next_loan_id",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "staked_plusd",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Initializes the collection metadata, the contract owner, and the vault\\nand pocket the registry reports defaults and write-downs to.\\n\\n# Arguments\\n\\n* `owner` - Account granted ownership (intended to be the access-manager).\\n* `name` / `symbol` - NFT collection metadata.\\n* `staked_plusd` / `pocket` - The sPLUSD vault and the pocket.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "staked_plusd",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pocket",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "transfer_from",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "capital_wallet",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Records a repayment against a loan (recoveries included, on\\n`Default`), capitalizing interest accrued so far. Returns the\\nrepayment ID and whether the loan is carved out.",
+      "name": "record_payment",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "repayment",
+          "type_": {
+            "udt": {
+              "name": "RepaymentData"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "tuple": {
+            "value_types": [
+              "u32",
+              "bool"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "repayment_data",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "repayment_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "RepaymentData"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Updates a loan's off-chain-reported metadata and, within limits, its\\nstatus. On `Approved`/`Default`, `status` must equal the current\\nstatus (metadata-only update); on `Performing`/`WatchList`, `status`\\nmay only stay put or toggle between the two.",
+      "name": "update_mutable",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "status",
+          "type_": {
+            "udt": {
+              "name": "LoanStatus"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "metadata_uri",
+          "type_": "string"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Adds a signed adjustment (a waiver is negative) to a loan's accrued\\ninterest.",
+      "name": "adjust_interest",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "delta",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "reason_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Amends a non-closed loan's rate and maturity. Status is unchanged;\\nallowed even while `Approved` (before any epoch exists) or `Default`.",
+      "name": "amend_economics",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_rate",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_maturity_timestamp",
+          "type_": "u64"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "approve_for_all",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "operator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Closes a defaulted loan once its outstanding balance has been brought\\nto zero, waiving any residual interest.",
+      "name": "close_defaulted",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "ClosureReason"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "economics_epoch",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "epoch_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "EconomicsEpoch"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_max_fee_bps",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_max_fee_bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Accepts a pending ownership transfer.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n\\n# Errors\\n\\n* [`crate::role_transfer::RoleTransferError::NoPendingTransfer`] - If\\nthere is no pending transfer to accept.\\n\\n# Events\\n\\n* topics - `[\"ownership_transfer_completed\"]`\\n* data - `[new_owner: Address]`",
+      "name": "accept_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Total senior interest currently owed on the loan. Zero on `Approved`\\nand `Closed`.",
+      "name": "accrued_interest",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "u128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_max_residual",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_max_residual",
+          "type_": "u128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "unabsorbed_total",
+      "inputs": [],
+      "outputs": [
+        "u128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Reverses a previously recorded repayment (once only). Returns the\\nreversed [`RepaymentData`].",
+      "name": "unrecord_payment",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "RepaymentData"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "mutable_loan_data",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "MutableLoanData"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "outstanding_total",
+      "inputs": [],
+      "outputs": [
+        "u128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Renounces ownership of the contract.\\n\\nPermanently removes the owner, disabling all functions gated by\\n`#[only_owner]`.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n\\n# Errors\\n\\n* [`OwnableError::TransferInProgress`] - If there is a pending ownership\\ntransfer.\\n* [`OwnableError::OwnerNotSet`] - If the owner is not set.\\n\\n# Notes\\n\\n* Authorization for the current owner is required.",
+      "name": "renounce_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_capital_wallet",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_capital_wallet",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Initiates a 2-step ownership transfer to a new address.\\n\\nRequires authorization from the current owner. The new owner must later\\ncall `accept_ownership()` to complete the transfer.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n* `new_owner` - The proposed new owner.\\n* `live_until_ledger` - Ledger number until which the new owner can\\naccept. A value of `0` cancels any pending transfer.\\n\\n# Errors\\n\\n* [`OwnableError::OwnerNotSet`] - If the owner is not set.\\n* [`crate::role_transfer::RoleTransferError::NoPendingTransfer`] - If\\ntrying to cancel a transfer that doesn't exist.\\n* [`crate::role_transfer::RoleTransferError::InvalidLiveUntilLedger`] -\\nIf the specified ledger is in the past.\\n* [`crate::role_transfer::RoleTransferError::InvalidPendingAccount`] -\\nIf the specified pending account is not the same as the provided `new`\\naddress.\\n\\n# Notes\\n\\n* Authorization for the current owner is required.",
+      "name": "transfer_ownership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "immutable_loan_data",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "ImmutableLoanData"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns whether the `operator` is allowed to manage all the assets of\\n`owner`.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n* `owner` - Account of the token's owner.\\n* `operator` - Account to be checked.",
+      "name": "is_approved_for_all",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "operator",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_repayment_reversed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "repayment_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "cumulative_repayment_data",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "RepaymentData"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a disbursement is drawn against the senior tranche.\\n\\n* topics - `[\"disbursed\", loan_id: u32]`\\n* data - `[amount: u128, outstanding: u128]`",
+      "lib": "",
+      "name": "Disbursed",
+      "prefix_topics": [
+        "disbursed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "outstanding",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a new loan is drawn (minted to `capital_wallet`).\\n\\n* topics - `[\"loan_drawn\", loan_id: u32]`\\n* data - `[metadata_uri: String]`",
+      "lib": "",
+      "name": "LoanDrawn",
+      "prefix_topics": [
+        "loan_drawn"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "metadata_uri",
+          "type_": "string",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when the minter address is set.\\n\\n* topics - `[\"minter_set\"]`\\n* data - `[minter: Address]`",
+      "lib": "",
+      "name": "MinterSet",
+      "prefix_topics": [
+        "minter_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "minter",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a loan is closed.\\n\\n* topics - `[\"loan_closed\", loan_id: u32, reason: ClosureReason]`",
+      "lib": "",
+      "name": "LoanClosed",
+      "prefix_topics": [
+        "loan_closed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "ClosureReason"
+            }
+          },
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a disbursement is reversed.\\n\\n* topics - `[\"undisbursed\", loan_id: u32]`\\n* data - `[amount: u128, outstanding: u128]`",
+      "lib": "",
+      "name": "Undisbursed",
+      "prefix_topics": [
+        "undisbursed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "outstanding",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when the max fee cap (in bps) is set.\\n\\n* topics - `[\"max_fee_bps_set\"]`\\n* data - `[max_fee_bps: u32]`",
+      "lib": "",
+      "name": "MaxFeeBpsSet",
+      "prefix_topics": [
+        "max_fee_bps_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "max_fee_bps",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a loan is moved into default. `moved` is the PLUSD carved\\nout of the vault into the loan's pocket (zero on a repeat default); the\\nrest of `outstanding` could not be covered by the vault.\\n\\n* topics - `[\"loan_defaulted\", loan_id: u32]`\\n* data - `[outstanding: u128, moved: u128]`",
+      "lib": "",
+      "name": "LoanDefaulted",
+      "prefix_topics": [
+        "loan_defaulted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "outstanding",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "moved",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted whenever a loan's status actually changes.\\n\\n* topics - `[\"status_updated\", loan_id: u32, new_status: LoanStatus]`",
+      "lib": "",
+      "name": "StatusUpdated",
+      "prefix_topics": [
+        "status_updated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "new_status",
+          "type_": {
+            "udt": {
+              "name": "LoanStatus"
+            }
+          },
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a matured loan is rolled over onto new terms.\\n\\n* topics - `[\"loan_rolled_over\", loan_id: u32]`\\n* data - `[new_rate: u32, new_maturity_timestamp: u64]`",
+      "lib": "",
+      "name": "LoanRolledOver",
+      "prefix_topics": [
+        "loan_rolled_over"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "new_rate",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_maturity_timestamp",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when the max waivable residual interest is set.\\n\\n* topics - `[\"max_residual_set\"]`\\n* data - `[max_residual: u128]`",
+      "lib": "",
+      "name": "MaxResidualSet",
+      "prefix_topics": [
+        "max_residual_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "max_residual",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted at closure with the final interest breakdown.\\n\\n* topics - `[\"interest_settled\", loan_id: u32]`\\n* data - `[accrued: u128, paid: u128, waived: u128]`",
+      "lib": "",
+      "name": "InterestSettled",
+      "prefix_topics": [
+        "interest_settled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "accrued",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "paid",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "waived",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a loan's outstanding balance is written down.\\n\\n* topics - `[\"loan_written_down\", loan_id: u32]`\\n* data - `[amount: u128, outstanding: u128, burned: u128, unabsorbed: u128]`",
+      "lib": "",
+      "name": "LoanWrittenDown",
+      "prefix_topics": [
+        "loan_written_down"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "outstanding",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "burned",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "unabsorbed",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a repayment is recorded.\\n\\n* topics - `[\"payment_recorded\", loan_id: u32, repayment_id: u32]`\\n* data - `[repayment: RepaymentData, outstanding: u128]`",
+      "lib": "",
+      "name": "PaymentRecorded",
+      "prefix_topics": [
+        "payment_recorded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "repayment_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "repayment",
+          "type_": {
+            "udt": {
+              "name": "RepaymentData"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "outstanding",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when the capital wallet address is set.\\n\\n* topics - `[\"capital_wallet_set\"]`\\n* data - `[capital_wallet: Address]`",
+      "lib": "",
+      "name": "CapitalWalletSet",
+      "prefix_topics": [
+        "capital_wallet_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "capital_wallet",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a loan's economics are amended.\\n\\n* topics - `[\"economics_amended\", loan_id: u32]`\\n* data - `[new_rate: u32, new_maturity_timestamp: u64]`",
+      "lib": "",
+      "name": "EconomicsAmended",
+      "prefix_topics": [
+        "economics_amended"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "new_rate",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_maturity_timestamp",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when the risk council manually adjusts accrued interest.\\n\\n* topics - `[\"interest_adjusted\", loan_id: u32]`\\n* data - `[delta: i128, reason_hash: BytesN<32>]`",
+      "lib": "",
+      "name": "InterestAdjusted",
+      "prefix_topics": [
+        "interest_adjusted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "delta",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reason_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a repayment is reversed.\\n\\n* topics - `[\"payment_unrecorded\", loan_id: u32, repayment_id: u32]`\\n* data - `[repayment: RepaymentData, outstanding: u128]`",
+      "lib": "",
+      "name": "PaymentUnrecorded",
+      "prefix_topics": [
+        "payment_unrecorded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "repayment_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "repayment",
+          "type_": {
+            "udt": {
+              "name": "RepaymentData"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "outstanding",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Snapshot of a loan's money state, combining stored balances with the\\nderived `outstanding` and `accrued_interest`.",
+      "lib": "",
+      "name": "LoanMoney",
+      "fields": [
+        {
+          "doc": "",
+          "name": "accrued_interest",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "carved_out",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "disbursed",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "outstanding",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "repaid",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "written_down",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Lifecycle state of a loan. The discriminant order is significant: several\\ntransitions are gated on the relative ordering (see [`LoanStatus::rank`]).",
+      "lib": "",
+      "name": "LoanStatus",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Approved"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Performing"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "WatchList"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Default"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Closed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Why a loan was closed.",
+      "lib": "",
+      "name": "ClosureReason",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "None"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "ScheduledMaturity"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "EarlyRepayment"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Cancelled"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Default"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "OtherWriteDown"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A repayment waterfall allocation. `record_payment` stores each one and\\nmaintains a per-loan cumulative total.",
+      "lib": "",
+      "name": "RepaymentData",
+      "fields": [
+        {
+          "doc": "",
+          "name": "equity_distributed",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "mgmt_fee",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "oet_alloc",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "offtaker_received",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "perf_fee",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "senior_interest",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "senior_principal_repaid",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A segment of constant interest terms. A new epoch is appended whenever\\n`outstanding` changes (disburse / undisburse / record_payment /\\nunrecord_payment / write_down) or the rate/maturity changes (rollover /\\namendment), capturing the interest accrued under the previous terms.",
+      "lib": "",
+      "name": "EconomicsEpoch",
+      "fields": [
+        {
+          "doc": "",
+          "name": "accrued_interest",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "effective_from",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "maturity_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "senior_interest_rate",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Loan state that evolves over the loan's life.",
+      "lib": "",
+      "name": "MutableLoanData",
+      "fields": [
+        {
+          "doc": "Set by the first `set_default`, when the loan's PLUSD moves to its\\npocket; never cleared (after `cure`, repayments still go to the pocket).",
+          "name": "carved_out",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "closure_reason",
+          "type_": {
+            "udt": {
+              "name": "ClosureReason"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "current_maturity_timestamp",
+          "type_": "u64"
+        },
+        {
+          "doc": "The rate in effect now. Mirrors the latest epoch's rate once one is\\nopen; while `Approved` (no epoch yet) it holds the rate epoch 0 will\\nopen with, kept current by `amend_economics`.",
+          "name": "current_rate",
+          "type_": "u32"
+        },
+        {
+          "doc": "Cumulative amount disbursed, net of `undisburse`.",
+          "name": "disbursed",
+          "type_": "u128"
+        },
+        {
+          "doc": "Risk-council adjustment (waivers are negative) layered onto the\\nepoch-derived accrued interest; see [`crate::LoanRegistry::adjust_interest`].",
+          "name": "interest_adjustment",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "metadata_uri",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "next_economics_epochs_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "next_repayment_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "Cumulative principal repaid via `record_payment`, net of\\n`unrecord_payment`.",
+          "name": "repaid",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "status",
+          "type_": {
+            "udt": {
+              "name": "LoanStatus"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "written_down",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Loan economics fixed at origination.",
+      "lib": "",
+      "name": "ImmutableLoanData",
+      "fields": [
+        {
+          "doc": "sha256 of the borrower's data-room id.",
+          "name": "borrower_ref",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "original_equity_tranche",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "original_facility_size",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "original_maturity_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "original_offtaker_price",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "original_senior_tranche",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "origination_date",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "senior_interest_rate",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when an ownership transfer is initiated.",
+      "lib": "",
+      "name": "OwnershipTransfer",
+      "prefix_topics": [
+        "ownership_transfer"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when ownership is renounced.",
+      "lib": "",
+      "name": "OwnershipRenounced",
+      "prefix_topics": [
+        "ownership_renounced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when an ownership transfer is completed.",
+      "lib": "",
+      "name": "OwnershipTransferCompleted",
+      "prefix_topics": [
+        "ownership_transfer_completed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when the contract is paused.",
+      "lib": "",
+      "name": "Paused",
+      "prefix_topics": [
+        "paused"
+      ],
+      "params": [],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when the contract is unpaused.",
+      "lib": "",
+      "name": "Unpaused",
+      "prefix_topics": [
+        "unpaused"
+      ],
+      "params": [],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a token is minted.",
+      "lib": "",
+      "name": "Mint",
+      "prefix_topics": [
+        "mint"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  }
+]

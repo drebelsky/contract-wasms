@@ -1,0 +1,550 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "deal",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Deal"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "operator",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns `Some(Address)` if ownership is set, or `None` if ownership has\\nbeen renounced.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.",
+      "name": "get_owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Brings the loan NFT owner's DEBT balance to the loan's outstanding:\\nunfreezes it, mints or claws back the difference, freezes it again.\\nCallable by anyone.",
+      "name": "sync_debt",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Brings this contract's CARGO balance to the loan's pledged cargo\\nquantity. Callable by anyone.",
+      "name": "sync_cargo",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "debt_issuer",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Applies to deals registered from now on; registered deals keep their\\ntokens.",
+      "name": "set_issuers",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "debt_issuer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cargo_issuer",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "cargo_issuer",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The `DEBT<nnnn>` SAC address for `loan_id` under the current issuer,\\ncomputable before it is deployed.",
+      "name": "debt_address",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "* `owner` - The access-manager.\\n* `loan_registry` - Source of DEBT: `outstanding` and the NFT owner.\\n* `collateral_registry` - Source of CARGO: `cargo_quantity`.\\n* `debt_issuer` / `cargo_issuer` - Classic accounts issuing every\\n`DEBT<nnnn>` / `CARGO<nnnn>`.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "loan_registry",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "collateral_registry",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "debt_issuer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cargo_issuer",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The `CARGO<nnnn>` SAC address for `loan_id` under the current issuer.",
+      "name": "cargo_address",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "loan_registry",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Registers the deal for `loan_id`: its `DEBT<nnnn>` / `CARGO<nnnn>`\\nSACs must already be deployed with this contract as admin. Lets this\\ncontract hold its own CARGO. The loan must exist. The capital wallet's\\nDEBT trustline is not needed yet (`sync_debt` fails until it exists).",
+      "name": "register_deal",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Deal"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Accepts a pending ownership transfer.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n\\n# Errors\\n\\n* [`crate::role_transfer::RoleTransferError::NoPendingTransfer`] - If\\nthere is no pending transfer to accept.\\n\\n# Events\\n\\n* topics - `[\"ownership_transfer_completed\"]`\\n* data - `[new_owner: Address]`",
+      "name": "accept_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_loan_registry",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "loan_registry",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Renounces ownership of the contract.\\n\\nPermanently removes the owner, disabling all functions gated by\\n`#[only_owner]`.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n\\n# Errors\\n\\n* [`OwnableError::TransferInProgress`] - If there is a pending ownership\\ntransfer.\\n* [`OwnableError::OwnerNotSet`] - If the owner is not set.\\n\\n# Notes\\n\\n* Authorization for the current owner is required.",
+      "name": "renounce_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Initiates a 2-step ownership transfer to a new address.\\n\\nRequires authorization from the current owner. The new owner must later\\ncall `accept_ownership()` to complete the transfer.\\n\\n# Arguments\\n\\n* `e` - Access to the Soroban environment.\\n* `new_owner` - The proposed new owner.\\n* `live_until_ledger` - Ledger number until which the new owner can\\naccept. A value of `0` cancels any pending transfer.\\n\\n# Errors\\n\\n* [`OwnableError::OwnerNotSet`] - If the owner is not set.\\n* [`crate::role_transfer::RoleTransferError::NoPendingTransfer`] - If\\ntrying to cancel a transfer that doesn't exist.\\n* [`crate::role_transfer::RoleTransferError::InvalidLiveUntilLedger`] -\\nIf the specified ledger is in the past.\\n* [`crate::role_transfer::RoleTransferError::InvalidPendingAccount`] -\\nIf the specified pending account is not the same as the provided `new`\\naddress.\\n\\n# Notes\\n\\n* Authorization for the current owner is required.",
+      "name": "transfer_ownership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "collateral_registry",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_collateral_registry",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "collateral_registry",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The capital wallet's DEBT balance was brought to the loan's outstanding.\\n\\n* topics - `[\"debt_synced\", loan_id: u32]`\\n* data - `[target: i128, previous: i128, minted: i128, clawed: i128]`",
+      "lib": "",
+      "name": "DebtSynced",
+      "prefix_topics": [
+        "debt_synced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "target",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "previous",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "minted",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "clawed",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"issuers_set\"]`\\n* data - `[debt_issuer: Address, cargo_issuer: Address]`",
+      "lib": "",
+      "name": "IssuersSet",
+      "prefix_topics": [
+        "issuers_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "debt_issuer",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cargo_issuer",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The factory's CARGO balance was brought to the loan's pledged cargo.\\n\\n* topics - `[\"cargo_synced\", loan_id: u32]`\\n* data - `[target: i128, previous: i128, minted: i128, burned: i128]`",
+      "lib": "",
+      "name": "CargoSynced",
+      "prefix_topics": [
+        "cargo_synced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "target",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "previous",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "minted",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "burned",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"registries_set\"]`\\n* data - `[loan_registry: Address, collateral_registry: Address]`",
+      "lib": "",
+      "name": "RegistriesSet",
+      "prefix_topics": [
+        "registries_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_registry",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "collateral_registry",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "* topics - `[\"deal_registered\", loan_id: u32]`\\n* data - `[debt: Address, cargo: Address]`",
+      "lib": "",
+      "name": "DealRegistered",
+      "prefix_topics": [
+        "deal_registered"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "loan_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "debt",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cargo",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A deal's token pair.",
+      "lib": "",
+      "name": "Deal",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cargo",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "debt",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when an ownership transfer is initiated.",
+      "lib": "",
+      "name": "OwnershipTransfer",
+      "prefix_topics": [
+        "ownership_transfer"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "live_until_ledger",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when ownership is renounced.",
+      "lib": "",
+      "name": "OwnershipRenounced",
+      "prefix_topics": [
+        "ownership_renounced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when an ownership transfer is completed.",
+      "lib": "",
+      "name": "OwnershipTransferCompleted",
+      "prefix_topics": [
+        "ownership_transfer_completed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  }
+]
