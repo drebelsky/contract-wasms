@@ -1,0 +1,113 @@
+[
+  {
+    "function_v0": {
+      "doc": "Recovers the signer of a raw secp256k1 signature and compares it with\\nthe registered key.\\n\\n`key_data` must be a 65-byte uncompressed SEC1 point (`0x04 || X || Y`)\\nand `sig_data` must be `r[32] || s[32] || recovery_id[1]`, with a raw\\nrecovery ID of `0` or `1`. The Soroban host requires a normalized low-S\\nsignature. The supplied 32-byte `hash` is passed directly to the Soroban\\nhost without another hashing step.\\n\\nThe hazmat API is necessary here because the generic verifier boundary\\nrepresents the already-SHA-256-hashed Latch auth digest as `Bytes`. The\\nSDK has no supported conversion from those raw bytes back to `Hash<32>`;\\nhashing again to obtain that type would verify a different message.\\n\\n# Errors\\n\\n- [`Secp256k1VerifierError::InvalidHashLength`] - `hash` is not 32\\nbytes.\\n- [`Secp256k1VerifierError::InvalidKeyEncoding`] - `key_data` does not\\nstart with the uncompressed SEC1 prefix `0x04`.\\n- [`Secp256k1VerifierError::InvalidRecoveryId`] - the signature recovery\\nID is not `0` or `1`; Ethereum-style `27`/`28` va",
+      "name": "verify",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "hash",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": {
+            "bytes_n": {
+              "n": 65
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sig_data",
+          "type_": {
+            "bytes_n": {
+              "n": 65
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Input and authorization errors detected by the verifier.\\n\\nError numbering starts at 1 because this verifier is independently\\ndeployed.",
+      "lib": "",
+      "name": "Secp256k1VerifierError",
+      "cases": [
+        {
+          "doc": "The Latch authorization payload hash is not exactly 32 bytes.",
+          "name": "InvalidHashLength",
+          "value": 1
+        },
+        {
+          "doc": "The public key does not use the required uncompressed SEC1 prefix.",
+          "name": "InvalidKeyEncoding",
+          "value": 2
+        },
+        {
+          "doc": "The signature recovered a public key other than the registered key.",
+          "name": "KeyMismatch",
+          "value": 3
+        },
+        {
+          "doc": "The recovery ID is not the raw ECDSA value 0 or 1.",
+          "name": "InvalidRecoveryId",
+          "value": 4
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the canonical 65-byte uncompressed SEC1 public key unchanged.\\n\\n# Errors\\n\\n- [`Secp256k1VerifierError::InvalidKeyEncoding`] - `key_data` does not\\nstart with the uncompressed SEC1 prefix `0x04`.",
+      "name": "canonicalize_key",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": {
+            "bytes_n": {
+              "n": 65
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bytes"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Canonicalizes every secp256k1 key while preserving input order.\\n\\n# Errors\\n\\n- [`Secp256k1VerifierError::InvalidKeyEncoding`] - any key does not\\nstart with the uncompressed SEC1 prefix `0x04`.",
+      "name": "batch_canonicalize_key",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 65
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "bytes"
+          }
+        }
+      ]
+    }
+  }
+]

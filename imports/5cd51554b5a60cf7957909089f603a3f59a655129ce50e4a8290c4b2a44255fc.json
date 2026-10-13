@@ -1,0 +1,13 @@
+[
+  "bytes_copy_to_linear_memory",
+  "bytes_get",
+  "bytes_len",
+  "bytes_new_from_linear_memory",
+  "fail_with_error",
+  "obj_cmp",
+  "recover_key_ecdsa_secp256k1",
+  "vec_get",
+  "vec_len",
+  "vec_new",
+  "vec_push_back"
+]
