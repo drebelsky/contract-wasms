@@ -1,0 +1,270 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidInput",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotInitialized",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "AlreadyInitialized",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "Slippage",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "Unauthorized",
+          "value": 5
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Rate numerator and denominator are 7-decimal stroop amounts of the owner's\\nhuman quote (\"100 OLD = 1 NEW\" is stored as denominator 100*10^7 and\\nnumerator 1*10^7). Classic assets and this project's V2 SACs both use 7\\ndecimals, so the ratio is the same in whole tokens and in stroops.\\n`new_amount = floor(old_amount * rate_numerator / rate_denominator)`.",
+      "lib": "",
+      "name": "MigrationConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "launchpad",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "migrations",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "old_code",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "old_issuer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "old_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "rate_denominator",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "rate_numerator",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "total_new_distributed",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "total_old_burned",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "launchpad",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "launchpad",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "initialized",
+      "inputs": [],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "MigrationConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_total_old_burned",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_total_new_distributed",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "preview_migration",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "old_amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Bind this contract and freeze the Classic asset, V2 pool, and rate.\\nAdmin is the constructor owner; initialization cannot appoint another admin.",
+      "name": "initialize",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "old_code",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "old_issuer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "rate_numerator",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "rate_denominator",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "MigrationConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "migrate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "old_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_new_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  }
+]

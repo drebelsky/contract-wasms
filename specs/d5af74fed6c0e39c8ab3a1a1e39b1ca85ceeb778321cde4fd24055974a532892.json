@@ -1,0 +1,177 @@
+[
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Hop",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "A",
+            "type_": [
+              "address",
+              "u32",
+              "u32",
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "S",
+            "type_": [
+              "address",
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "U",
+            "type_": [
+              "address",
+              "address",
+              {
+                "udt": {
+                  "name": "OHints"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "GuardFailed",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "OutMin",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "BadRoute",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "HopFailed",
+          "value": 4
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Route",
+      "fields": [
+        {
+          "doc": "",
+          "name": "h",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Hop"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "m",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "n",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "OHints",
+      "fields": [
+        {
+          "doc": "",
+          "name": "checkpoint",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "checkpoint_min",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "slot",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "route_if",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_in",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "min_balance",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "token_out",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "routes",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Route"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  }
+]
