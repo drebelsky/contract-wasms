@@ -1,0 +1,2161 @@
+[
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Allowance",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AllowanceDataKey"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Balance",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Admin"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "UsdcToken"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "TotalAssets"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "TotalShares"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Initialized"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "RegistryContract"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "DeprecatedYieldSplit",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "XldSacAddress"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "MintFeeBps"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "OperatorWallet"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "DeprecatedVestingSchedule",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "PauseDeposits"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "PauseWithdrawals"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "EmergencyTvlSnapshot"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "EmergencyWithdrawBudget"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "LastPauseToggleLedger"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "AgentMintFeeBps"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "CompanyMintFeeBps"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "AgentFactoryContract"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "CompanyBot",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "AgentBot",
+            "type_": [
+              "address"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "VestingRecord",
+      "fields": [
+        {
+          "doc": "",
+          "name": "already_withdrawn",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "start_time",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "total_locked",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "vesting_end",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AllowanceValue",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "expiration_ledger",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Per-ledger withdrawal budget tracker for emergency rate limiting.",
+      "lib": "",
+      "name": "WithdrawBudget",
+      "fields": [
+        {
+          "doc": "",
+          "name": "already_withdrawn",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "ledger_seq",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AllowanceDataKey",
+      "fields": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "burn",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "name",
+      "inputs": [],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "EIP-4626: Returns the address of the underlying token used for the Vault (USTRY).",
+      "name": "asset",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotInitialized",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "Unauthorized",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "InsufficientDeposit",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "InsufficientShares",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "ZeroAmount",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "SplitNotActive",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "AlreadySplit",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "BelowMinDeposit",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "InvalidFeeBps",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "ExceedsVestedAmount",
+          "value": 10
+        },
+        {
+          "doc": "V3: Operation blocked by kill switch",
+          "name": "DepositsPaused",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "WithdrawalsPaused",
+          "value": 12
+        },
+        {
+          "doc": "V3: Single withdrawal exceeds emergency cap (10% of TVL)",
+          "name": "ExceedsEmergencyCap",
+          "value": 13
+        },
+        {
+          "doc": "V3.1: Toggle cooldown not elapsed (~10 minutes between toggles)",
+          "name": "PauseCooldown",
+          "value": 14
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "symbol",
+      "inputs": [],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "approve",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "expiration_ledger",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "balance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deposit USTRY into vault, mint XLD shares via SAC.\\nWhen RegistryContract is configured on-chain, non-registry callers are routed\\nthrough the 3-tier fee schedule (0.1% company bot, 0.5% CLI/agent/bot, 1.0% public).",
+      "name": "deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ustry_amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "decimals",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "transfer",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "muxed_to",
+          "type_": "muxed_address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Withdraw USTRY by burning XLD shares.\\nRounding: DOWN on withdrawal (user gets slightly less = vault absorbs rounding cost).",
+      "name": "withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "withdrawer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "xld_amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "allowance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "burn_from",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "current_admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "extend_ttl",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Initialize vault with admin, USTRY token, XLD SAC, operator wallet, and mint fee.\\nThe vault holds USTRY and mints/burns XLD via its SAC.",
+      "name": "initialize",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ustry_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "xld_sac",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "operator_wallet",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "mint_fee_bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "EIP-4626: Maximum amount of XLD shares that can be redeemed by `owner` without reverting.\\nAccounts for both `PauseWithdrawals` and the V3 emergency per-ledger withdrawal cap when `PauseDeposits` is active.",
+      "name": "max_redeem",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Withdraw vault funds to a specified address (registry-authorized, for grace refunds).\\nBurns corresponding XLD shares from recipient via SAC.",
+      "name": "vault_rate",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "SEP-41 burn event",
+      "lib": "",
+      "name": "BurnEvent",
+      "prefix_topics": [
+        "burn"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "SEP-41 mint event",
+      "lib": "",
+      "name": "MintEvent",
+      "prefix_topics": [
+        "mint"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "PT/YT split tracking per domain\\nPhase 1: split_active = false (PT+YT unified, move together)\\nPhase 3+: split_active = true (PT and YT can have different owners)",
+      "lib": "",
+      "name": "YieldSplit",
+      "fields": [
+        {
+          "doc": "",
+          "name": "node",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "principal_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "pt_owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "shares_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "split_active",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "split_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "yt_owner",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deposit USTRY on behalf of a domain registrant/renewer. The `from` address (Registry)\\nprovides USTRY, and `recipient` receives XLD shares after their tier fee (default 1.0% public,\\n0.5% CLI/bot/agent, 0.1% company; split 50/50 between operator wallet and vault).\\nCompatible with existing Registry auth trees because Vault pulls exact `ustry_amount` from `from`.",
+      "name": "deposit_for",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ustry_amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "EIP-4626: Maximum amount of underlying USTRY assets that can be deposited for `receiver`.\\nBounded by Stellar SAC / classic asset protocol ceiling (`i64::MAX` stroops) when active.",
+      "name": "max_deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "receiver",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "sync_assets",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Vault top-up event (add USTRY to existing domain position)",
+      "lib": "",
+      "name": "TopUpEvent",
+      "prefix_topics": [
+        "vault_topup"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "domain_node",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ustry_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares_added",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_agent_bot",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Public / human mint fee in bps (default 100 = 1.0%)",
+      "name": "mint_fee_bps",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_mint_fee",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fee_bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set authorized registry contract (admin only)",
+      "name": "set_registry",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "registry",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "total_assets",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "total_shares",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Constructor (Protocol 22+): Called atomically during CreateContractV2.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ustry_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "xld_sac",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "operator_wallet",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "mint_fee_bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns all 3 configurable fee tiers as (human_fee_bps, agent_fee_bps, company_fee_bps)",
+      "name": "get_fee_tiers",
+      "inputs": [],
+      "outputs": [
+        {
+          "tuple": {
+            "value_types": [
+              "u32",
+              "u32",
+              "u32"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Whitelist or remove an external CLI/Bot/Agent address (receives AgentMintFeeBps, default 0.5%).\\nStored in persistent() storage to prevent instance() storage bloat.",
+      "name": "set_agent_bot",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "bot",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enabled",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Configure all 3 fee tiers in a single transaction:\\n(human_fee_bps: e.g. 100 = 1.0%, agent_fee_bps: e.g. 50 = 0.5%, company_fee_bps: e.g. 10 = 0.1%)",
+      "name": "set_fee_tiers",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "human_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "agent_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "company_fee_bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "transfer_from",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "SEP-41 approve event",
+      "lib": "",
+      "name": "ApproveEvent",
+      "prefix_topics": [
+        "approve"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "expiration_ledger",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_company_bot",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "EIP-4626: Simulates the amount of USTRY assets returned when redeeming `shares` XLD.",
+      "name": "preview_redeem",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deposit USTRY into vault with automatic 3-tier fee resolution:\\n- Company Bot: CompanyMintFeeBps (default 10 bps = 0.1%)\\n- CLI / Bot / AI Agent: AgentMintFeeBps (default 50 bps = 0.5%)\\n- Public / Human User: MintFeeBps (default 100 bps = 1.0%)\\nFee split: 50% to vault (all holders), 50% to operator wallet.",
+      "name": "public_deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ustry_amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "SEP-41 transfer event",
+      "lib": "",
+      "name": "TransferEvent",
+      "prefix_topics": [
+        "transfer"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "EIP-4626: Simulates the net XLD shares minted for a deposit of `assets` USTRY at the\\nhighest configured fee tier (default public MintFeeBps = 1.0%).\\nUsing `max(human, agent, company)` guarantees the EIP-4626 lower-bound invariant\\n`actual_shares >= preview_deposit(assets)` for all callers even if custom tier rates are non-monotonic.",
+      "name": "preview_deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "assets",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Whitelist or remove a Company Bot address (receives CompanyMintFeeBps, default 0.1%).\\nStored in persistent() storage to prevent instance() storage bloat.",
+      "name": "set_company_bot",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "bot",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enabled",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set USTRY token address (admin only)",
+      "name": "set_ustry_token",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ustry_token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Read current pause status. Public, no auth required.",
+      "name": "get_pause_status",
+      "inputs": [],
+      "outputs": [
+        {
+          "tuple": {
+            "value_types": [
+              "bool",
+              "bool"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the effective mint fee in bps that will be charged for a given address (pure read-only view)",
+      "name": "get_user_fee_bps",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "EIP-4626: Returns the ideal amount of USTRY assets the Vault would exchange for the\\namount of XLD shares provided, exclusive of fees and independent of the caller (rounds DOWN).",
+      "name": "convert_to_assets",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "EIP-4626: Returns the ideal amount of XLD shares the Vault would exchange for the\\namount of USTRY assets provided, exclusive of fees and independent of the caller (rounds DOWN).",
+      "name": "convert_to_shares",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "assets",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set AgentFactory contract address so deployed C-address agents automatically receive the Agent fee tier (0.5%)",
+      "name": "set_agent_factory",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "agent_factory",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "CLI / Bot / AI Agent mint fee in bps (default 50 = 0.5%)",
+      "name": "agent_mint_fee_bps",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Public deposit USTRY into vault on behalf of a user/agent with automatic 3-tier fee resolution.\\nFee split: 50% to vault (all holders), 50% to operator wallet.\\nMints XLD shares for net amount after fee.",
+      "name": "public_deposit_for",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ustry_amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set mint fee for CLI, bots & AI agents (default 50 bps = 0.5%)",
+      "name": "set_agent_mint_fee",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fee_bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Toggle deposit pause. Admin-only.\\nWhen paused: deposit(), deposit_for(), public_deposit() all reject.\\nSDF Audit Fix C-01: snapshots TotalAssets at pause time for rate limiter.\\nM-01 fix: Enforces cooldown between toggle operations.",
+      "name": "set_pause_deposits",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Vault deposit event (domain registration & seed deposit path)",
+      "lib": "",
+      "name": "VaultDepositEvent",
+      "prefix_topics": [
+        "vault_deposit"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ustry_amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Caller-aware EIP-4626 preview: Simulates the exact net XLD shares minted for `receiver`\\nusing their resolved tier fee (1.0% public, 0.5% CLI/bot/agent, 0.1% company).",
+      "name": "preview_deposit_for",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "receiver",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "assets",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set operator wallet for fee revenue (admin only)",
+      "name": "set_operator_wallet",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "operator_wallet",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set XLD SAC address (admin only)",
+      "name": "set_xld_sac_address",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "xld_sac",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Vault public deposit event (fee-bearing path)",
+      "lib": "",
+      "name": "PublicDepositEvent",
+      "prefix_topics": [
+        "vault_public_deposit"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "ustry_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares_minted",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Vault withdraw event",
+      "lib": "",
+      "name": "VaultWithdrawEvent",
+      "prefix_topics": [
+        "vault_withdraw"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "withdrawer",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "xld_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ustry_out",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Company Bot mint fee in bps (default 10 = 0.1%)",
+      "name": "company_mint_fee_bps",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "View: returns the maximum XLD amount a user can actually withdraw,\\naccounting for vesting locks. Free (non-vested) XLD is always available.",
+      "name": "get_max_withdrawable",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set mint fee for the company bot (default 10 bps = 0.1%)",
+      "name": "set_company_mint_fee",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fee_bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Toggle withdrawal pause. Admin-only.\\nWhen paused: withdraw(), withdraw_to() all reject.\\nWARNING: Only use during contract upgrades or if withdraw logic\\nitself is compromised. Trapping user funds destroys trust.\\nH-03 fix: Cannot pause withdrawals while deposits are already paused\\n(prevents trapping all user funds simultaneously).\\nM-01 fix: Enforces cooldown between toggle operations.",
+      "name": "set_pause_withdrawals",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when admin updates any of the 3 fee tiers",
+      "lib": "",
+      "name": "FeeTiersUpdatedEvent",
+      "prefix_topics": [
+        "fee_tiers_updated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "human_fee_bps",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "agent_fee_bps",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "company_fee_bps",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Vault withdraw_to event (registry-initiated)",
+      "lib": "",
+      "name": "VaultWithdrawToEvent",
+      "prefix_topics": [
+        "vault_withdraw_to"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "ustry_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares_burned",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when the admin toggles the kill switch",
+      "lib": "",
+      "name": "PauseStatusChangedEvent",
+      "prefix_topics": [
+        "pause_status_changed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "deposits_paused",
+          "type_": "bool",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "withdrawals_paused",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when admin updates the Company Bot or Agent Bot persistent whitelist",
+      "lib": "",
+      "name": "BotWhitelistUpdatedEvent",
+      "prefix_topics": [
+        "bot_whitelist_updated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "bot",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "tier",
+          "type_": "symbol",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "enabled",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Burn",
+      "prefix_topics": [
+        "burn"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Mint",
+      "prefix_topics": [
+        "mint"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to_muxed_id",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Approve",
+      "prefix_topics": [
+        "approve"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "expiration_ledger",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "vec"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Clawback",
+      "prefix_topics": [
+        "clawback"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Transfer",
+      "prefix_topics": [
+        "transfer"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to_muxed_id",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MintWithAmountOnly",
+      "prefix_topics": [
+        "mint"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TransferWithAmountOnly",
+      "prefix_topics": [
+        "transfer"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TokenMetadata",
+      "fields": [
+        {
+          "doc": "",
+          "name": "decimal",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        }
+      ]
+    }
+  }
+]
