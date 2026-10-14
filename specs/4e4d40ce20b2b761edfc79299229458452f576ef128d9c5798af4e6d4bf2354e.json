@@ -1,0 +1,1989 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "exit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Exit"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The ASP refuses a pending deposit with a public reason code. Flagging a flagged deposit\\nreplaces the reason and keeps the time of the first flag, so it cannot postpone a refund.\\nCode 0 is reserved for a depositor's cancellation.",
+      "name": "flag",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The guardian stops `shield`, `transact`, `admit`, `attest`, `release` and `claim` for 72\\nhours. The next halt is allowed 7 days after this one ends, so users always get a week to\\nexit between halts.",
+      "name": "halt",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Inserts the commitments of every listed deposit that is eligible: pending, not flagged,\\nattested, and past its delay. Others are skipped. IDs must be strictly ascending. Returns\\nthe admitted IDs.",
+      "name": "admit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "ids",
+          "type_": {
+            "vec": {
+              "element_type": "u64"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "vec": {
+                "element_type": "u64"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Anyone moves the parts of a stranded exit whose party can receive now, judged as `transact`\\njudges it, back into the exit queue, at its tail, as a new exit that `release` pays in turn\\nlike any other, and returns its ID. A part whose party still cannot receive stays stranded.\\nFails with `NothingClaimable` when no part can move. Refused while halted; works while\\npaused.",
+      "name": "claim",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u64",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The ASP asserts that every unflagged deposit with an ID up to `up_to` passed screening.\\nAttestations only move forward and never past the last deposit.",
+      "name": "attest",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "up_to",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The depositor takes back a deposit that is not yet admitted, flagged or not. Works while\\nhalted.",
+      "name": "cancel",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Config"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "limits",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Limits"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Anyone returns a deposit flagged at least a day ago to its depositor. Works while halted.",
+      "name": "refund",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The guardian ends a halt early. The cooldown then runs from now.",
+      "name": "resume",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Queues a deposit of `ext.ext_amount` from `depositor` and returns its ID. The commitments\\nenter the tree only when the deposit is admitted.",
+      "name": "shield",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "proof",
+          "type_": {
+            "udt": {
+              "name": "TxProof"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "ext",
+          "type_": {
+            "udt": {
+              "name": "ExtData"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u64",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "status",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Status"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The ASP clears a flag set by mistake, while the deposit is still pending.",
+      "name": "unflag",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pending",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PendingDeposit"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Anyone pays queued exits from the head of the exit queue, in ID order, until today's outflow\\nwindow is full or `max` exits were handled, and returns how many were. Of an exit that does\\nnot fit, it pays what does, payout first, and the rest stays at the head for the next day,\\nso no window goes unused. The one exception is a payout to an account that does not exist\\nyet, which is never paid in a part below 1 XLM, the least that creates the account: with\\nless room left, release stops and the exit waits for the next day. When the asset contract\\nrefuses a transfer, everything the exit still owes is set aside as a stranded exit for\\n`claim`, so that a recipient who cannot receive never holds up the exits behind it. While\\nthe issuer keeps the vault itself from holding the asset, or the vault holds less than the\\nnext payment, it stops with the queue as it is, and fails with `VaultCannotPay` if it paid\\nnothing. Refused while halted; works while paused.",
+      "name": "release",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "max",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Anyone extends the instance, the tree entries, the listed pending deposits and the listed\\nqueued or stranded exits to the network's maximum TTL. IDs that are no longer pending,\\nqueued or stranded are skipped.",
+      "name": "bump_ttl",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pending_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u64"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "exit_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u64"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_spent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "nullifier",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "stranded",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Exit"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Settles a transfer (`ext_amount == 0`) or an unshield (`ext_amount < 0`). `submitter` is\\nthe relayer, or the user when self-relaying. The payout and the fee are paid at once when\\nno exit is queued and they fit what is left of today's outflow window. Otherwise the exit\\njoins the exit queue and `release` pays it in turn. Fails with `CannotReceive` when a party\\nit would pay cannot receive the asset now. An account must exist, except that an XLM payout\\nof at least 1 XLM creates the recipient's account.",
+      "name": "transact",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "proof",
+          "type_": {
+            "udt": {
+              "name": "TxProof"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "ext",
+          "type_": {
+            "udt": {
+              "name": "ExtData"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "submitter",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The guardian stops or resumes deposits and transfers. Unshields, releases and claims of\\nexits, cancellations and refunds are never paused.",
+      "name": "set_pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "deposits",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "transfers",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The guardian changes the limits. A tightening, where `min_deposit` does not fall and no\\nother field rises, applies at once and cancels any queued loosening; any loosening replaces\\nthe queued one and applies 7 days later through `apply_limits`. `max_daily_outflow` never\\ndecreases, so a full pool can always exit within a week.",
+      "name": "set_limits",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "limits",
+          "type_": {
+            "udt": {
+              "name": "Limits"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Anyone applies the queued loosening once it is due.",
+      "name": "apply_limits",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "current_root",
+      "inputs": [],
+      "outputs": [
+        "u256"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Runs with the deployment, so the vault never exists unconfigured. `domain` is derived from\\nthe network and the asset contract's name rather than taken as an argument. A build with\\nthe testnet-forgeable key refuses to deploy on mainnet.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asp",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "delay_small",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "delay_large",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "limits",
+          "type_": {
+            "udt": {
+              "name": "Limits"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The guardian drops the queued loosening.",
+      "name": "cancel_limits",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_known_root",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "root",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "queued_limits",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "QueuedLimits"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "next_leaf_index",
+      "inputs": [],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Codes start at 100, clear of the small codes of the Stellar Asset Contract, whose errors reach\\ncallers unchanged when one of its plain transfers fails a call.",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "BadConfig",
+          "value": 100
+        },
+        {
+          "doc": "",
+          "name": "BadLimits",
+          "value": 101
+        },
+        {
+          "doc": "",
+          "name": "OutflowDecrease",
+          "value": 102
+        },
+        {
+          "doc": "",
+          "name": "Halted",
+          "value": 103
+        },
+        {
+          "doc": "",
+          "name": "DepositsPaused",
+          "value": 104
+        },
+        {
+          "doc": "",
+          "name": "TransfersPaused",
+          "value": 105
+        },
+        {
+          "doc": "",
+          "name": "NonEmptyRoot",
+          "value": 106
+        },
+        {
+          "doc": "",
+          "name": "BadAmount",
+          "value": 107
+        },
+        {
+          "doc": "",
+          "name": "BadFee",
+          "value": 108
+        },
+        {
+          "doc": "",
+          "name": "BadParties",
+          "value": 109
+        },
+        {
+          "doc": "",
+          "name": "WrongVault",
+          "value": 110
+        },
+        {
+          "doc": "",
+          "name": "WrongNetwork",
+          "value": 111
+        },
+        {
+          "doc": "",
+          "name": "BadCiphertext",
+          "value": 112
+        },
+        {
+          "doc": "",
+          "name": "DepositTooLarge",
+          "value": 113
+        },
+        {
+          "doc": "",
+          "name": "DepositorDailyLimit",
+          "value": 114
+        },
+        {
+          "doc": "",
+          "name": "TvlCapExceeded",
+          "value": 115
+        },
+        {
+          "doc": "",
+          "name": "BadArity",
+          "value": 116
+        },
+        {
+          "doc": "",
+          "name": "NonCanonical",
+          "value": 117
+        },
+        {
+          "doc": "",
+          "name": "DuplicateNullifier",
+          "value": 118
+        },
+        {
+          "doc": "",
+          "name": "DuplicateCommitment",
+          "value": 119
+        },
+        {
+          "doc": "",
+          "name": "Expired",
+          "value": 120
+        },
+        {
+          "doc": "",
+          "name": "UnknownRoot",
+          "value": 121
+        },
+        {
+          "doc": "",
+          "name": "TreeFull",
+          "value": 122
+        },
+        {
+          "doc": "",
+          "name": "NullifierSpent",
+          "value": 123
+        },
+        {
+          "doc": "",
+          "name": "ExtDataHashMismatch",
+          "value": 124
+        },
+        {
+          "doc": "",
+          "name": "PublicAmountMismatch",
+          "value": 125
+        },
+        {
+          "doc": "",
+          "name": "InvalidProof",
+          "value": 126
+        },
+        {
+          "doc": "",
+          "name": "UnknownDeposit",
+          "value": 127
+        },
+        {
+          "doc": "",
+          "name": "NotFlagged",
+          "value": 128
+        },
+        {
+          "doc": "",
+          "name": "BadReason",
+          "value": 129
+        },
+        {
+          "doc": "",
+          "name": "BadAttestation",
+          "value": 130
+        },
+        {
+          "doc": "",
+          "name": "BadIds",
+          "value": 131
+        },
+        {
+          "doc": "",
+          "name": "HaltCooldown",
+          "value": 132
+        },
+        {
+          "doc": "",
+          "name": "NotHalted",
+          "value": 133
+        },
+        {
+          "doc": "",
+          "name": "NoQueuedLimits",
+          "value": 134
+        },
+        {
+          "doc": "",
+          "name": "LimitsNotReady",
+          "value": 135
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 136
+        },
+        {
+          "doc": "",
+          "name": "ForgeableKey",
+          "value": 137
+        },
+        {
+          "doc": "",
+          "name": "RefundTooEarly",
+          "value": 138
+        },
+        {
+          "doc": "",
+          "name": "ExceedsAdmittedValue",
+          "value": 139
+        },
+        {
+          "doc": "",
+          "name": "DepositTooSmall",
+          "value": 140
+        },
+        {
+          "doc": "",
+          "name": "ExceedsDailyOutflow",
+          "value": 141
+        },
+        {
+          "doc": "",
+          "name": "NotStranded",
+          "value": 142
+        },
+        {
+          "doc": "",
+          "name": "NothingClaimable",
+          "value": 143
+        },
+        {
+          "doc": "",
+          "name": "CannotReceive",
+          "value": 144
+        },
+        {
+          "doc": "",
+          "name": "VaultCannotPay",
+          "value": 145
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Halted",
+      "prefix_topics": [
+        "halted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "until",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Paused",
+      "prefix_topics": [
+        "paused"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "deposits",
+          "type_": "bool",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "transfers",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Resumed",
+      "prefix_topics": [
+        "resumed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "next_halt_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Repeats what the token transfers of a payment show, so a watcher need not join them.\\n`exit_id` is set when `release` completes an exit from the exit queue, and absent when\\n`transact` paid at once. For an exit paid in several steps, `ext_amount` and `fee` are the\\nparts of the last step; the earlier ones appear in `exit_paid`.",
+      "lib": "",
+      "name": "Settled",
+      "prefix_topics": [
+        "settled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "ext_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "muxed_address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "relayer",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "exit_id",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Attested",
+      "prefix_topics": [
+        "attested"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "up_to",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Part payment by `release` of the exit at the head of the queue, which keeps its place there.\\n`payout_left` and `fee_left` stay owed.",
+      "lib": "",
+      "name": "ExitPaid",
+      "prefix_topics": [
+        "exit_paid"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "payout_paid",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee_paid",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "payout_left",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee_left",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "An exit that waits in the exit queue; `release` pays it in turn.",
+      "lib": "",
+      "name": "ExitQueued",
+      "prefix_topics": [
+        "exit_queued"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ext_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "muxed_address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "relayer",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Parts of the stranded exit `id` moved back into the exit queue, at its tail, as the exit\\n`new_id`. `payout` and `fee` are the parts moved.",
+      "lib": "",
+      "name": "ExitRequeued",
+      "prefix_topics": [
+        "exit_requeued"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "payout",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "A released exit with a part the asset contract refused to transfer. `payout` and `fee` are\\nwhat it still owes, which stays reserved until `claim` moves it back into the queue.",
+      "lib": "",
+      "name": "ExitStranded",
+      "prefix_topics": [
+        "exit_stranded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "payout",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LimitsQueued",
+      "prefix_topics": [
+        "limits_queued"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "limits",
+          "type_": {
+            "udt": {
+              "name": "Limits"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ready_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "NewNullifier",
+      "prefix_topics": [
+        "new_nullifier"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "nullifier",
+          "type_": "u256",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "For a tightening, which applies at once, `ready_at` is the time it was applied.",
+      "lib": "",
+      "name": "LimitsApplied",
+      "prefix_topics": [
+        "limits_applied"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "limits",
+          "type_": {
+            "udt": {
+              "name": "Limits"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ready_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "NewCommitment",
+      "prefix_topics": [
+        "new_commitment"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "index",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "commitment",
+          "type_": "u256",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "encrypted_output",
+          "type_": "bytes",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DepositFlagged",
+      "prefix_topics": [
+        "deposit_flagged"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DepositPending",
+      "prefix_topics": [
+        "deposit_pending"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "commitment0",
+          "type_": "u256",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "commitment1",
+          "type_": "u256",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DepositAdmitted",
+      "prefix_topics": [
+        "deposit_admitted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "leaf_index0",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "leaf_index1",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "`reason` is 0 when the depositor cancelled, otherwise the flag's reason code.",
+      "lib": "",
+      "name": "DepositRefunded",
+      "prefix_topics": [
+        "deposit_refunded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LimitsCancelled",
+      "prefix_topics": [
+        "limits_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "limits",
+          "type_": {
+            "udt": {
+              "name": "Limits"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "ready_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "`reason` is the code of the flag that was cleared.",
+      "lib": "",
+      "name": "DepositUnflagged",
+      "prefix_topics": [
+        "deposit_unflagged"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "An exit owed by the vault: what is still owed to `recipient` and `relayer`, and the time\\n`transact` or `claim` queued it. A queued exit holds what is left after any part payment; a\\nstranded one holds the parts not yet moved back into the queue.",
+      "lib": "",
+      "name": "Exit",
+      "fields": [
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "payout",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "queued_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "muxed_address"
+        },
+        {
+          "doc": "",
+          "name": "relayer",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Config",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asp",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "delay_large",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "delay_small",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "domain",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Amounts in the asset's smallest unit.",
+      "lib": "",
+      "name": "Limits",
+      "fields": [
+        {
+          "doc": "",
+          "name": "large_deposit_threshold",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "max_daily_outflow",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "max_daily_per_depositor",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "max_deposit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "max_fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_deposit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "tvl_cap",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "`tvl` is all value the vault holds for users: `pending_total` of it is in pending deposits,\\n`queued_total` is owed to queued and stranded exits, and the rest belongs to unspent notes.\\n`exit_head` is the ID of the oldest exit still queued and `exit_tail` the ID the next queued\\nexit takes, so the queue is empty when they are equal. `outflow` is the total paid out on day\\n`outflow_day`; a later day starts from zero.",
+      "lib": "",
+      "name": "Status",
+      "fields": [
+        {
+          "doc": "",
+          "name": "attested_up_to",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "deposits_paused",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "exit_head",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "exit_tail",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "halted_until",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "next_deposit_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "next_halt_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "outflow",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "outflow_day",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "pending_total",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "queued_total",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "transfers_paused",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "tvl",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Every storage key of the vault. Clients read state with `getLedgerEntries` on these keys.",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Config"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Limits"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "QueuedLimits"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Status"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Roots"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Frontier"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "NextLeaf"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Nullifier",
+            "type_": [
+              "u256"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Pending",
+            "type_": [
+              "u64"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Exit",
+            "type_": [
+              "u64"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stranded",
+            "type_": [
+              "u64"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "DepositorDay",
+            "type_": [
+              "address",
+              "u64"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The last 256 roots, one per inserted leaf pair. `newest` indexes the current root; slots not\\nyet written hold 0, which is never accepted as a root.",
+      "lib": "",
+      "name": "RootRing",
+      "fields": [
+        {
+          "doc": "",
+          "name": "newest",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "roots",
+          "type_": {
+            "vec": {
+              "element_type": "u256"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A loosening of the limits that applies once `ready_at` has passed.",
+      "lib": "",
+      "name": "QueuedLimits",
+      "fields": [
+        {
+          "doc": "",
+          "name": "limits",
+          "type_": {
+            "udt": {
+              "name": "Limits"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "ready_at",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A deposit waiting in the entry queue. `delay` is the wait its amount called for when it was\\nmade. `flag` is the reason code of the ASP's refusal and `flagged_at` the time the deposit was\\nfirst flagged, 0 while it is not.",
+      "lib": "",
+      "name": "PendingDeposit",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "commitment0",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "commitment1",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "delay",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "encrypted_output0",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "encrypted_output1",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "flag",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "flagged_at",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The external data a proof binds through `ext_data_hash`, which is\\n`keccak256(XDR(ScVal(ExtData))) mod p`.",
+      "lib": "",
+      "name": "ExtData",
+      "fields": [
+        {
+          "doc": "",
+          "name": "deadline",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "encrypted_output0",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "encrypted_output1",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "ext_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "network_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "muxed_address"
+        },
+        {
+          "doc": "",
+          "name": "relayer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "vault",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A transaction proof and the public inputs the client supplies. The vault injects\\n`domain` itself, so it is not part of this type.",
+      "lib": "",
+      "name": "TxProof",
+      "fields": [
+        {
+          "doc": "",
+          "name": "ext_data_hash",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "input_nullifiers",
+          "type_": {
+            "vec": {
+              "element_type": "u256"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "output_commitments",
+          "type_": {
+            "vec": {
+              "element_type": "u256"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "proof",
+          "type_": {
+            "udt": {
+              "name": "Groth16Proof"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "public_amount",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "root",
+          "type_": "u256"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A Groth16 proof in the host's uncompressed big-endian encoding.",
+      "lib": "",
+      "name": "Groth16Proof",
+      "fields": [
+        {
+          "doc": "",
+          "name": "a",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "b",
+          "type_": {
+            "bytes_n": {
+              "n": 128
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "c",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ]
+    }
+  }
+]
