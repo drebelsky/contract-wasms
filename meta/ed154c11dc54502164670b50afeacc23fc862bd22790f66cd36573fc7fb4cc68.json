@@ -1,0 +1,44 @@
+[
+  {
+    "sc_meta_v0": {
+      "key": "sep",
+      "val": "41"
+    }
+  },
+  {
+    "sc_meta_v0": {
+      "key": "url",
+      "val": "https://x-pool.ai"
+    }
+  },
+  {
+    "sc_meta_v0": {
+      "key": "name",
+      "val": "cXLM"
+    }
+  },
+  {
+    "sc_meta_v0": {
+      "key": "binver",
+      "val": "1.0.0"
+    }
+  },
+  {
+    "sc_meta_v0": {
+      "key": "source_repo",
+      "val": "https://github.com/SpaceManBrain/Stellar_cXLM"
+    }
+  },
+  {
+    "sc_meta_v0": {
+      "key": "rsver",
+      "val": "1.97.0"
+    }
+  },
+  {
+    "sc_meta_v0": {
+      "key": "rssdkver",
+      "val": "27.0.5#ea54f95d3f2f49e0487b29fd1a9f469638f09aba"
+    }
+  }
+]
