@@ -1,0 +1,120 @@
+[
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "PkRoot"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "PubSeed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PqError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "BadSignature",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotInitialized",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__check_auth",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "signature_payload",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "signature",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "auth_contexts",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Context"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": []
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "PqError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pk_root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "pub_seed",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  }
+]

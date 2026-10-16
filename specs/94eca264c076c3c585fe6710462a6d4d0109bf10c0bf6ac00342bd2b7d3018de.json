@@ -1,0 +1,410 @@
+[
+  {
+    "udt_union_v0": {
+      "doc": "Curve (StableSwap-NG on Soroban) adapter.\\n\\nInterface reverse-read from the testnet 3-coin pool\\nCB6PW7DRUI5GO652L7CRUOOPAZ4IBMWKQ7RCM7SGWFFF5YQKV6PIXFXN (2026-10-15):\\nPool:    get_dy(i: u32, j: u32, dx: i128) -> i128\\nexchange(caller: Address, i: u32, j: u32, dx: i128, min_dy: i128,\\nreceiver: MuxedAddress) -> i128\\nget_balances() -> Vec<i128>\\nFactory: pool_count() -> u32\\npool_registration(pool_index: u32) -> PoolRegistration { pool, coins, ... }\\n\\nFunds flow (ufama Router \\xe2\\x86\\x92 this adapter):\\nThe Router PUSHES token_in to this adapter, then invokes `swap`.\\nCurve's `exchange` pulls the input with a nested\\n`token_in.transfer(caller \\xe2\\x86\\x92 pool, dx)` \\xe2\\x80\\x94 verified from the testnet\\nsimulation diagnostics (fn_call transfer [caller, pool, dx]) \\xe2\\x80\\x94 so we\\npre-authorize exactly that sub-invocation, the same way the Aqua\\nadapter does. Output is measured by balance delta and forwarded to\\n`recipient`.\\n\\nPool resolution: an admin-registered pin wins; otherwise the adapter\\nwalks the factory registry (bounded) and picks the pool holdi",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Admin"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Curve factory (pool registry) contract address",
+            "name": "Factory"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Registered pool for an unordered pair (stored both directions)",
+            "name": "Pool",
+            "type_": [
+              "address",
+              "address"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Two-step admin rotation: proposed new admin, pending acceptance.",
+            "name": "PendingAdmin"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A Curve pool used for a pair.",
+      "lib": "",
+      "name": "PoolInfo",
+      "fields": [
+        {
+          "doc": "The pool's coin list \\xe2\\x80\\x94 order defines get_dy / exchange indexes",
+          "name": "coins",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Pool contract address (also its LP token)",
+          "name": "pool_address",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Execute a single-hop swap through a Curve pool.\\n\\nExpects `amount_in` of token_in to have been pushed to this contract\\nby the caller beforehand. Sends the output to `recipient` and returns\\nthe actual amount out.",
+      "name": "swap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_in",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_out",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_amount_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "CurveAdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Quote a swap via the pool's own get_dy (the venue's math, fees\\nincluded \\xe2\\x80\\x94 Curve's dynamic off-peg fee is applied inside).",
+      "name": "quote",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_in",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_out",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "CurveAdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pin the pool to use for a pair (both directions). Admin only.",
+      "name": "set_pool",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_a",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_b",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool_address",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "coins",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "CurveAdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Current factory; None while the adapter is unarmed.",
+      "name": "get_factory",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Remove a pin so the factory resolver applies again. Admin only.",
+      "name": "remove_pool",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_a",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_b",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "CurveAdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set (arm) or update the factory address. Admin only. On mainnet\\nthis is the launch-day activation call.",
+      "name": "set_factory",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_factory",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "CurveAdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CurveAdapterError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotInitialized",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "AlreadyInitialized",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Unauthorized",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "SwapFailed",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "PoolNotSet",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "TokenNotInPool",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "NoPendingAdmin",
+          "value": 9
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Complete an admin rotation \\xe2\\x80\\x94 callable only by the proposed admin.",
+      "name": "accept_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "CurveAdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The pool this adapter would use for a pair (pin or resolver).",
+      "name": "get_pool_for",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_in",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_out",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "PoolInfo"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "CurveAdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploy-time constructor. `factory` may be None: the adapter is\\nthen dormant until `set_factory` arms it (mainnet launch pattern).",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "factory",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Propose a new admin (two-step rotation). Admin only.",
+      "name": "transfer_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "CurveAdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+]

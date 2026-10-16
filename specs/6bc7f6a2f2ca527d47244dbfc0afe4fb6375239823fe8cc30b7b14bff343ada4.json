@@ -1,0 +1,178 @@
+[
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "TxRoot"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "TxSeed"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "UpRoot"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "UpSeed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PqError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "BadSignature",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotInitialized",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Swap this instance's code in place. The authorization for this\\ninvocation is checked by `__check_auth`, which routes `update`\\ninvocations to the UPGRADE key \\xe2\\x80\\x94 the TRANSFER key gains nothing\\nhere. Address, storage, and balances are untouched by the swap.",
+      "name": "update",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Code version marker (compile-time constant of the running code).",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__check_auth",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "signature_payload",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "signature",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "auth_contexts",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Context"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": []
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "PqError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "tx_root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "tx_seed",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "up_root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "up_seed",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  }
+]
