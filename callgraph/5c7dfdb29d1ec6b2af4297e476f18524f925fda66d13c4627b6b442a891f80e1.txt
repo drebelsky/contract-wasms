@@ -1,0 +1,13 @@
+run,call
+run,call
+run,string_new_from_linear_memory
+run,string_new_from_linear_memory
+run,string_new_from_linear_memory
+run,strkey_to_address
+run,strkey_to_address
+run,strkey_to_address
+run,symbol_new_from_linear_memory
+run,symbol_new_from_linear_memory
+run,vec_new
+run,vec_new_from_linear_memory
+run,vec_new_from_linear_memory
