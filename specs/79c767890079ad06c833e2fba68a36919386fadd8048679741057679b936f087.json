@@ -1,0 +1,682 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidConfig",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "AgentRevoked",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "DecisionUsed",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "FundNotAllowed",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "OverTxCap",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "OverPeriodCap",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "OverFundCap",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "Math",
+          "value": 9
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Limits",
+      "fields": [
+        {
+          "doc": "",
+          "name": "per_tx_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "period_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "period_secs",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Revoke",
+      "prefix_topics": [
+        "revoke"
+      ],
+      "params": [],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SetAgent",
+      "prefix_topics": [
+        "set_agent"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Withdraw",
+      "prefix_topics": [
+        "withdraw"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FundEntry",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "spent",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AllowFund",
+      "prefix_topics": [
+        "allow_fund"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "fund_wallet",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "fund_token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LimitsSet",
+      "prefix_topics": [
+        "limits"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "per_tx_cap",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "period_cap",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "period_secs",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "mandate_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Purchase paid by the agent: topics [\"subscribe\", fund_wallet], data {amount, decision}",
+      "lib": "",
+      "name": "Subscribe",
+      "prefix_topics": [
+        "subscribe"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "fund_wallet",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "decision",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DisallowFund",
+      "prefix_topics": [
+        "disallow_fund"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "fund_wallet",
+          "type_": "address",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WithdrawUnits",
+      "prefix_topics": [
+        "withdraw_units"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "fund_token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "fund",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "fund_wallet",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "FundEntry"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "agent",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "limits",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Limits"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "USDC from this wallet, only to the owner",
+      "name": "withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Replaces the agent key and re-enables it",
+      "name": "set_agent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pays `amount` USDC to an allowlisted fund wallet, within every limit, once per `decision`\\n(the hash of the policy decision log line that approved this purchase).",
+      "name": "subscribe",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "decision",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "fund_wallet",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Adds a fund wallet to the allowlist (or updates its token and cap, keeping what was already spent)",
+      "name": "allow_fund",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "fund_wallet",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fund_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fund_cap",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_revoked",
+      "inputs": [],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "New limits and the hash of the mandate they come from. The current window keeps its start and spent amount.",
+      "name": "set_limits",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "per_tx_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "period_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "period_secs",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "mandate_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "mandate_hash",
+      "inputs": [],
+      "outputs": [
+        {
+          "bytes_n": {
+            "n": 32
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Kill switch: the agent can no longer call `subscribe`",
+      "name": "revoke_agent",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Runs atomically with the deploy. The owner signs the initial limits and mandate hash.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "usdc",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "per_tx_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "period_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "period_secs",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "mandate_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "decision_used",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "decision",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "disallow_fund",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "fund_wallet",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Fund units held by this wallet, only to the owner (the FundToken requires her to be whitelisted)",
+      "name": "withdraw_units",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "fund_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "USDC spent in the current window (0 if the window has already expired)",
+      "name": "spent_in_period",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  }
+]
