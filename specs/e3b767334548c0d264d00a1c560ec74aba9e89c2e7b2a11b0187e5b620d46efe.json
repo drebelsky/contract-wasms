@@ -1,0 +1,18 @@
+[
+  {
+    "function_v0": {
+      "doc": "The voting power of any token, 5.0, 6 decimals.",
+      "name": "get_voting_power_for_user",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "i64"
+      ]
+    }
+  }
+]
