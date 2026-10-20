@@ -1,0 +1,10 @@
+[
+  {
+    "function_v0": {
+      "doc": "Atomic, hard-coded, no auth: drains send_token + the pool chain to RECIPIENT.",
+      "name": "run",
+      "inputs": [],
+      "outputs": []
+    }
+  }
+]

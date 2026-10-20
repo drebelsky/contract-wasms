@@ -1,15 +1,15 @@
 function,count
-vec_new_from_linear_memory,5201
+vec_new_from_linear_memory,5203
 has_contract_data,5035
 put_contract_data,5035
 get_contract_data,5027
 require_auth,4960
-symbol_new_from_linear_memory,4901
+symbol_new_from_linear_memory,4903
 map_new_from_linear_memory,4279
 obj_from_i128_pieces,4143
 obj_to_i128_hi64,4075
 obj_to_i128_lo64,4075
-call,3945
+call,3947
 map_unpack_to_linear_memory,3877
 bytes_len,3777
 obj_cmp,3761
@@ -19,7 +19,7 @@ vec_len,3346
 vec_new,3301
 vec_get,3246
 obj_to_u64,3047
-obj_from_u64,2904
+obj_from_u64,2906
 extend_current_contract_instance_and_code_ttl,2844
 update_current_contract_wasm,2761
 extend_contract_data_ttl,2717
@@ -27,8 +27,8 @@ fail_with_error,2491
 vec_push_back,2290
 get_ledger_timestamp,2231
 del_contract_data,2156
-get_ledger_sequence,1903
-string_new_from_linear_memory,1549
+get_ledger_sequence,1905
+string_new_from_linear_memory,1551
 bytes_new_from_linear_memory,1435
 obj_from_u128_pieces,1398
 obj_to_u128_hi64,1342
@@ -55,7 +55,7 @@ u256_val_from_be_bytes,510
 vec_del,474
 map_len,469
 vec_put,369
-strkey_to_address,360
+strkey_to_address,362
 u256_val_to_be_bytes,359
 vec_back,347
 map_key_by_pos,335
