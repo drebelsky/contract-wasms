@@ -1,0 +1,108 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidMaximum",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "InvalidActualAmount",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "ExceedsMaximum",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "Expired",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "NotYetValid",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "InvalidValidityWindow",
+          "value": 6
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Terms the payer signs. The actual settled amount is not part of the terms;\\nit is supplied (and signed) by the facilitator at settlement time.",
+      "lib": "",
+      "name": "SettlementTerms",
+      "fields": [
+        {
+          "doc": "Token contract (SEP-41) used for the payment.",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "Last ledger (inclusive) at which settlement is allowed; also used as\\nthe expiration ledger of the inline token approval.",
+          "name": "deadline_ledger",
+          "type_": "u32"
+        },
+        {
+          "doc": "Account allowed to choose the actual amount and submit settlement.",
+          "name": "facilitator",
+          "type_": "address"
+        },
+        {
+          "doc": "Upper bound on the settled amount, in the token's atomic units.",
+          "name": "max_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "Account that receives the settled amount.",
+          "name": "pay_to",
+          "type_": "address"
+        },
+        {
+          "doc": "Account whose funds are debited.",
+          "name": "payer",
+          "type_": "address"
+        },
+        {
+          "doc": "First ledger (inclusive) at which settlement is allowed.",
+          "name": "valid_after_ledger",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Settles `actual_amount` (at most `terms.max_amount`) from the payer to\\n`terms.pay_to` in a single atomic invocation.\\n\\nAuthorization:\\n- The payer signs `settle(terms)` only, so one signature covers any\\namount up to `max_amount`. The payer's authorization tree must also\\ninclude the nested `approve` call on the token made below.\\n- The facilitator signs `settle(terms, actual_amount)`, binding the\\nexact amount being settled.\\n\\nAny failure (validation, auth, or token transfer) reverts the whole\\ninvocation, including the inline approval.",
+      "name": "settle",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "terms",
+          "type_": {
+            "udt": {
+              "name": "SettlementTerms"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "actual_amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  }
+]
