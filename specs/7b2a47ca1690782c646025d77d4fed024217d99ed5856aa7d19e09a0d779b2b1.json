@@ -1,0 +1,885 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotOwner",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotOracle",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "NotParticipant",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidOrderId",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "OrderExists",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "OrderNotFound",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "InvalidBuyer",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "TokenNotAllowed",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "InvalidExpiry",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "InvalidRail",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "InvalidFiatTerms",
+          "value": 13
+        },
+        {
+          "doc": "",
+          "name": "InvalidState",
+          "value": 14
+        },
+        {
+          "doc": "",
+          "name": "NotAssignedBuyer",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "OfferExpired",
+          "value": 16
+        },
+        {
+          "doc": "",
+          "name": "SellerCannotAccept",
+          "value": 17
+        },
+        {
+          "doc": "",
+          "name": "OrderStillActive",
+          "value": 18
+        },
+        {
+          "doc": "",
+          "name": "FiatLegMissing",
+          "value": 19
+        },
+        {
+          "doc": "",
+          "name": "FiatLegDeposited",
+          "value": 20
+        },
+        {
+          "doc": "",
+          "name": "FiatLegOnChain",
+          "value": 21
+        },
+        {
+          "doc": "",
+          "name": "NoOnChainFiatLeg",
+          "value": 22
+        },
+        {
+          "doc": "",
+          "name": "SellerConfirmationRequired",
+          "value": 23
+        },
+        {
+          "doc": "",
+          "name": "OrderReleasesAutomatically",
+          "value": 24
+        },
+        {
+          "doc": "",
+          "name": "OnlySeller",
+          "value": 25
+        },
+        {
+          "doc": "",
+          "name": "DisputeTimeoutNotReached",
+          "value": 26
+        },
+        {
+          "doc": "",
+          "name": "UnsupportedToken",
+          "value": 27
+        },
+        {
+          "doc": "",
+          "name": "FeeTooHigh",
+          "value": 28
+        },
+        {
+          "doc": "",
+          "name": "InvalidPaymentReference",
+          "value": 29
+        },
+        {
+          "doc": "",
+          "name": "NoPendingOwner",
+          "value": 30
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Order",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "auto_release",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "buyer",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "disputed_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "expires_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "fiat_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "fiat_depositor",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "fiat_leg_deposited",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "fiat_token",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "payment_rail_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "payment_reference",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "seller_confirmed",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "status",
+          "type_": {
+            "udt": {
+              "name": "Status"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Status",
+      "cases": [
+        {
+          "doc": "",
+          "name": "None",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "Locked",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "Accepted",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "PaymentInitiated",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "FiatVerified",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "ReleaseRequested",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "Disputed",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "Released",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "Refunded",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "Cancelled",
+          "value": 9
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pause",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Settlement. On-chain fiat leg: callable by ANYONE and swaps both legs atomically. Off-chain: oracle only.",
+      "name": "settle",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "fee_bps",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "unpause",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_order",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Order"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_paused",
+      "inputs": [],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_oracle",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "status",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "(B) OFF-CHAIN fiat leg only: the oracle attests that the buyer's fiat is held by the payment provider.",
+      "name": "verify_fiat",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "payment_reference",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Buyer accepts a public offer, or the pre-assigned buyer accepts a direct order.",
+      "name": "accept_order",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "buyer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Before any payment: the seller may cancel an open offer at once; once accepted, only after expiry.",
+      "name": "cancel_order",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Seller locks the crypto leg. buyer == None creates a public offer; otherwise only that buyer may accept.",
+      "name": "create_order",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "buyer",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "expires_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "payment_rail_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "fiat_token",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "fiat_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "auto_release",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "fee_treasury",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "open_dispute",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`owner` should be the 2-of-3 multisig account. `treasury` receives the platform fee.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "token_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "oracle_enabled",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "resolve_dispute",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "release_to_buyer",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "accept_ownership",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "(A) ON-CHAIN fiat leg: the buyer, or the platform's escrow wallet (oracle), deposits the fiat token.",
+      "name": "deposit_fiat_leg",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "depositor",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "payment_reference",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_fee_treasury",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_platform_fee",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "basis_points",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_allowed_token",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Two-step ownership transfer (same safety as Ownable2Step).",
+      "name": "transfer_ownership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Escape hatch: a dispute nobody resolved is undone after DISPUTE_TIMEOUT (each leg returns to its owner).",
+      "name": "claim_stale_dispute",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Only for orders where the seller did not pre-consent (auto_release == false).",
+      "name": "confirm_seller_release",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Optional signal that the buyer has started paying (also opens the dispute window).",
+      "name": "mark_payment_initiated",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "order_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  }
+]
