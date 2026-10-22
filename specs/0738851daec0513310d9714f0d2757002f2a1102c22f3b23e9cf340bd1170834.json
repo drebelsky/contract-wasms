@@ -1,0 +1,1468 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TtlPolicy",
+      "fields": [
+        {
+          "doc": "",
+          "name": "extend_to",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "threshold",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FactoryTtlConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "bump_implementation_on_read",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "bump_implementation_on_write",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "bump_registry_on_read",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "bump_registry_on_write",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "implementation",
+          "type_": {
+            "udt": {
+              "name": "TtlPolicy"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "instance",
+          "type_": {
+            "udt": {
+              "name": "TtlPolicy"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "registry",
+          "type_": {
+            "udt": {
+              "name": "TtlPolicy"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Codes are permanent, and banded by the hundred within `11000\\xe2\\x80\\x9311999`.",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "Coin count outside the range `amm_core::coin_count_in_range` accepts.",
+          "name": "InputCoinCountOutOfRange",
+          "value": 11000
+        },
+        {
+          "doc": "The same token address appears more than once in the coin list.",
+          "name": "InputDuplicateCoinAddress",
+          "value": 11001
+        },
+        {
+          "doc": "A coin reports more decimals than `PRECISION_DECIMALS`.",
+          "name": "InputTooManyDecimals",
+          "value": 11002
+        },
+        {
+          "doc": "`fee` is outside `0..=MAX_DEPLOY_FEE`.",
+          "name": "InputFeeOutOfRange",
+          "value": 11003
+        },
+        {
+          "doc": "`offpeg_fee_multiplier` is unsupported or would make the dynamic fee exceed its maximum.",
+          "name": "InputOffpegMultiplierOutOfRange",
+          "value": 11004
+        },
+        {
+          "doc": "Amplification is outside `1..MAX_A`.",
+          "name": "InputAmplificationOutOfRange",
+          "value": 11005
+        },
+        {
+          "doc": "`asset_types` is not exactly `coins.len()` long.",
+          "name": "InputArrayLengthMismatch",
+          "value": 11006
+        },
+        {
+          "doc": "The LP token `name` is longer than `MAX_LP_NAME_BYTES`.",
+          "name": "InputNameTooLong",
+          "value": 11007
+        },
+        {
+          "doc": "The LP token `symbol` is longer than `MAX_LP_SYMBOL_BYTES`.",
+          "name": "InputSymbolTooLong",
+          "value": 11008
+        },
+        {
+          "doc": "The ownership-transfer deadline is not in the future.",
+          "name": "InputDeadlineInPast",
+          "value": 11009
+        },
+        {
+          "doc": "The admin or fee receiver is missing.",
+          "name": "StateNotInitialized",
+          "value": 11200
+        },
+        {
+          "doc": "`accept_transfer_ownership` was called with no transfer pending.",
+          "name": "StateNoPendingTransfer",
+          "value": 11201
+        },
+        {
+          "doc": "No pool implementation is registered for the requested coin count and index.",
+          "name": "StateUnregisteredImplementation",
+          "value": 11202
+        },
+        {
+          "doc": "The selected pool implementation is not deployable.",
+          "name": "StateImplementationNotDeployable",
+          "value": 11203
+        },
+        {
+          "doc": "That wasm hash is already registered for this coin count.",
+          "name": "StateDuplicateImplementation",
+          "value": 11204
+        },
+        {
+          "doc": "The pending ownership transfer has expired.",
+          "name": "StateTransferExpired",
+          "value": 11205
+        },
+        {
+          "doc": "A candidate coin would not report usable `decimals`.",
+          "name": "ExtTokenBadMetadata",
+          "value": 11400
+        },
+        {
+          "doc": "A deployed pool's required metadata is unavailable, malformed, or disagrees with the requested coins.",
+          "name": "ExtPoolBadMetadata",
+          "value": 11401
+        },
+        {
+          "doc": "The rate-oracle wiring asks for something this port does not implement: an `asset_types` entry\\nother than `ASSET_TYPE_PLAIN`, or any `methods`/`oracles` entry at all.",
+          "name": "UnimplementedRateOracle",
+          "value": 11500
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A pending ownership transfer.",
+      "lib": "",
+      "name": "PendingAdmin",
+      "fields": [
+        {
+          "doc": "Proposed administrator.",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "Exclusive acceptance deadline.",
+          "name": "deadline",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Supported inputs for deploying a plain pool.",
+      "lib": "",
+      "name": "PlainPoolParams",
+      "fields": [
+        {
+          "doc": "Human-readable, unscaled amplification.",
+          "name": "amplification",
+          "type_": "i128"
+        },
+        {
+          "doc": "Curve-compatible asset types; every entry must be `ASSET_TYPE_PLAIN`.",
+          "name": "asset_types",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "Pool coins in their fixed index order.",
+          "name": "coins",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Base swap fee, scaled by `FEE_DENOMINATOR`.",
+          "name": "fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "Price-oracle averaging window.",
+          "name": "ma_exp_time",
+          "type_": "u64"
+        },
+        {
+          "doc": "Reserved Curve-compatible rate methods; must be empty.",
+          "name": "methods",
+          "type_": {
+            "vec": {
+              "element_type": "symbol"
+            }
+          }
+        },
+        {
+          "doc": "LP token name.",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "Dynamic-fee multiplier, scaled by `FEE_DENOMINATOR`.",
+          "name": "offpeg_fee_multiplier",
+          "type_": "i128"
+        },
+        {
+          "doc": "Reserved Curve-compatible rate oracles; must be empty.",
+          "name": "oracles",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "LP token symbol.",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "Deployable Factory implementation selected for deployment.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Immutable Factory record for a deployed pool.",
+      "lib": "",
+      "name": "PoolRegistration",
+      "fields": [
+        {
+          "doc": "Number of coins in this pool.",
+          "name": "coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "Decimals reported by each coin at deployment.",
+          "name": "coin_decimals",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "Pool coins in their fixed index order.",
+          "name": "coins",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Ledger timestamp at deployment.",
+          "name": "deployed_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "Account that authorized this deployment.",
+          "name": "deployer",
+          "type_": "address"
+        },
+        {
+          "doc": "Permanent index of the selected implementation.",
+          "name": "implementation_index",
+          "type_": "u32"
+        },
+        {
+          "doc": "Address of the deployed pool.",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "Permanent Factory deployment index.",
+          "name": "pool_index",
+          "type_": "u32"
+        },
+        {
+          "doc": "Permanent index among deployments with this `coin_count`.",
+          "name": "pool_index_within_coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "Hash of the pool Wasm selected for deployment.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A Factory-registered pool Wasm for one coin count.",
+      "lib": "",
+      "name": "PoolImplementation",
+      "fields": [
+        {
+          "doc": "Number of coins supported by this Wasm.",
+          "name": "coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "Whether the Factory may use this implementation to deploy pools.",
+          "name": "deployable",
+          "type_": "bool"
+        },
+        {
+          "doc": "Permanent index within this coin-count's implementation registry.",
+          "name": "implementation_index",
+          "type_": "u32"
+        },
+        {
+          "doc": "Ledger timestamp at registration.",
+          "name": "registered_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "Hash of the deployable pool Wasm.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The durable identity assigned to a successful pool deployment.",
+      "lib": "",
+      "name": "PlainPoolDeployment",
+      "fields": [
+        {
+          "doc": "Number of coins in the pool.",
+          "name": "coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "Ledger timestamp at deployment.",
+          "name": "deployed_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "Permanent index of the selected implementation within `coin_count`.",
+          "name": "implementation_index",
+          "type_": "u32"
+        },
+        {
+          "doc": "Address of the newly deployed pool.",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "Permanent Factory deployment index.",
+          "name": "pool_index",
+          "type_": "u32"
+        },
+        {
+          "doc": "Permanent index among deployments with this `coin_count`.",
+          "name": "pool_index_within_coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "Hash of the selected pool Wasm.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FeeReceiverSet",
+      "prefix_topics": [
+        "fee_receiver_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_receiver",
+          "type_": "muxed_address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_receiver",
+          "type_": "muxed_address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "OwnershipAccepted",
+      "prefix_topics": [
+        "ownership_accepted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "previous_admin",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "OwnershipReverted",
+      "prefix_topics": [
+        "ownership_reverted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "abandoned_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Pool deployment. `scaled_amplification` uses `A_PRECISION`; fee fields use `FEE_DENOMINATOR`.",
+      "lib": "",
+      "name": "PlainPoolDeployed",
+      "prefix_topics": [
+        "plain_pool_deployed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "Permanent Factory deployment index.",
+          "name": "pool_index",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "Number of coins in the pool.",
+          "name": "coin_count",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "Permanent index among deployments with this `coin_count`.",
+          "name": "pool_index_within_coin_count",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "Account that authorized the deployment.",
+          "name": "deployer",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "coins",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "coin_decimals",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "scaled_amplification",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "admin_fee",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "offpeg_fee_multiplier",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "min_locked_liquidity",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "Wasm hash of the deployed pool, indexed for implementation incident response.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "implementation_index",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "deployed_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FactoryInitialized",
+      "prefix_topics": [
+        "factory_initialized"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "fee_receiver",
+          "type_": "muxed_address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "OwnershipCommitted",
+      "prefix_topics": [
+        "ownership_committed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "future_admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "deadline",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ImplementationRegistered",
+      "prefix_topics": [
+        "implementation_registered"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "implementation_index",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "registered_at",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ImplementationDeployableChanged",
+      "prefix_topics": [
+        "implementation_deploy_changed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "implementation_index",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "deployable",
+          "type_": "bool",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Factory admin.",
+            "name": "Admin"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Pending admin transfer.",
+            "name": "FutureAdmin"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Where pools send admin fees.",
+            "name": "FeeReceiver"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Total pools created; also the next global index and salt source.",
+            "name": "PoolCount"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Pools created for `coin_count`; also its next index.",
+            "name": "PoolCountByCoinCount",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Next implementation index for `coin_count`.",
+            "name": "PoolImplCount",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Implementation record at `(coin_count, implementation_index)`.",
+            "name": "PoolImpl",
+            "type_": [
+              "u32",
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Implementation slot by unique Wasm hash.",
+            "name": "PoolImplByHash",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Pool address by global index. Append-only.",
+            "name": "PoolList",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Factory-created pool registration, by address.",
+            "name": "PoolRegistration",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Pool address by `(coin_count, pool_index_within_coin_count)`. Append-only.",
+            "name": "PoolListByCoinCount",
+            "type_": [
+              "u32",
+              "u32"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The admin of every deployed pool.",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Number of pools ever deployed.",
+      "name": "pool_count",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Factory TTL policy.",
+      "name": "ttl_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "FactoryTtlConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Destination address for each pool's admin fees.",
+      "name": "fee_receiver",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "muxed_address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Unexpired pending admin.",
+      "name": "future_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PendingAdmin"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set up the Factory: `admin` becomes the sole authority over every pool it deploys, and\\n`fee_receiver` the destination of every pool's admin-fee sweep.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fee_receiver",
+          "type_": "muxed_address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Implementation record at `(coin_count, implementation_index)`.",
+      "name": "implementation",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "implementation_index",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PoolImplementation"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin only. Redirects the admin-fee destination for every pool at once.",
+      "name": "set_fee_receiver",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_receiver",
+          "type_": "muxed_address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless. Extends the Factory instance TTL.",
+      "name": "bump_instance_ttl",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploys and registers a plain pool from a selected deployable implementation. Permissionless.\\n\\nDuplicates are allowed \\xe2\\x80\\x94 the salt is the pool counter, so identical deploys cannot collide.\\n\\n- `deployer`: authorizes deployment.\\n- `params`: supported plain-pool settings and Curve-compatible reserved fields.",
+      "name": "deploy_plain_pool",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "deployer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "PlainPoolParams"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "PlainPoolDeployment"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The immutable registration at global 0-based `pool_index`, or `None` past the end.",
+      "name": "pool_registration",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pool_index",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PoolRegistration"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Number of registered implementations for `coin_count`.",
+      "name": "implementation_count",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Implementation record for a globally unique Wasm hash.",
+      "name": "implementation_by_hash",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PoolImplementation"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless. Extends an implementation record's TTL.",
+      "name": "bump_implementation_ttl",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "implementation_index",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin only. Registers a pool Wasm that is initially not deployable for `coin_count`.",
+      "name": "register_implementation",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "PoolImplementation"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Number of pools ever deployed for `coin_count`.",
+      "name": "pool_count_by_coin_count",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Promotes the unexpired pending admin.",
+      "name": "accept_transfer_ownership",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin only. First step of the two-step transfer: records `new_admin` as pending.",
+      "name": "commit_transfer_ownership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "deadline",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin only. Cancels the pending ownership transfer.",
+      "name": "revert_transfer_ownership",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless. Extends a pool registration's TTL.",
+      "name": "bump_pool_registration_ttl",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pool_index",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Immutable Factory registration for `pool_address`, or `None` for a pool it never deployed.",
+      "name": "pool_registration_by_address",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pool_address",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PoolRegistration"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin only. Sets whether the Factory may deploy pools from an implementation.",
+      "name": "set_implementation_deployable",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "implementation_index",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "deployable",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Immutable registration at `pool_index_within_coin_count`, or `None` past that count's end.",
+      "name": "pool_registration_by_coin_count",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "coin_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "pool_index_within_coin_count",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PoolRegistration"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "All immutable settings supplied when a pool is constructed.\\n\\nThis is the single argument to a pool's `__constructor`. It is shared by the Factory, which\\nserializes and authorizes the call, and by the pool, which validates and persists it.",
+      "lib": "",
+      "name": "PoolConstructorArgs",
+      "fields": [
+        {
+          "doc": "Protocol share of fees, scaled by the pool fee denominator.",
+          "name": "admin_fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "Human-readable, unscaled amplification.",
+          "name": "amplification",
+          "type_": "i128"
+        },
+        {
+          "doc": "Asset type for each token; current pools support only plain assets.",
+          "name": "asset_types",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "Factory permanently bound to the pool and authorized to construct it.",
+          "name": "factory",
+          "type_": "address"
+        },
+        {
+          "doc": "Base swap fee, scaled by the pool fee denominator.",
+          "name": "fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "Price-oracle averaging window.",
+          "name": "ma_exp_time",
+          "type_": "u64"
+        },
+        {
+          "doc": "Reserved Curve-compatible rate methods; current pools require this to be empty.",
+          "name": "methods",
+          "type_": {
+            "vec": {
+              "element_type": "symbol"
+            }
+          }
+        },
+        {
+          "doc": "LP units permanently locked on the first deposit.",
+          "name": "min_locked_liquidity",
+          "type_": "i128"
+        },
+        {
+          "doc": "LP token name.",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "Dynamic-fee multiplier, scaled by the pool fee denominator.",
+          "name": "offpeg_fee_multiplier",
+          "type_": "i128"
+        },
+        {
+          "doc": "Reserved Curve-compatible rate oracles; current pools require this to be empty.",
+          "name": "oracles",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Deployment salt the Factory derived the pool's address from; see [`pool_address`].",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "LP token symbol.",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "Pool token contracts in their fixed index order.",
+          "name": "tokens",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

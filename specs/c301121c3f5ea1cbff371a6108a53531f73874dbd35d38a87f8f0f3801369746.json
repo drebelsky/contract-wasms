@@ -1,0 +1,356 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Hop",
+      "fields": [
+        {
+          "doc": "",
+          "name": "adapter",
+          "type_": {
+            "udt": {
+              "name": "Adapter"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_in",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_out",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Adapter",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Aquarius"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Soroswap"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Sushi"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CyclePlan",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "deadline",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "hops",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Hop"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "min_return",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CycleResult",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "hop_outputs",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "EmptyPath",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "InvalidPath",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "Expired",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidPool",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "Arithmetic",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "NoOutput",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "InputNotConsumed",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "MinimumNotMet",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "BalanceMismatch",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "InvalidOwner",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "AdminNotFound",
+          "value": 12
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "instance_ttl_config",
+          "type_": {
+            "udt": {
+              "name": "TtlConfig"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "execute_cycle",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "plan",
+          "type_": {
+            "udt": {
+              "name": "CyclePlan"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "CycleResult"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_instance_ttl_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "TtlConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_instance_ttl_config",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "TtlConfig"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TtlConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "max_extension",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "min_extension",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "target",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TtlConfigError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "ConfigNotFound",
+          "value": 9501
+        },
+        {
+          "doc": "",
+          "name": "InvalidConfig",
+          "value": 9502
+        }
+      ]
+    }
+  }
+]
