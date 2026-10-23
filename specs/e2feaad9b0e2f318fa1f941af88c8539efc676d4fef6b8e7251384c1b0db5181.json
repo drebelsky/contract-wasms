@@ -1,0 +1,595 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FactorySettings",
+      "fields": [
+        {
+          "doc": "",
+          "name": "curve_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "platform",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "platform_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Fixed registry chosen by the factory deployer, never by launch creators.",
+          "name": "reputation",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "settings",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "FactorySettings"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "launch_at",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "index",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "launch_count",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "settings",
+          "type_": {
+            "udt": {
+              "name": "FactorySettings"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploy a curve vault and move the owner's whole asset balance into it.",
+      "name": "create_bonding_curve",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "LaunchParams"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidConfig",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "InvalidSupply",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "NotOpen",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidTrade",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "SoldOut",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "Slippage",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "NoReserve",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "NoClaim",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "WrongAsset",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "UnknownLabel",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "ReputationRequired",
+          "value": 12
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Buckets",
+      "fields": [
+        {
+          "doc": "",
+          "name": "curve",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "team",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Vesting",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cliff_seconds",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "duration_seconds",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "schedule",
+          "type_": {
+            "udt": {
+              "name": "UnlockSchedule"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Metadata",
+      "fields": [
+        {
+          "doc": "",
+          "name": "description",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "logo",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Allocations",
+      "fields": [
+        {
+          "doc": "",
+          "name": "curve_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "pool_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "team_bps",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LaunchConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "buckets",
+          "type_": {
+            "udt": {
+              "name": "Buckets"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "factory",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "LaunchParams"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "platform",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "platform_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "reputation",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "total_supply",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LaunchParams",
+      "fields": [
+        {
+          "doc": "",
+          "name": "allocations",
+          "type_": {
+            "udt": {
+              "name": "Allocations"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "curve",
+          "type_": {
+            "udt": {
+              "name": "CurveSettings"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "metadata",
+          "type_": {
+            "udt": {
+              "name": "Metadata"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pair",
+          "type_": "address"
+        },
+        {
+          "doc": "Immutable label ID in the factory's registry. Zero disables reputation checks.",
+          "name": "reputation_label",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "starts_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "vesting",
+          "type_": {
+            "udt": {
+              "name": "Vesting"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CurveSettings",
+      "fields": [
+        {
+          "doc": "Fee accrued for the creator on every buy and sell, in basis points.",
+          "name": "creator_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Share of pair reserves earmarked for the creator at graduation.",
+          "name": "creator_payout_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Net pair-token stroops held in the curve at graduation.",
+          "name": "graduation_target",
+          "type_": "i128"
+        },
+        {
+          "doc": "Initial virtual asset reserve, in asset stroops. Must exceed curve inventory.",
+          "name": "virtual_base_reserve",
+          "type_": "i128"
+        },
+        {
+          "doc": "Initial virtual pair reserve, in pair-token stroops.",
+          "name": "virtual_quote_reserve",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UnlockSchedule",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Daily"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Weekly"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Monthly"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Immutable rules identified by a registry-local ID, not by the display name.",
+      "lib": "",
+      "name": "Label",
+      "fields": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "criteria",
+          "type_": {
+            "udt": {
+              "name": "Criteria"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Scores",
+      "fields": [
+        {
+          "doc": "",
+          "name": "github",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "onchain",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "social",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Every supplied threshold must be exceeded strictly. None ignores that field.",
+      "lib": "",
+      "name": "Criteria",
+      "fields": [
+        {
+          "doc": "",
+          "name": "github_above",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "onchain_above",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "social_above",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "total_above",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ReputationError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidLabel",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 2
+        }
+      ]
+    }
+  }
+]

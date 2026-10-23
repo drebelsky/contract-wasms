@@ -1,0 +1,911 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Quote",
+      "fields": [
+        {
+          "doc": "",
+          "name": "creator_fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "Curve price before the creator trading fee.",
+          "name": "gross",
+          "type_": "i128"
+        },
+        {
+          "doc": "Total buyer payment or net seller receipt.",
+          "name": "user_amount",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "State",
+      "fields": [
+        {
+          "doc": "",
+          "name": "busy",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "buyer_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "Earned trading fees, excluded from the curve reserve and graduation target.",
+          "name": "creator_fees",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "graduated",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "quote_reserve",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "sold",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "team_claimed",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LaunchStatus",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Scheduled"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Open"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Graduated"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "GraduationPreview",
+      "fields": [
+        {
+          "doc": "",
+          "name": "creator_payout",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "platform_fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "pool_asset_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "pool_pair_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "unsold_curve_amount",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "buy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "buyer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "max_payment",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Quote"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Recorded buyers may sell back at any time while the launch is open.",
+      "name": "sell",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_receipt",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Quote"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Derived from ledger time; no keeper or finalize transaction is required.",
+      "name": "status",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "LaunchStatus"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_state",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "State"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "quote_buy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Quote"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "claim_team",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "LaunchConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "quote_sell",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Quote"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "buyer_count",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Reputation eligibility only; timing, balances, and trade limits are separate.",
+      "name": "is_eligible",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "address",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "LaunchConfig"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "current_price",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "claimable_team",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Only net tokens bought by this address from the curve can be sold back.",
+      "name": "sellable_balance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "buyer",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pull trading fees separately so an unavailable creator cannot block trades.\\nThe owner can select another recipient if their own trustline is unavailable.",
+      "name": "claim_creator_fees",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "recipient",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Accounting only. No pool or graduation transfers exist yet.",
+      "name": "graduation_preview",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "GraduationPreview"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidConfig",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "InvalidSupply",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "NotOpen",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidTrade",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "SoldOut",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "Slippage",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "NoReserve",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "NoClaim",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "WrongAsset",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "UnknownLabel",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "ReputationRequired",
+          "value": 12
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Buckets",
+      "fields": [
+        {
+          "doc": "",
+          "name": "curve",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "team",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Vesting",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cliff_seconds",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "duration_seconds",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "schedule",
+          "type_": {
+            "udt": {
+              "name": "UnlockSchedule"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Metadata",
+      "fields": [
+        {
+          "doc": "",
+          "name": "description",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "logo",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Allocations",
+      "fields": [
+        {
+          "doc": "",
+          "name": "curve_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "pool_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "team_bps",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LaunchConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "buckets",
+          "type_": {
+            "udt": {
+              "name": "Buckets"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "factory",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "LaunchParams"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "platform",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "platform_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "reputation",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "total_supply",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LaunchParams",
+      "fields": [
+        {
+          "doc": "",
+          "name": "allocations",
+          "type_": {
+            "udt": {
+              "name": "Allocations"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "curve",
+          "type_": {
+            "udt": {
+              "name": "CurveSettings"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "metadata",
+          "type_": {
+            "udt": {
+              "name": "Metadata"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pair",
+          "type_": "address"
+        },
+        {
+          "doc": "Immutable label ID in the factory's registry. Zero disables reputation checks.",
+          "name": "reputation_label",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "starts_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "vesting",
+          "type_": {
+            "udt": {
+              "name": "Vesting"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CurveSettings",
+      "fields": [
+        {
+          "doc": "Fee accrued for the creator on every buy and sell, in basis points.",
+          "name": "creator_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Share of pair reserves earmarked for the creator at graduation.",
+          "name": "creator_payout_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Net pair-token stroops held in the curve at graduation.",
+          "name": "graduation_target",
+          "type_": "i128"
+        },
+        {
+          "doc": "Initial virtual asset reserve, in asset stroops. Must exceed curve inventory.",
+          "name": "virtual_base_reserve",
+          "type_": "i128"
+        },
+        {
+          "doc": "Initial virtual pair reserve, in pair-token stroops.",
+          "name": "virtual_quote_reserve",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UnlockSchedule",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Daily"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Weekly"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Monthly"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Immutable rules identified by a registry-local ID, not by the display name.",
+      "lib": "",
+      "name": "Label",
+      "fields": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "criteria",
+          "type_": {
+            "udt": {
+              "name": "Criteria"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Scores",
+      "fields": [
+        {
+          "doc": "",
+          "name": "github",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "onchain",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "social",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Every supplied threshold must be exceeded strictly. None ignores that field.",
+      "lib": "",
+      "name": "Criteria",
+      "fields": [
+        {
+          "doc": "",
+          "name": "github_above",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "onchain_above",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "social_above",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "total_above",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ReputationError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidLabel",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 2
+        }
+      ]
+    }
+  }
+]
