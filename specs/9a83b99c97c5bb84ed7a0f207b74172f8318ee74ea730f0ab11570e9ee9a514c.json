@@ -1,0 +1,94 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "The treasury's `Config`, mirrored for the one field read here (same field names and\\norder = same XDR map).",
+      "lib": "",
+      "name": "Config",
+      "fields": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "daily_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "per_task_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Record that `owner` operates `treasury`. Owner-signed; duplicates are a no-op.\\nRefused unless the treasury's admin is `owner`.",
+      "name": "register",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Drop `treasury` from `owner`'s list. Owner-signed; an absent entry is a no-op.\\nNo admin check: removing a listing can only take something away from the owner.",
+      "name": "unregister",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Every treasury registered by `owner`, oldest \\xe2\\x86\\x92 newest (empty when none).",
+      "name": "treasuries_of",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "address"
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,266 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "A time-bound, spend-capped agent credential to start the treasury with (the Leash).",
+      "lib": "",
+      "name": "Leash",
+      "fields": [
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "valid_until",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Everything a treasury needs to be useful on the first ledger it exists in.",
+      "lib": "",
+      "name": "Setup",
+      "fields": [
+        {
+          "doc": "",
+          "name": "daily_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "Amount of `token` deposited from the owner into the treasury (0 = unfunded). Refused\\nas a whole if it exceeds the token's deposit cap.",
+          "name": "fund",
+          "type_": "i128"
+        },
+        {
+          "doc": "Start a Leash for an agent key right away: empty = none, one entry = that agent.\\n(A `Vec` rather than an `Option`: the SDK's spec cannot carry an optional struct.)",
+          "name": "leash",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Leash"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "Most the agent may move per UTC calendar month (0 = no monthly limit).",
+          "name": "monthly_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "Owner of the funds: becomes the treasury's admin AND root agent (as the app did).",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "Monthly caps on individual payees (may be empty). A cap does not approve its payee.",
+          "name": "payee_caps",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "PayeeCap"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "Payees approved from the start (may be empty).",
+          "name": "payees",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "per_task_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "Record the treasury under the owner in the registry (cross-device recovery).",
+          "name": "register",
+          "type_": "bool"
+        },
+        {
+          "doc": "Caller-chosen; the treasury address is derived from the factory and this salt.",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "SEP-41 / SAC token the treasury holds and spends.",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A monthly ceiling on what one payee may receive (v4).",
+      "lib": "",
+      "name": "PayeeCap",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A token the factory accepts and the deposit cap its treasuries are born with\\n(0 = uncapped), in the token's own units.",
+      "lib": "",
+      "name": "TokenCap",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploy a treasury and set it up \\xe2\\x80\\x94 one owner signature for the whole thing.\\n\\nOrder matters for atomicity only in the sense that any refusal (an incoherent\\npolicy in the constructor, an invalid Leash, an unfunded owner) aborts the entire\\ntransaction: no half-configured treasury can exist.",
+      "name": "create",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "s",
+          "type_": {
+            "udt": {
+              "name": "Setup"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The tokens a treasury from this factory may hold.",
+      "name": "tokens",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "registry",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The deposit cap a treasury of `token` is born with (0 = uncapped), or `None` for a\\ntoken this factory does not accept.",
+      "name": "deposit_cap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pins the treasury code, the registry and the accepted tokens with their deposit caps.\\nImmutable after deploy (no setters): a factory that could be re-pointed would be a way\\nto hand users different code, and one whose caps could be raised would make the beta\\nbound a promise only.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "treasury_wasm",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "registry",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "caps",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "TokenCap"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "treasury_wasm",
+      "inputs": [],
+      "outputs": [
+        {
+          "bytes_n": {
+            "n": 32
+          }
+        }
+      ]
+    }
+  }
+]

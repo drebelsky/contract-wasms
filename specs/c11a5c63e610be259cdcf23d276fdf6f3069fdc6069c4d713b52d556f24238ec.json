@@ -1,0 +1,1078 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "PayeeNotWhitelisted",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "ExceedsTaskLimit",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "ExceedsDailyLimit",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "BelowReputationThreshold",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "InsufficientFreeBalance",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "EscrowNotFound",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "DeadlineNotReached",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "ExceedsSessionLimit",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "InvalidLimits",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "InvalidDeadline",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "ExceedsPayeeCap",
+          "value": 14
+        },
+        {
+          "doc": "",
+          "name": "ExceedsMonthlyLimit",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "ExceedsDepositCap",
+          "value": 16
+        },
+        {
+          "doc": "",
+          "name": "PayeeOutsideTaskBudget",
+          "value": 17
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The agent asks the treasury to pay `amount` to `to` for `task_id`.\\nThe contract enforces the policy and rejects any violation on-chain.\\nOnly the free (unlocked) balance is spendable \\xe2\\x80\\x94 funds reserved by open\\nescrows cannot be paid out directly.",
+      "name": "pay",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "task_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Config",
+      "fields": [
+        {
+          "doc": "Owner of the funds; the only one who can change the policy.",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "The root agent allowed to trigger payments when no session is active.",
+          "name": "agent",
+          "type_": "address"
+        },
+        {
+          "doc": "Max total spend allowed inside any rolling 24-hour window.",
+          "name": "daily_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "Max spend allowed in a SINGLE payment (a per-PAYMENT cap, checked per call).\\n`TaskSpent` accumulates spend per `task_id` for attribution only \\xe2\\x80\\x94 it is NOT\\ncapped against this limit, so several sub-cap payments to the same task_id are\\nallowed; the real cumulative bound is the rolling 24h `daily_limit`.",
+          "name": "per_task_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "SEP-41 / SAC token the treasury holds and spends (e.g. USDC).",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "An outcome-bound payment: `amount` is reserved (locked) in the treasury for\\n`payee` against `task_id`, releasable on approval or refundable after `deadline`\\n(UNIX seconds). The funds never leave until release \\xe2\\x80\\x94 refund just unlocks them.",
+      "lib": "",
+      "name": "Escrow",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "deadline",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "task_id",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Config"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Payee",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Spend bucketed per hour (`timestamp / 3600`) \\xe2\\x80\\x94 the rolling 24h window sums\\nthe last 24 buckets. Old buckets are simply never read again; persistent\\nmin-TTL far exceeds 24h, so an in-window bucket can never be archived.",
+            "name": "HourSpent",
+            "type_": [
+              "u64"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "TaskSpent",
+            "type_": [
+              "u64"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "RepRegistry"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "MinReputation"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Poseidon Merkle root over the payee set a compliance proof is checked against.\\nOwner-declared (the whitelist itself is not enumerable on-chain), so the proof\\nasserts membership in *this* treasury's published payee set rather than one the\\nprover picked.",
+            "name": "WhitelistRoot"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "EscrowEntry",
+            "type_": [
+              "u64"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "NextEscrowId"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Locked"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Session"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Paused"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Most this treasury may hold after a `deposit`. Set once in the constructor, no setter.",
+            "name": "DepositCap"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Most the agent may move in one UTC calendar month (0 / absent = no monthly limit).",
+            "name": "MonthlyLimit"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Agent-moved value per month, keyed by `month_of(timestamp)`.",
+            "name": "MonthSpent",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Most one payee may receive per UTC calendar month (absent = only the other limits).",
+            "name": "PayeeCap",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "PayeeSpent",
+            "type_": [
+              "address",
+              "u32"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The payees the current Leash may pay. Empty / absent = any approved payee.",
+            "name": "SessionPayees"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A time-bound, spend-capped agent credential. While a session is active\\n(`now < valid_until`) it is the ONLY spender \\xe2\\x80\\x94 the root agent is replaced,\\nnot complemented, so authorisation stays unambiguous and auditable. When it\\nexpires or is revoked, spending falls back to `Config.agent`.",
+      "lib": "",
+      "name": "Session",
+      "fields": [
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "spent",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "valid_until",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Total funds currently reserved by open escrows (treasury balance minus this\\nis the spendable free balance).",
+      "name": "locked",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "balance",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Fund the treasury from `from`, refusing anything that would take its balance above the\\ndeposit cap. The cap is the beta's exposure bound while the code is unaudited.\\n\\nA plain token transfer to the treasury's address does not pass through here \\xe2\\x80\\x94 no\\ncontract can refuse incoming SAC transfers \\xe2\\x80\\x94 so the cap binds the app, the factory and\\nevery client that funds through `deposit`, not a sender determined to go around it.",
+      "name": "deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_payee",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Whitelist a payee. Admin-only.",
+      "name": "add_payee",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Spend inside the rolling 24-hour window (the \"daily\" allowance).",
+      "name": "day_spent",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_paused",
+      "inputs": [],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The monthly cap on `payee`, or 0 when it has none.",
+      "name": "payee_cap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Rotate the root agent (the fallback spender when no session is active).\\nAdmin-only \\xe2\\x80\\x94 the recovery path if the root agent key is lost or leaked.",
+      "name": "set_agent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Config"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_escrow",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Escrow"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Update the spending limits, effective immediately. Admin-only. If the new\\ndaily limit is below what the window already holds, spending resumes once\\nthe window drains \\xe2\\x80\\x94 that is the intended behaviour.",
+      "name": "set_limits",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "daily_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "per_task_limit",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Freeze/unfreeze spending (pay, create_escrow, release_escrow). Admin-only.\\nExit paths \\xe2\\x80\\x94 refund_escrow, admin_withdraw, and every admin setter \\xe2\\x80\\x94 keep\\nworking while paused, so an incident can always be unwound.",
+      "name": "set_paused",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Cumulative spend recorded against `task_id` \\xe2\\x80\\x94 an attribution ledger, not a cap.\\n(The per-call limit is `Config.per_task_limit`; the cumulative bound is the daily window.)",
+      "name": "task_spent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "task_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The current UTC calendar month as `year * 12 + (month - 1)` \\xe2\\x80\\x94 the key every monthly\\nfigure is stored under, so clients never re-derive the calendar themselves.",
+      "name": "this_month",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Most this treasury takes in through `deposit` (0 = uncapped). Fixed at deploy.",
+      "name": "deposit_cap",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The stored session, if any \\xe2\\x80\\x94 including an expired one (callers compare\\n`valid_until` to now; the contract itself ignores expired sessions).",
+      "name": "get_session",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Session"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Agent-moved value in `month` (see `this_month`), escrow commitments included.",
+      "name": "month_spent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "month",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "What `payee` has been paid (or had committed in escrow) in `month`.",
+      "name": "payee_spent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "month",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Delegate spending to a session agent. Admin-only. While the session is\\nactive it is the only spender (see `Session`); setting a new session\\noverwrites the old one and resets its spent counter (rotation).",
+      "name": "set_session",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "valid_until",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Total agent-moved value inside the closed UTC day `period_id`\\n(`period_id = timestamp / 86400`) \\xe2\\x80\\x94 the figure a compliance proof commits to.\\n\\nDeliberately NOT `day_spent`: the rolling window answers \"how much allowance is\\nleft right now\" and changes every hour, so a proof could never bind to it. This\\nsums the 24 fixed buckets of one calendar day, giving a value that is final once\\nthe day closes and reads identically forever after.\\n\\n\"Moved\" includes escrow commitments, not just settled payments \\xe2\\x80\\x94 `create_escrow`\\ncharges the same buckets, because locking the balance is the agent exercising its\\nbudget whether or not the funds ever leave.\\n\\n24 persistent reads, one fewer than `rolling_spent` already performs per spend.",
+      "name": "period_spent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "period_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Remove a payee from the whitelist. Admin-only.",
+      "name": "remove_payee",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Atomic init at deploy time (no front-runnable `initialize`).\\nLimits are validated here so a treasury can never exist with a policy\\nthat contradicts itself (e.g. per-task above daily).\\n\\n`deposit_cap` (0 = none) is fixed for the treasury's life: nothing can raise it, so a\\nfactory that pins one hands out treasuries the owner cannot over-fund through `deposit`.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "daily_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "per_task_limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "deposit_cap",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Agent reserves `amount` for `payee` against a future-delivered task. The funds\\nstay in the treasury (locked, not transferred) until released on approval or\\nrefunded after `deadline`. Subject to the same payee gate + per-task limit +\\nsession cap as a direct payment; the rolling window is charged here, at\\ncommitment time (see the reasoning inline below).",
+      "name": "create_escrow",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "task_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "deadline",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u64",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "monthly_limit",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "After the deadline, the agent reclaims an undelivered escrow \\xe2\\x80\\x94 the lock is\\nreleased back to the treasury's free balance. No transfer, no spend recorded,\\nand the session budget is NOT restored (conservative: the cap bounds what a\\nsession may commit). Deliberately works while paused (exit path).",
+      "name": "refund_escrow",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Most `payee` may receive per UTC calendar month. Admin-only; 0 removes the cap. The cap\\ndoes not approve the payee \\xe2\\x80\\x94 it narrows what an approved (or reputation-gated) payee\\ncan be paid. Capping the agent's own float address is what bounds money that has left\\nthe treasury's protection.",
+      "name": "set_payee_cap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "payee",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Owner reclaims free (unlocked) funds with their own signature. Deliberately\\nexempt from pause, the payee gate, and the rolling window: those bound\\n*delegated* agent spending, and the exit path must work exactly when limits\\nare exhausted or spending is frozen. Escrow-locked funds stay locked (the\\ncommitment to payees survives; refund is the escape hatch for those).",
+      "name": "admin_withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin (the owner / hirer) approves delivery \\xe2\\x86\\x92 release the locked funds to the\\npayee. The rolling window was already charged when the escrow was created, so\\nrelease does not check or charge it again; the spend is accounted per task\\nexactly like a direct `pay`.",
+      "name": "release_escrow",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Instantly revoke the session \\xe2\\x80\\x94 spending falls back to the root agent.\\nAdmin-only; deliberately works while paused (incident response).",
+      "name": "revoke_session",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The payees the current Leash is restricted to; empty when it may pay any approved one.",
+      "name": "session_payees",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The payee-set Merkle root this treasury publishes, or `None` if the owner never\\ndeclared one (in which case no compliance proof can be checked against it).",
+      "name": "whitelist_root",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "bytes_n": {
+                "n": 32
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "A Leash for one task: like `set_session`, but the agent may only pay the payees\\nlisted here (each must still pass the whitelist / reputation gate). This is what the\\nowner signs when approving an agent's budget request \\xe2\\x80\\x94 once, for the whole task.\\nAdmin-only.",
+      "name": "set_task_budget",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "agent",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "valid_until",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "payees",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Most the agent may move per UTC calendar month, across every payee. Admin-only;\\n0 removes the monthly limit. Like the daily limit, lowering it below what the month\\nalready holds simply stops spending until the month turns.",
+      "name": "set_monthly_limit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Publish the Merkle root of the payee set that compliance proofs are checked\\nagainst. Admin-only: the root IS the owner's policy statement, so an agent that\\ncould write it would be choosing the payee set its own proof is verified against.\\n\\nThe root is not derived from `DataKey::Payee` \\xe2\\x80\\x94 the whitelist is a key-per-payee\\nmap with no on-chain enumeration, and the circuit's Poseidon hash has no host\\nimplementation to rebuild it with. The owner computes it off-chain and anchors it\\nhere; the event makes every change auditable.",
+      "name": "set_whitelist_root",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin unilaterally cancels an open escrow \\xe2\\x80\\x94 the lock returns to the free\\nbalance, nothing is paid, no deadline needed. This is the incident-response\\npath: a compromised agent could otherwise tie up the whole treasury in\\nescrows it alone can refund. Deliberately works while paused (exit path);\\nthe session budget is NOT restored (consistent with refund).",
+      "name": "admin_cancel_escrow",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The active reputation gate, if any: `(registry, min_reputation)`.",
+      "name": "get_reputation_policy",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "tuple": {
+                "value_types": [
+                  "address",
+                  "i128"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set (or update) the reputation gate. Admin-only. With `min_reputation > 0`,\\na payee that is NOT on the whitelist can still be paid when its score from\\n`registry` is >= `min_reputation` \\xe2\\x80\\x94 turning the static allowlist into an\\nearned-trust gate. Set `min_reputation = 0` to disable (whitelist-only).",
+      "name": "set_reputation_policy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "registry",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "min_reputation",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  }
+]

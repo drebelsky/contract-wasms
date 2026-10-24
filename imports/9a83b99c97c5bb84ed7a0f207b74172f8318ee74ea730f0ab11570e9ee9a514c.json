@@ -1,0 +1,20 @@
+[
+  "call",
+  "contract_event",
+  "del_contract_data",
+  "get_contract_data",
+  "has_contract_data",
+  "map_unpack_to_linear_memory",
+  "obj_cmp",
+  "obj_to_i128_hi64",
+  "obj_to_i128_lo64",
+  "put_contract_data",
+  "require_auth",
+  "symbol_new_from_linear_memory",
+  "vec_del",
+  "vec_first_index_of",
+  "vec_len",
+  "vec_new",
+  "vec_new_from_linear_memory",
+  "vec_push_back"
+]

@@ -1,0 +1,284 @@
+[
+  {
+    "function_v0": {
+      "doc": "Arm a pending flash-loan route. Called by the invoker just before Blend.flash_loan.",
+      "name": "arm",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "legs",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Leg"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Self-funded: pull `amount` of `asset` from owner onto this contract, route, send proceeds back.\\nIntermediate tokens stay on this contract (no classic trustlines needed).",
+      "name": "run",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "legs",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Leg"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "init",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Err",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotInit",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "BadCaller",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "BadAsset",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "BadAmount",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "NoRoute",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "Slippage",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "BadVenue",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "Zero",
+          "value": 8
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Leg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "in_idx",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "out_idx",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_in",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_out",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "venue",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "exec_op",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_addr",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "_fee",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin upgrades wasm (keeps contract id). Saves a re-create next time.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Pending",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "legs",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Leg"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        }
+      ]
+    }
+  }
+]
