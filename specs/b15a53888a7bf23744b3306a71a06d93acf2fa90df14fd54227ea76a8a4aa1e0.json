@@ -1,0 +1,239 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Irm",
+      "fields": [
+        {
+          "doc": "",
+          "name": "base_bps",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "kink_bps",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "slope1_bps",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "slope2_bps",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Reserve",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "liq_bonus_bps",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "liq_threshold_bps",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "ltv_bps",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "init",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "irm",
+          "type_": {
+            "udt": {
+              "name": "Irm"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "vault",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Accrue borrow index (simple-interest per call, compounding across calls).",
+      "name": "accrue",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin-only in-place code upgrade.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin-only: register the yield vault as a recognized XLM supplier. Debt asset read from vault.asset().",
+      "name": "set_vault",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "vault",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_reserve",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "r",
+          "type_": {
+            "udt": {
+              "name": "Reserve"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "total_supply",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Vault-only: record XLM the vault has already transferred to the pool.",
+      "name": "vault_supply",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "vault_supplied",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Vault-only: return supplied XLM to the vault.",
+      "name": "vault_withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "collateral_value_xlm",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "use_threshold",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  }
+]
