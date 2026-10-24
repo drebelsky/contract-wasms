@@ -1,0 +1,65 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "swap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "in_idx",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "_o",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "in_amount",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "out_min",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        "u128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "c",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "f",
+          "type_": {
+            "vec": {
+              "element_type": "symbol"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  }
+]
