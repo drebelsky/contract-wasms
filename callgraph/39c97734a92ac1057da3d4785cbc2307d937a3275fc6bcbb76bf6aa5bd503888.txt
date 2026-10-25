@@ -1,0 +1,7 @@
+pay_and_trust,call
+pay_and_trust,call
+pay_and_trust,obj_from_i128_pieces
+pay_and_trust,obj_to_i128_hi64
+pay_and_trust,obj_to_i128_lo64
+pay_and_trust,vec_new_from_linear_memory
+pay_and_trust,vec_new_from_linear_memory

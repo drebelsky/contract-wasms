@@ -1,0 +1,639 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "PolicyNotFound",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "InvalidInterval",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "InvalidCap",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidParty",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "NotActive",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "NotPaused",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "AlreadyFinal",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "NotDue",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 10
+        },
+        {
+          "doc": "`allowance_live_until` is under a day away or past the network maximum.",
+          "name": "InvalidAllowanceExpiry",
+          "value": 11
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Policy",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "charges",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "Consecutive charges the subscriber could not cover. Reset on success.",
+          "name": "failed_attempts",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "interval",
+          "type_": "u64"
+        },
+        {
+          "doc": "When the last uncovered charge was recorded (0 if never).",
+          "name": "last_failed_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "merchant",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "next_charge_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "spent",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "status",
+          "type_": {
+            "udt": {
+              "name": "Status"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "subscriber",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Status",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Active",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 1
+        },
+        {
+          "doc": "Ended by the subscriber or the merchant. Final.",
+          "name": "Revoked",
+          "value": 2
+        },
+        {
+          "doc": "The cap leaves less than one more charge. Final.",
+          "name": "Completed",
+          "value": 3
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Charged",
+      "prefix_topics": [
+        "charged"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64",
+          "location": "topic_list"
+        },
+        {
+          "doc": "When this charge was scheduled; the ledger close time minus this is its lateness.",
+          "name": "due_at",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "spent",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "charges",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "next_charge_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ChargeFailed",
+      "prefix_topics": [
+        "charge_failed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "due_at",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "ChargeOutcome"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "failed_attempts",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ChargeOutcome",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Charged",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "InsufficientBalance",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "InsufficientAllowance",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PolicyCreated",
+      "prefix_topics": [
+        "policy_created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "subscriber",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "merchant",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "interval",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "next_charge_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "StatusChanged",
+      "prefix_topics": [
+        "status_changed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "status",
+          "type_": {
+            "udt": {
+              "name": "Status"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "next_charge_at",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "Who changed it: the subscriber, the merchant (cancel), or the contract (completion).",
+          "name": "actor",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Stop charges until resumed. The commitment and allowance are kept.",
+      "name": "pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "token",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "End a policy from the merchant side. The subscriber's leftover allowance\\ncan no longer be charged by this policy; `refresh_allowance` trims it.",
+      "name": "cancel",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Charge a due policy. Permissionless: the terms fix who is paid and how much.",
+      "name": "charge",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "ChargeOutcome"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Restart a paused policy. If its next charge passed while paused, a new\\nperiod starts now; missed periods are not billed.",
+      "name": "resume",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "End a policy for good and release its commitment. It does not touch the\\ntoken allowance, so nothing happening on the subscriber's other policies\\ncan make revocation fail. This policy can never charge again, and\\n`refresh_allowance` trims the leftover allowance.",
+      "name": "revoke",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Total the subscriber's live policies may still charge.",
+      "name": "committed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "subscriber",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_policy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Policy"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "policy_count",
+      "inputs": [],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`token` is the asset every policy is denominated in (the USDC SAC).",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Create a policy and execute its first charge atomically.\\n`allowance_live_until` is the ledger the subscriber's allowance expires at.",
+      "name": "create_policy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "subscriber",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "merchant",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "interval",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "allowance_live_until",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u64",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Re-grant exactly the committed allowance with a fresh expiry. Use it to\\nrenew before the allowance expires or to trim excess after a merchant\\ncancellation or completion.",
+      "name": "refresh_allowance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "subscriber",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowance_live_until",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  }
+]

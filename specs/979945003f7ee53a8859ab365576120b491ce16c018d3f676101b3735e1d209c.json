@@ -1,0 +1,580 @@
+[
+  {
+    "udt_union_v0": {
+      "doc": "How to ask `Route::oracle` for a price: a SEP-40 `lastprice(asset)`, or\\na single-feed RedStone contract's `read_price_data()`.",
+      "lib": "",
+      "name": "Feed",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Sep40",
+            "type_": [
+              {
+                "udt": {
+                  "name": "Asset"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "RedStoneFeed"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The unit an oracle quotes in. A `Usdc` price is converted to USD through\\nthe USDC token's own USD-quoted route, never assumed to be 1:1.",
+      "lib": "",
+      "name": "Quote",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Usd"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Usdc"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Route",
+      "fields": [
+        {
+          "doc": "",
+          "name": "feed",
+          "type_": {
+            "udt": {
+              "name": "Feed"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "max_age_secs",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote",
+          "type_": {
+            "udt": {
+              "name": "Quote"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "source",
+          "type_": "symbol"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LegNav",
+      "fields": [
+        {
+          "doc": "",
+          "name": "divergence_bps",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "source",
+          "type_": "symbol"
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "units_per_share",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "value_usd",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FundNav",
+      "fields": [
+        {
+          "doc": "",
+          "name": "legs",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "LegNav"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "per_share_usd",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "total_usd",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "NavError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NoRoute",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NoFreshPrice",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "InvalidRoute",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "ShapeMismatch",
+          "value": 5
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AdminSet",
+      "prefix_topics": [
+        "admin_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "previous",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RouteSet",
+      "prefix_topics": [
+        "route_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "primary",
+          "type_": {
+            "udt": {
+              "name": "Route"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "secondary",
+          "type_": {
+            "option": {
+              "value_type": {
+                "udt": {
+                  "name": "Route"
+                }
+              }
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PriceQuote",
+      "fields": [
+        {
+          "doc": "",
+          "name": "divergence_bps",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "source",
+          "type_": "symbol"
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RouteRemoved",
+      "prefix_topics": [
+        "route_removed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "removed",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "USD value of one whole share (10^7 base units), 8 decimals. Fails if\\nany leg has no fresh price: a NAV that skips a leg is not a NAV.",
+      "name": "nav",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "fund",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "FundNav"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "NavError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "usdc",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "USD price of one whole token, 8 decimals.",
+      "name": "price",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "PriceQuote"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "NavError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "primary",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Route"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "secondary",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Route"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_route",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "primary",
+          "type_": {
+            "udt": {
+              "name": "Route"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "secondary",
+          "type_": {
+            "option": {
+              "value_type": {
+                "udt": {
+                  "name": "Route"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "NavError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "remove_route",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`usdc` is the token whose USD-quoted route converts USDC-quoted feeds.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "usdc",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Asset",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stellar",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Other",
+            "type_": [
+              "symbol"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

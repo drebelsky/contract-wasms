@@ -1,0 +1,272 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Cfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "max_age_s",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "max_dev_bps",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Feed",
+      "fields": [
+        {
+          "doc": "",
+          "name": "price_xlm",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "ts",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Raw latest NAV push (XLM per unit, 7-dec) with its ledger timestamp; consumers apply their own staleness limit.",
+      "name": "nav",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Feed"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "init",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "p",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "keeper",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_cfg",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "Cfg"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin-only in-place code upgrade.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "TODO: replace admin push with (a) Reflector cross-contract `lastprice(Asset)` converted\\nUSD->XLM via Reflector XLM/USD, (b) ed25519-signed custodian NAV attestations.",
+      "name": "push_nav",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "price_xlm",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Annual yield rate of the underlying RWA in bps (e.g. T-bill yield).",
+      "name": "push_rate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "bps",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin sets the dedicated NAV keeper key (keeper can only push NAV, max 1% move per push).",
+      "name": "set_keeper",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "push_market",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "price_xlm",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "push_fallback",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "price_xlm",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "keeper_push_nav",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "price_xlm",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Collateral price: min(NAV, market) when both fresh & within deviation; fallback if primary stale;\\npanics (=> caller blocks action) if nothing fresh or breaker tripped.",
+      "name": "collateral_price",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  }
+]

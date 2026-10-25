@@ -1,0 +1,558 @@
+[
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Paid",
+      "prefix_topics": [
+        "paid"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Funded",
+      "prefix_topics": [
+        "funded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Upgraded",
+      "prefix_topics": [
+        "upgraded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Withdrawn",
+      "prefix_topics": [
+        "withdrawn"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RewardError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "AlreadyInitialized",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotInitialized",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Unauthorized",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InsufficientBalance",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "MathOverflow",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "InvalidAddress",
+          "value": 7
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Anyone with auth can top up the reward balance.",
+      "name": "fund",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Trait-compatible alias for a controller payout. Callable only by the group controller.\\nPays exactly `amount` or fails. `amount <= 0` is rejected.",
+      "name": "mint",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "name",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "string",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "symbol",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "string",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "SEP-41-shaped balance read. The controller reads `balance(controller)` to size a payout.\\nOnly the controller has a reward balance (the funded pool); every other address is zero.",
+      "name": "balance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Immediate upgrade, factory (admin) only.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "decimals",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "SEP-41-shaped transfer used by the core controller's `claim`. `from` must be the controller\\n(the controller authorizes it as the current contract). Pays `amount` of the real token to\\n`to` or fails; the controller treats failure as a soft failure and keeps accrued rewards.",
+      "name": "transfer",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "controller",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Cumulative amount paid to users through the controller.",
+      "name": "total_paid",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "reward_token",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "total_funded",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`admin` is the market-factory contract. `controller` is the group controller that will be\\nallowed to draw rewards. `reward_token` is the real SEP-41 token that is paid out.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "reward_token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "total_withdrawn",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Real reward-token balance held by this contract (what can be paid out right now).",
+      "name": "balance_available",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Factory only (on owner request). Withdrawing can leave accrued rewards unclaimable until\\nthe balance is refunded.",
+      "name": "withdraw_unallocated",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RewardError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+]

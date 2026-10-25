@@ -1,0 +1,1028 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FundError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NoComponents",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "TooManyComponents",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "DuplicateComponent",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "InvalidUnits",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "InsufficientBalance",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "InsufficientAllowance",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "NotAllowlisted",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "NothingToDeposit",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "UnknownComponent",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "InvalidExpiration",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "PermissionedComponent",
+          "value": 13
+        },
+        {
+          "doc": "",
+          "name": "ReserveShortfall",
+          "value": 14
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Destroys shares without redeeming; the basket stays with the other holders.",
+      "name": "burn",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "name",
+      "inputs": [],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "owed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deposit the basket for `shares` from `investor`, minting to `to`.\\nReturns what was pulled per component, in `components()` order.",
+      "name": "issue",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "investor",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Burn `shares` from `from` and pay the pro-rata basket to `to`.\\nLegs listed in `skip` are booked as owed to `from` instead of paid.\\nNobody, manager included, can stop this call.",
+      "name": "redeem",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "skip",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "symbol",
+      "inputs": [],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "approve",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "expiration_ledger",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "balance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "manager",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "decimals",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Live holdings per component, net of amounts owed to past redeemers.",
+      "name": "holdings",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "platform",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "transfer",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "allowance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "burn_from",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "compliance",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Compliance"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "components",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "Component"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_investor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "investor",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "quote_issue",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_manager",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_manager",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "quote_redeem",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_investor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "investor",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "total_supply",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "platform",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "manager",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "components",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Component"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "compliance",
+          "type_": {
+            "udt": {
+              "name": "Compliance"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "transfer_from",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pay out a leg that an earlier redeem skipped.",
+      "name": "withdraw_owed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Opening the fund to anyone needs every component classed exactly\\n`Open` on the platform shelf; permissioned or delisted legs keep the\\nallowlist on.",
+      "name": "set_compliance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "compliance",
+          "type_": {
+            "udt": {
+              "name": "Compliance"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Amount of each component backing one whole share (10^7 units).",
+      "name": "units_per_share",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Burn",
+      "prefix_topics": [
+        "burn"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Mint",
+      "prefix_topics": [
+        "mint"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Issue",
+      "prefix_topics": [
+        "issue"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "investor",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amounts",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Redeem",
+      "prefix_topics": [
+        "redeem"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amounts",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "skip",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Approve",
+      "prefix_topics": [
+        "approve"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "spender",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "expiration_ledger",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "vec"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Transfer",
+      "prefix_topics": [
+        "transfer"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ManagerSet",
+      "prefix_topics": [
+        "manager_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "previous",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "manager",
+          "type_": "address",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "InvestorSet",
+      "prefix_topics": [
+        "investor_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "investor",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WithdrawOwed",
+      "prefix_topics": [
+        "withdraw_owed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ComplianceSet",
+      "prefix_topics": [
+        "compliance_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "compliance",
+          "type_": {
+            "udt": {
+              "name": "Compliance"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LeftoverCredited",
+      "prefix_topics": [
+        "leftover_credited"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "manager",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Component",
+      "fields": [
+        {
+          "doc": "",
+          "name": "initial_units",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Compliance",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Open"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Allowlist"
+          }
+        }
+      ]
+    }
+  }
+]

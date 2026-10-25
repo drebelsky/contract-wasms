@@ -1,0 +1,3092 @@
+[
+  {
+    "function_v0": {
+      "doc": "Immediate upgrade of the factory itself.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_wasm",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "WasmHashes"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_wasm",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "wasm",
+          "type_": {
+            "udt": {
+              "name": "WasmHashes"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "treasury",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_group",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Group"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "groups_of",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "u32"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Step 1 of 2 (Soroban allows 100 ledger entries per transaction): validates the config, deploys the\\nreceipt-vault and its own jump-rate model and initializes both. The market is not usable until\\n`activate_market` wires it into the controller. A non-`None` yield route is attached later by\\n`attach_yield`.",
+      "name": "add_market",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "MarketConfig"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "group_count",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "list_groups",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "start",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "Group"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Once per group: deploys the reward distributor for `reward_token` and registers it as the\\ncontroller's reward token. The choice is permanent for the group.",
+      "name": "set_rewards",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "reward_token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Caps, reserve factor and a CF change. Caps and reserve factor apply immediately; a CF change\\nis staged on the controller and applied by `apply_pending` after 60s.",
+      "name": "update_risk",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cf",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "supply_cap",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "borrow_cap",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "reserve_factor",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "wire_margin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "margin_controller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "liquidation_incentive",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "liquidation_fee",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Attaches the market's configured yield route. DeFindex is attached directly (no adapter);\\nreturns the adapter address for routes that deploy one.",
+      "name": "attach_yield",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "option": {
+                "value_type": "address"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploys the group controller and price router and wires the router as the controller's oracle\\n(the first oracle set on a fresh controller applies immediately).",
+      "name": "create_group",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "symbol"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "market_token",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pauses (or unpauses) deposits and borrows. The core controller auto-expires a pause after 72h.",
+      "name": "pause_market",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "deposit",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "borrow",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Switching yield route detaches the old route and attaches the new one. Phase 4.",
+      "name": "switch_yield",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "route",
+          "type_": {
+            "udt": {
+              "name": "YieldRoute"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Stages a new price source for the market; `apply_pending` applies it after 60s.",
+      "name": "update_price",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "PriceConfig"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploys nothing: updates the market's existing jump-rate model (immediate in core).",
+      "name": "update_rates",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "rates",
+          "type_": {
+            "udt": {
+              "name": "RateModel"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Applies staged changes once their 60s delay passed: the CF on the controller (second call of\\n`set_market_cf`) and the price config on the router. `None` applies every market of the group.",
+      "name": "apply_pending",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Step 2 of 2: configures the vault, lists it on the controller, sets the price source and the\\ncollateral factor (the first CF for a market applies immediately), reward speeds and idle buffer.",
+      "name": "activate_market",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Phase 2+: records the mode. Wiring `set_keeper` on vaults lands with the Aquarius route.",
+      "name": "set_keeper_mode",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "mode",
+          "type_": {
+            "udt": {
+              "name": "KeeperMode"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Core receipt-vault upgrades require redeem to be paused. Peridot admin only, used around `execute_core_upgrade`.",
+      "name": "set_redeem_pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_market_config",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "MarketConfig"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_market_record",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "MarketRecord"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_oracle_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_reward_speeds",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "supply_per_sec",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "borrow_per_sec",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_margin_factory",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "link_margin_market",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "margin_controller",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_allowlist_mode",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "on",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_margin_factory",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "margin_factory",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Only Reflector feeds that Peridot has reviewed can be used as a price source.",
+      "name": "set_oracle_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "transfer_ownership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "update_idle_buffer",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_creator_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Step 2, after the delay.",
+      "name": "execute_core_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Core contracts keep their two-step path (60s delay in the hackathon copy): step 1.",
+      "name": "propose_core_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "update_margin_params",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "liquidation_incentive",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "liquidation_fee",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Withdrawing can leave accrued rewards unclaimable until the distributor is refunded.",
+      "name": "withdraw_unallocated",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_price_feed_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_yield_vault_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "vault",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Approves one (token, oracle, asset key) price mapping. Owners can only choose mappings approved here.",
+      "name": "set_price_feed_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Hotfix pass-through for NEW group contracts (price router, distributor, adapters): immediate.",
+      "name": "upgrade_group_contract",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Only yield vaults that Peridot has reviewed can receive a market's idle liquidity: an arbitrary\\nvault supplied by a group owner could take the depositors' funds.",
+      "name": "set_yield_vault_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "vault",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FactoryError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotAdmin",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotOwner",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "WasmNotSet",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "GroupNotFound",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "MarketNotFound",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "MarketAlreadyExists",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "CreatorNotAllowed",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "MarketAlreadyActive",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "MarketNotActive",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "MarginFactoryNotSet",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "NotMarginFactory",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "CollateralFactorTooHigh",
+          "value": 20
+        },
+        {
+          "doc": "",
+          "name": "CollateralFactorTooLow",
+          "value": 21
+        },
+        {
+          "doc": "",
+          "name": "CapRequired",
+          "value": 22
+        },
+        {
+          "doc": "",
+          "name": "IdleBufferOutOfRange",
+          "value": 23
+        },
+        {
+          "doc": "",
+          "name": "ReserveFactorTooHigh",
+          "value": 24
+        },
+        {
+          "doc": "",
+          "name": "RatesOutOfRange",
+          "value": 25
+        },
+        {
+          "doc": "",
+          "name": "PriceModeNotAllowed",
+          "value": 26
+        },
+        {
+          "doc": "",
+          "name": "OracleNotAllowed",
+          "value": 27
+        },
+        {
+          "doc": "",
+          "name": "PriceFeedNotAllowed",
+          "value": 32
+        },
+        {
+          "doc": "",
+          "name": "CfChangeStaged",
+          "value": 33
+        },
+        {
+          "doc": "",
+          "name": "RewardSpeedTooHigh",
+          "value": 28
+        },
+        {
+          "doc": "",
+          "name": "TooManyMarkets",
+          "value": 29
+        },
+        {
+          "doc": "",
+          "name": "InvalidRoute",
+          "value": 30
+        },
+        {
+          "doc": "",
+          "name": "MarginNotAllowedForMode",
+          "value": 31
+        },
+        {
+          "doc": "",
+          "name": "RewardsAlreadySet",
+          "value": 40
+        },
+        {
+          "doc": "",
+          "name": "RewardsNotSet",
+          "value": 41
+        },
+        {
+          "doc": "",
+          "name": "MarketsLockedByRewards",
+          "value": 50
+        },
+        {
+          "doc": "",
+          "name": "YieldAlreadyAttached",
+          "value": 42
+        },
+        {
+          "doc": "",
+          "name": "NothingPending",
+          "value": 43
+        },
+        {
+          "doc": "",
+          "name": "NotYetApplicable",
+          "value": 44
+        },
+        {
+          "doc": "",
+          "name": "InvalidToken",
+          "value": 45
+        },
+        {
+          "doc": "",
+          "name": "InvalidYieldVault",
+          "value": 46
+        },
+        {
+          "doc": "",
+          "name": "YieldVaultNotAllowed",
+          "value": 49
+        },
+        {
+          "doc": "",
+          "name": "Unsupported",
+          "value": 47
+        },
+        {
+          "doc": "",
+          "name": "BadArgument",
+          "value": 48
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CfStaged",
+      "prefix_topics": [
+        "cf_staged"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cf",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "execute_after",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Upgraded",
+      "prefix_topics": [
+        "upgraded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RewardsSet",
+      "prefix_topics": [
+        "rewards_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "distributor",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reward_token",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarketAdded",
+      "prefix_topics": [
+        "market_added"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "jump_rate_model",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PriceStaged",
+      "prefix_topics": [
+        "price_staged"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "PriceConfig"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "execute_after",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "GroupCreated",
+      "prefix_topics": [
+        "group_created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "symbol",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "controller",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "price_router",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarginLinked",
+      "prefix_topics": [
+        "margin_linked"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "margin_controller",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "`param` is a short name (\"cf\", \"supply_cap\", \"borrow_cap\", \"reserve_factor\", \"rates\",\\n\"idle_buffer\", \"pause_deposit\", \"pause_borrow\", \"liq_incentive\", \"liq_fee\", ...); values are\\nthe decimal numbers as u128 (booleans as 0/1).",
+      "lib": "",
+      "name": "ParamUpdated",
+      "prefix_topics": [
+        "param_updated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "param",
+          "type_": "symbol",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "old",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PriceApplied",
+      "prefix_topics": [
+        "price_applied"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "PriceConfig"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "KeeperModeSet",
+      "prefix_topics": [
+        "keeper_mode_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "mode",
+          "type_": {
+            "udt": {
+              "name": "KeeperMode"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarginEnabled",
+      "prefix_topics": [
+        "margin_enabled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "margin_controller",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "YieldAttached",
+      "prefix_topics": [
+        "yield_attached"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "boosted_vault",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "adapter",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RewardSpeedSet",
+      "prefix_topics": [
+        "reward_speed_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "supply_per_sec",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "borrow_per_sec",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarketActivated",
+      "prefix_topics": [
+        "market_activated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CoreUpgradeProposed",
+      "prefix_topics": [
+        "core_upgrade_proposed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "OwnershipTransferred",
+      "prefix_topics": [
+        "ownership_transferred"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "old_owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PendingCf",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cf",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "execute_after",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Everything the factory remembers about a market beyond the group's `markets` list.",
+      "lib": "",
+      "name": "MarketRecord",
+      "fields": [
+        {
+          "doc": "False between `add_market` and `activate_market`.",
+          "name": "active",
+          "type_": "bool"
+        },
+        {
+          "doc": "Adapter contract deployed by the factory for the yield route (None for DeFindex or no route).",
+          "name": "adapter",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "boosted_vault",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Applied configuration (`collateral_factor` is the value live on the controller).",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "MarketConfig"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "jump_rate_model",
+          "type_": "address"
+        },
+        {
+          "doc": "At most one staged CF change (a Vec because optional structs do not round-trip in SDK test builds).",
+          "name": "pending_cf",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "PendingCf"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "At most one staged price change.",
+          "name": "pending_price",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "PendingPrice"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PendingPrice",
+      "fields": [
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "PriceConfig"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "execute_after",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Group",
+      "fields": [
+        {
+          "doc": "",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "keeper_mode",
+          "type_": {
+            "udt": {
+              "name": "KeeperMode"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "keeper_paid_until",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "margin_controller",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "markets",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "symbol"
+        },
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "price_router",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "reward_distributor",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "6.4 Interest curve in core `jump-rate-model` units. All zeros is valid (0% borrow).",
+      "lib": "",
+      "name": "RateModel",
+      "fields": [
+        {
+          "doc": "",
+          "name": "base",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "jump",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "kink",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "multiplier",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "BlendRoute",
+      "fields": [
+        {
+          "doc": "The Peridot-administered Blend fee vault.",
+          "name": "fee_vault",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "KeeperMode",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "None"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "PeridotHosted"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "SelfHosted",
+            "type_": [
+              "address"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Wasm hashes the factory deploys with `deploy_v2`. Phase 1 fields are required,\\nlater phases are optional until their contracts exist.",
+      "lib": "",
+      "name": "WasmHashes",
+      "fields": [
+        {
+          "doc": "",
+          "name": "aquarius_reserve",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "aquarius_vault",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "blend_adapter",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "controller",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "jump_rate",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "price_router",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "receipt_vault",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "reward_distributor",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "xoxno_adapter",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "zenex_adapter",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "XoxnoRoute",
+      "fields": [
+        {
+          "doc": "",
+          "name": "hub_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "spoke_id",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Tuple variants with payload structs (see `PriceConfig`).",
+      "lib": "",
+      "name": "YieldRoute",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "None"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 1. Attached directly, no adapter.",
+            "name": "Defindex",
+            "type_": [
+              {
+                "udt": {
+                  "name": "DefindexRoute"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 1.",
+            "name": "Blend",
+            "type_": [
+              {
+                "udt": {
+                  "name": "BlendRoute"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 2.",
+            "name": "Aquarius",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AquariusRoute"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 3, USDC only, async (10-VAULT-ZENEX.md).",
+            "name": "Zenex",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ZenexRoute"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 4.",
+            "name": "Xoxno",
+            "type_": [
+              {
+                "udt": {
+                  "name": "XoxnoRoute"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ZenexRoute",
+      "fields": [
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "min_buffer_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "target_buffer_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "vault",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarketConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "borrow_cap",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "borrow_reward_per_sec",
+          "type_": "u128"
+        },
+        {
+          "doc": "1e6 scale.",
+          "name": "collateral_factor",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "idle_buffer_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "margin_enabled",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "price",
+          "type_": {
+            "udt": {
+              "name": "PriceConfig"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "rates",
+          "type_": {
+            "udt": {
+              "name": "RateModel"
+            }
+          }
+        },
+        {
+          "doc": "1e6 scale.",
+          "name": "reserve_factor",
+          "type_": "u128"
+        },
+        {
+          "doc": "Both must be > 0.",
+          "name": "supply_cap",
+          "type_": "u128"
+        },
+        {
+          "doc": "Reward token base units per second; 0 if no rewards.",
+          "name": "supply_reward_per_sec",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "yield_route",
+          "type_": {
+            "udt": {
+              "name": "YieldRoute"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AquariusRoute",
+      "fields": [
+        {
+          "doc": "",
+          "name": "pair_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "reserve_cap_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "reserve_cut_bps",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DefindexRoute",
+      "fields": [
+        {
+          "doc": "",
+          "name": "vault",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "6.2 Per-token price derivation mode of the group price router.",
+      "lib": "",
+      "name": "PriceConfig",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "Phase 1.",
+            "name": "ReflectorOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ReflectorOnlyCfg"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 3.",
+            "name": "ReflectorWithAquariusGuard",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ReflectorGuardCfg"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 3, restricted (lower CF, no margin).",
+            "name": "AquariusOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AquariusOnlyCfg"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AquariusOnlyCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "6.2 Payloads of [`PriceConfig`]. `#[contracttype]` enums allow only unit and tuple\\nvariants, so the named fields of the handoff sketch live in these structs.",
+      "lib": "",
+      "name": "ReflectorOnlyCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ReflectorGuardCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "max_dev_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Copied byte for byte from core `simple-peridottroller/src/reflector.rs`.\\nThe `contracttype` layout must match what the controller decodes.",
+      "lib": "",
+      "name": "Asset",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stellar",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Other",
+            "type_": [
+              "symbol"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

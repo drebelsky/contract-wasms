@@ -1,0 +1,518 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "Swap route config: XLM -> usdc -> ustry via `router`, NAV from `oracle.nav(ustry)`.",
+      "lib": "",
+      "name": "SwapCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "max_age_s",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "max_dev_bps",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "max_slip_bps",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "router",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "usdc",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ustry",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Targets",
+      "fields": [
+        {
+          "doc": "",
+          "name": "buffer_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lending_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "rwa_bps",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "init",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fee_bps",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "t",
+          "type_": {
+            "udt": {
+              "name": "Targets"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "asset",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "venues",
+      "inputs": [],
+      "outputs": [
+        {
+          "tuple": {
+            "value_types": [
+              {
+                "option": {
+                  "value_type": "address"
+                }
+              },
+              {
+                "option": {
+                  "value_type": "address"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "balance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pulls XLM via the SAC once venues (and thus the asset) are configured.",
+      "name": "deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "xlm",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Keeper reports harvested yield (already converted to XLM). Performance fee minted as shares to treasury.",
+      "name": "harvest",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "gain_xlm",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pending",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin-only in-place code upgrade.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin: configure the XLM->USDC->USTRY swap route and oracle guards (deviation/slippage capped at 2%).",
+      "name": "set_swap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "SwapCfg"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "swap_cfg",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "SwapCfg"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Depositor: burn `shares` at current share price and receive XLM from the idle buffer.",
+      "name": "withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "(idle XLM held, XLM in pool, XLM cost basis in wrapper, wrapper shares held, XLM basis awaiting wrapper redemption claim)",
+      "name": "positions",
+      "inputs": [],
+      "outputs": [
+        {
+          "tuple": {
+            "value_types": [
+              "i128",
+              "i128",
+              "i128",
+              "i128",
+              "i128"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin, one-time: set the vault's deposit asset (native XLM SAC). Kept separate from any venue's underlying.",
+      "name": "set_asset",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "xlm",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin-only: link lending pool and RWA wrapper. Never touches the vault asset (Key::Xlm).",
+      "name": "set_venues",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "wrapper",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "share_price",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin: swap idle XLM -> USDC -> USTRY. Guards: rwa_bps target cap, fresh NAV, DEX quote within\\nmax_dev_bps of NAV, and min-out = max(caller min, NAV-implied out less max_slip_bps). Returns USTRY received.",
+      "name": "allocate_rwa",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "deadline",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin one-time backfill for a wrapper redemption requested before pending tracking existed.",
+      "name": "sync_pending",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "xlm",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "total_assets",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin: move XLM vault -> pool, capped at targets.lending_bps of total assets.",
+      "name": "allocate_pool",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin: pull XLM pool -> vault.",
+      "name": "withdraw_pool",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin: swap USTRY -> USDC -> XLM back to idle, same guards. Realized P&L vs cost basis hits book assets.",
+      "name": "deallocate_rwa",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "ustry",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "deadline",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin (legacy path, wrapper underlying must equal the vault asset): move XLM vault -> wrapper.",
+      "name": "allocate_wrapper",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin: claim a matured wrapper redemption back to the vault.",
+      "name": "claim_rwa_redeem",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "(USTRY held, XLM cost basis, XLM value at NAV \\xe2\\x80\\x94 conservative min(basis, stale value) if NAV stale)",
+      "name": "rwa_swap_position",
+      "inputs": [],
+      "outputs": [
+        {
+          "tuple": {
+            "value_types": [
+              "i128",
+              "i128",
+              "i128"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin: queue redemption of wrapper shares (settles after wrapper redeem delay).",
+      "name": "request_rwa_redeem",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "u64"
+      ]
+    }
+  }
+]

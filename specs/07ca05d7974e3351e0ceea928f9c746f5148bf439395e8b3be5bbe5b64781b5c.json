@@ -1,0 +1,1471 @@
+[
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WasmSet",
+      "prefix_topics": [
+        "wasm_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "audited",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "swap_adapter",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Upgraded",
+      "prefix_topics": [
+        "upgraded"
+      ],
+      "params": [
+        {
+          "doc": "The upgraded contract (this factory, or a group's controller or swap adapter).",
+          "name": "contract",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarginError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotAdmin",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotOwner",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "WasmNotSet",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "RouterNotSet",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "AlreadyEnabled",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "NotEnabled",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "InvalidLeverage",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "InvalidIncentive",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "InvalidSlippage",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "InvalidFee",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "VariantUnavailable",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "VariantChange",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "MarketNotInGroup",
+          "value": 13
+        },
+        {
+          "doc": "",
+          "name": "NoAllowlistedPool",
+          "value": 14
+        },
+        {
+          "doc": "",
+          "name": "PriceModeNotAllowed",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "UnsupportedDecimals",
+          "value": 16
+        },
+        {
+          "doc": "",
+          "name": "TooManyMarkets",
+          "value": 17
+        },
+        {
+          "doc": "",
+          "name": "TooManyPools",
+          "value": 18
+        },
+        {
+          "doc": "",
+          "name": "PoolNotInGroup",
+          "value": 19
+        },
+        {
+          "doc": "",
+          "name": "PoolNotTrusted",
+          "value": 20
+        },
+        {
+          "doc": "",
+          "name": "PoolRevocationAdminOnly",
+          "value": 90
+        },
+        {
+          "doc": "",
+          "name": "PoolDenied",
+          "value": 91
+        },
+        {
+          "doc": "",
+          "name": "PoolNotAllowed",
+          "value": 21
+        },
+        {
+          "doc": "",
+          "name": "IncentivePending",
+          "value": 22
+        },
+        {
+          "doc": "",
+          "name": "UnknownMarket",
+          "value": 23
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolAllowed",
+      "prefix_topics": [
+        "pool_allowed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Richer view than `MarginInfo`: what is configured versus what is live.",
+      "lib": "",
+      "name": "MarginStatus",
+      "fields": [
+        {
+          "doc": "",
+          "name": "applied_liquidation_fee",
+          "type_": "u128"
+        },
+        {
+          "doc": "Liquidation incentive live on the group controller right now.",
+          "name": "applied_liquidation_incentive",
+          "type_": "u128"
+        },
+        {
+          "doc": "Target configuration the owner asked for.",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "GroupMarginConfig"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enabled_markets",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "False while `cfg.liquidation_incentive` is staged on the group controller.",
+          "name": "incentive_applied",
+          "type_": "bool"
+        },
+        {
+          "doc": "Earliest ledger time a repeat call (`apply_margin`) applies the staged incentive; 0 if applied.",
+          "name": "incentive_apply_after",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "maintenance_margin",
+          "type_": "u128"
+        },
+        {
+          "doc": "Liquidation incentive paid by the margin controller per pair (live immediately).",
+          "name": "pair_liquidation_incentive",
+          "type_": "u128"
+        },
+        {
+          "doc": "Pools allowlisted on the group's swap adapter through this factory.",
+          "name": "pools",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "swap_adapter",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "variant",
+          "type_": {
+            "udt": {
+              "name": "MarginVariant"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolTrustSet",
+      "prefix_topics": [
+        "pool_trust_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "trusted",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Immediate upgrade of this factory (new contracts upgrade without a timelock).",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarginEnabled",
+      "prefix_topics": [
+        "margin_enabled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "controller",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "swap_adapter",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "max_leverage",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "max_slippage",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "liquidation_incentive",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "liquidation_fee",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "incentive_applied",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarginUpdated",
+      "prefix_topics": [
+        "margin_updated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "max_leverage",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "max_slippage",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "liquidation_incentive",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "liquidation_fee",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "incentive_applied",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_wasm",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "MarginWasmHashes"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Set the Wasm hashes deployed per group (built with MARGIN_INIT_ADMIN = this factory).",
+      "name": "set_wasm",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "wasm",
+          "type_": {
+            "udt": {
+              "name": "MarginWasmHashes"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolBindingSet",
+      "prefix_topics": [
+        "pool_binding_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "pool_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarketMarginSet",
+      "prefix_topics": [
+        "market_margin_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "enabled",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UpgradeProposed",
+      "prefix_topics": [
+        "upgrade_proposed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_margin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "MarginInfo"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Aquarius router stored in each new group swap adapter (`swap-adapter.initialize`).",
+      "name": "set_router",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "router",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless: re-apply every pair's leverage cap (after a collateral factor change is applied).",
+      "name": "sync_pairs",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Re-send the stored incentive after the 60s stage so the group controller applies it.\\nOwner-gated like every config call; the UI shows `incentive_apply_after`.",
+      "name": "apply_margin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "market_factory",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploy and wire a swap adapter and an audited margin controller for the group.\\nNeeds `set_wasm` and `set_router` first. The incentive stages for 60s on the group controller\\n(`get_margin_status` reports it); trading itself does not wait for it.",
+      "name": "enable_margin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "GroupMarginConfig"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Change max leverage, slippage, liquidation incentive or fee. A changed incentive stages for\\n60s on the group controller; `apply_margin` applies it afterwards.",
+      "name": "update_margin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "GroupMarginConfig"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Allow or remove a pool on the group's swap adapter. Allowing requires a pool that trades two\\nunderlyings of the group's markets (and a Peridot-trusted pool when the registry is enforced).\\nV3 trading also needs the pool binding: see `set_pool_binding`.",
+      "name": "set_pool_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Bind an Aquarius pool index (`pool_id`) to an allowlisted pool. V3 opens, closes and\\nliquidations only route through (pool_id, pool) bindings.",
+      "name": "set_pool_binding",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "pool_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_pool_trusted",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "trusted",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Same two-step path for the group's swap adapter, step 2.",
+      "name": "upgrade_group_sa",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Peridot admin only: remove a pool from a group's swap adapter (incident response).",
+      "name": "admin_revoke_pool",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool_id",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Configured versus live values, including the 60s staging of the liquidation incentive.",
+      "name": "get_margin_status",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "MarginStatus"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Enable or disable margin trading for one market of the group.\\nEnabling requires: market belongs to the group, price mode is not AquariusOnly, 7-decimal\\nunderlying, and an allowlisted pool that trades the underlying. Disabling sets every pair\\nthat touches the market to 1x, which blocks new opens while existing positions can still be\\nclosed and liquidated; the vault link is left in place on purpose.",
+      "name": "set_market_margin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enabled",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_market_factory",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Audited controller upgrade, step 2 (reverts until the controller's timelock has passed and\\nthe hash equals the proposed one).",
+      "name": "upgrade_group_margin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`min(group max leverage, 1 / (1 - collateral factor))` for a margin-enabled market, floored;\\n0 when the market is not margin-enabled.",
+      "name": "effective_max_leverage",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u128",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Same two-step path for the group's swap adapter, step 1.",
+      "name": "propose_group_sa_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Optional hardening: when enforced, owners may only allowlist pools Peridot has trusted.",
+      "name": "set_pool_registry_enforced",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enforced",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Audited controller upgrade, step 1: the controller's built-in timelocked path\\n(`propose_upgrade_wasm`, 60s here). Step 2 is `upgrade_group_margin` with the same hash.",
+      "name": "propose_group_margin_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "MarginError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarginInfo",
+      "fields": [
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "GroupMarginConfig"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enabled_markets",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "swap_adapter",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "variant",
+          "type_": {
+            "udt": {
+              "name": "MarginVariant"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarginVariant",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Audited"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Phase 3.",
+            "name": "Custom"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Wasm hashes the margin factory deploys per group. Built with INIT_ADMIN = margin-factory address.",
+      "lib": "",
+      "name": "MarginWasmHashes",
+      "fields": [
+        {
+          "doc": "",
+          "name": "audited",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "Phase 3.",
+          "name": "custom",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "swap_adapter",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "GroupMarginConfig",
+      "fields": [
+        {
+          "doc": "1e6 scale, protocol share.",
+          "name": "liquidation_fee",
+          "type_": "u128"
+        },
+        {
+          "doc": "1e6 scale, 1_020_000..=1_150_000.",
+          "name": "liquidation_incentive",
+          "type_": "u128"
+        },
+        {
+          "doc": "1..=5 per group; Custom adds per-asset caps.",
+          "name": "max_leverage",
+          "type_": "u128"
+        },
+        {
+          "doc": "1e6 scale, at most 10%.",
+          "name": "max_slippage",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "variant",
+          "type_": {
+            "udt": {
+              "name": "MarginVariant"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

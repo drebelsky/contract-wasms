@@ -1,0 +1,313 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "deploy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "backstop_take_rate",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "max_positions",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "min_collateral",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "backstop_config",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "BackstopTierConfig"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "access_controller",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_pool",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pool_address",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Construct the pool factory contract\\n\\n### Arguments\\n* `pool_init_meta` - The pool initialization metadata",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pool_init_meta",
+          "type_": {
+            "udt": {
+              "name": "PoolInitMeta"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "backstop_config",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "pool_address",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "PoolBackstopConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Error codes for the pool factory contract. Common errors are codes that match up with the built-in\\ncontracts error reporting. Pool factory specific errors start at 1300.",
+      "lib": "",
+      "name": "PoolFactoryError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InternalError",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "AlreadyInitializedError",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "InvalidPoolInitArgs",
+          "value": 1300
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolFactoryDeployEvent",
+      "prefix_topics": [
+        "deploy"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "pool_address",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "single_value"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolInitMeta",
+      "fields": [
+        {
+          "doc": "",
+          "name": "backstop",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "blnt_id",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "One of the four canonical assets accepted by the v3 backstop.",
+      "lib": "",
+      "name": "BackstopAsset",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "BlntXlm"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "BlntUsdc"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Usdc"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Xlm"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One immutable loss-waterfall position configured for a pool.",
+      "lib": "",
+      "name": "BackstopTierConfig",
+      "fields": [
+        {
+          "doc": "Canonical asset deposited into this waterfall position.",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "BackstopAsset"
+            }
+          }
+        },
+        {
+          "doc": "Relative take-rate allocation weight from 1 through 100.",
+          "name": "take_rate_weight",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Immutable pool configuration consumed by the shared backstop.",
+      "lib": "",
+      "name": "PoolBackstopConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "access_controller",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "tiers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "BackstopTierConfig"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolFactoryDataKey",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Contracts",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "BackstopConfig",
+            "type_": [
+              "address"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

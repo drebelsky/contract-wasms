@@ -1,0 +1,660 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotAdmin",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotMarket",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "NotKeeper",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "InvalidVector",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "SlippageExceeded",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "InsufficientShares",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "ZeroShares",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 10
+        },
+        {
+          "doc": "The share price cannot be computed (shares outstanding but zero value). Deposits are refused.",
+          "name": "VaultImpaired",
+          "value": 11
+        },
+        {
+          "doc": "The fee vault could not be read.",
+          "name": "BlendUnavailable",
+          "value": 12
+        },
+        {
+          "doc": "The Blend pool lacks the liquidity for this withdrawal. No state was changed.",
+          "name": "LiquidityShortfall",
+          "value": 13
+        },
+        {
+          "doc": "",
+          "name": "BlendDepositFailed",
+          "value": 14
+        },
+        {
+          "doc": "The token balance moved by a different amount than requested (fee on transfer or a faulty fee vault).",
+          "name": "UnexpectedBalance",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "PoolMismatch",
+          "value": 16
+        },
+        {
+          "doc": "",
+          "name": "ReserveNotEnabled",
+          "value": 17
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "KeeperEvent",
+      "prefix_topics": [
+        "keeper"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PausedEvent",
+      "prefix_topics": [
+        "paused"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DepositEvent",
+      "prefix_topics": [
+        "deposit"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UpgradedEvent",
+      "prefix_topics": [
+        "upgraded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WithdrawEvent",
+      "prefix_topics": [
+        "withdraw"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "kind",
+      "inputs": [],
+      "outputs": [
+        "symbol"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pausing blocks new deposits only. Withdrawals stay open so the market can always redeem.",
+      "name": "pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "BlendAdapterConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "keeper",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "market",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "SEP-41 style share balance.",
+      "name": "balance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Only the market can deposit. Pulls exactly `token.transfer(market, this, amounts_desired[0])` (the\\ncall the receipt-vault pre-authorizes), supplies it to the Blend fee vault and mints shares against\\nthe position value measured BEFORE the supply. `invest` is ignored (always invests).",
+      "name": "deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amounts_desired",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amounts_min",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "invest",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "vec": {
+                "element_type": "i128"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "BLND emissions are claimable only by the fee-vault admin (`claim_emissions` is admin only), never by\\na depositor, so there is nothing to harvest here. Returns 0.",
+      "name": "harvest",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Immediate, no timelock.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Constructor configuration. `blend_pool` must equal `fee_vault.get_pool()` (checked in the constructor).",
+      "lib": "",
+      "name": "BlendAdapterConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "blend_pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fee_vault",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Burns `shares` of `from` and pays the pro-rata underlying (round down) to `from`. Withdrawals stay\\nopen while paused. Fails with `LiquidityShortfall` (and changes nothing) if the Blend pool cannot\\nrelease the funds.",
+      "name": "withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_amounts_out",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "vec": {
+                "element_type": "i128"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`principal` is the underlying still deposited (pro rata), so `total_value - principal` is the net\\nyield after the fee vault's take rate. `apy_hint_bps` is 0: the fee vault does not expose a rate.",
+      "name": "get_state",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "VaultState"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_keeper",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "underlying",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "SEP-41 style total share supply. The receipt-vault calls this when it redeems (not part of the\\n`YieldVault` trait; see the SPECS \"Blend route\" section).",
+      "name": "total_supply",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`admin` is the market-factory. Verifies the fee vault wraps `cfg.blend_pool` and has a reserve vault\\nfor `underlying`, so a misconfigured adapter can never be deployed.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "underlying",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "BlendAdapterConfig"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`[underlying]`. Never panics: any read failure or empty vault quotes `[0]`.",
+      "name": "get_asset_amounts_per_shares",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "6.1 State snapshot every YieldVault adapter reports.",
+      "lib": "",
+      "name": "VaultState",
+      "fields": [
+        {
+          "doc": "",
+          "name": "apy_hint_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": "symbol"
+        },
+        {
+          "doc": "",
+          "name": "last_harvest_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "last_harvest_ts",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "principal",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "reserve",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "total_shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "total_value",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "underlying",
+          "type_": "address"
+        }
+      ]
+    }
+  }
+]
