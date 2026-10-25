@@ -1,0 +1,1638 @@
+[
+  {
+    "function_v0": {
+      "doc": "Every shared contract this account pins at build time.",
+      "name": "infra",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "InfraPins"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Extend the account's instance, the applied document and its credential\\nfingerprints, and the named revoked-set and enrolled-id entries to the\\nnetwork maximum. Permissionless; changes no meaning.",
+      "name": "renew",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "fingerprints",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "enrollment_ids",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Call `target_fn` on `target` as this account (the account becomes\\nthe invoker, so `target`'s `require_auth` of this account passes).\\nRequires the account's authorization of this exact call. Refuses the\\ninvoker-only hook names: otherwise whoever can authorize `execute`\\ncould reach a controller, policy, or pool hook as the account\\n(spec \\xc2\\xa715).",
+      "name": "execute",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "target",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "target_fn",
+          "type_": "symbol"
+        },
+        {
+          "doc": "",
+          "name": "target_args",
+          "type_": {
+            "vec": {
+              "element_type": "val"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "val",
+            "error_type": {
+              "udt": {
+                "name": "PerchAccountError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The applied document's canonical bytes with the revision they belong\\nto; `None` before the first `apply_doc`.",
+      "name": "document",
+      "inputs": [],
+      "outputs": [
+        {
+          "tuple": {
+            "value_types": [
+              "u64",
+              {
+                "option": {
+                  "value_type": "bytes"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Invoker-only: the adopted controller sets (`frozen_until > 0`) or\\nclears (`0`) the `Protected` freeze for `attempt_id`. The account\\nmirrors the freeze rather than asking the controller from\\n`__check_auth`, because an account approving as a guardian through\\nthe same controller instance runs `__check_auth` while that\\ncontroller is on the call stack, and the host refuses re-entry.",
+      "name": "rcv_gate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "frozen_until",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "PerchAccountError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The configuration revision: 0 after the constructor, advanced by one\\nin every successful `apply_doc` (whatever it changes, a re-apply of\\nthe same document included) and every executed upgrade. Freeze\\nchanges, recovery attempts, evidence, and cancellations do not\\nadvance it. Never decreases and never repeats, so unlike `doc_hash` it\\ntells A -> B -> A apart.",
+      "name": "revision",
+      "inputs": [],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Apply a policy document \\xe2\\x80\\x94 **the only way authorization changes**.\\nThe shared, immutable infra it uses (the doc compiler, the\\ninterpreter, and the spending limit) is derived from build-time pins\\n(see [`infra`]), never passed in. Brings the installed rules to the\\ndocument in one invocation, changing only the rules that differ, and\\nreturns the canonical `doc_hash`.\\n\\nAuthorized by the owner (any ordinary rule scoped to the account),\\nor, for a recovery completion only, by the zero-signer recovery rule\\nwhose controller checks the exact target. On an account with an\\nadopted controller, the controller's `rcv_sync` classifies the call\\nbefore any rule changes and refuses what the profile does not allow\\n(`docs/recovery/spec.md` \\xc2\\xa710). `approval_valid_until` is the\\nfreshness bound a `Protected` reconfiguration's recorded approvals\\nwere given for; it is ignored otherwise.\\n\\nWith `expected_revision`, the call refuses with `StaleRevision`\\nunless the account is still at that [`Self::revision`], so a document\\nprepared agains",
+      "name": "apply_doc",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "doc_json",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "approval_valid_until",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "expected_revision",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "bytes_n": {
+                "n": 32
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "PerchAccountError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Whether a credential fingerprint is permanently revoked.",
+      "name": "is_revoked",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "fingerprint",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The applied document's canonical bytes, or `None` before the first\\n`apply_doc`. Under CANON v1, `sha256` of them is\\n[`Self::applied_doc_hash`].",
+      "name": "applied_doc",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "bytes"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Refuse reserved invoker-only names and, under a `Protected`\\nfreeze, everything but the authorized completion; then bind\\nthe digest to this account and run OZ's rule evaluation.",
+      "name": "__check_auth",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "signature_payload",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "signatures",
+          "type_": {
+            "udt": {
+              "name": "AuthPayload"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "auth_contexts",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Context"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Constants of this account's wasm: interface and snapshot versions,\\nthe document identity and authorization digest schemes, and the apply\\nmodes.",
+      "name": "capabilities",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "AccountCapabilities"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The doc compiler this account pins at build time.",
+      "name": "doc_compiler",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploy-time rule 0, `admin`: a policy-free self-admin rule for the\\nadmin signers. A rule scoped to the account authorizes every entry\\npoint that requires the account's own authorization \\xe2\\x80\\x94 `apply_doc`,\\n`execute` (arbitrary calls as the account), the upgrade entry points,\\nand `cancel_recovery` \\xe2\\x80\\x94 so this is full owner authority, not\\n`apply_doc` alone.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin_signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Everything rule selection and signing need, read at one ledger, with\\nthe revision it belongs to.",
+      "name": "configuration",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "AccountConfiguration"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The `Protected` freeze, if one was set and has not been cleared. It\\nis in force while the current ledger is below `until`.",
+      "name": "recovery_gate",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "FreezeGate"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Cancel the pending upgrade. Owner authorization.",
+      "name": "cancel_upgrade",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "PerchAccountError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Whether this account ever enrolled a ZK enrollment id.",
+      "name": "is_enrolled_id",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "A `Loss` owner's cancellation of a recovery attempt (spec T7). The\\ncontroller refuses it under `Protected`.",
+      "name": "cancel_recovery",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "PerchAccountError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Execute the pending upgrade once its delay has elapsed. Owner\\nauthorization. If the recovery generation moved since scheduling\\n(any enrollment, reconfiguration, removal, controller switch,\\ncompleted recovery, or executed upgrade), the request is stale and\\nthe call refuses with `StaleUpgrade`. The refusal leaves the request\\nin place, since a failed invocation keeps none of its writes; it can\\nnever execute, because the generation never decreases, and stays\\nuntil `schedule_upgrade` replaces it, `cancel_upgrade` removes it, or\\na completion clears it. Otherwise the controller, if one is adopted,\\nchecks its epoch and bumps it (refusing during an authorized\\nattempt), the generation advances, and the Wasm is replaced after\\nthis invocation.",
+      "name": "execute_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "request_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "PerchAccountError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Every context rule the account has installed, with its OZ id. The\\ndocument's rules are matched against these by `apply_doc`.",
+      "name": "installed_rules",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "InstalledRule"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The scheduled upgrade, if any.",
+      "name": "pending_upgrade",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "UpgradeRequest"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The canonical `doc_hash` of the currently applied policy document, or\\n`None` before the first `apply_doc` (only the constructor's admin rule\\nexists then). Anyone can check installed == reviewed.",
+      "name": "applied_doc_hash",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "bytes_n": {
+                "n": 32
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The OZ context rule with this id; panics if there is none. Re-exposed\\nlike [`Self::get_context_rules_count`].",
+      "name": "get_context_rule",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "context_rule_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "ContextRule"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Schedule an upgrade to `wasm_hash`, executable after\\n[`ACCOUNT_UPGRADE_DELAY_LEDGERS`] (spec \\xc2\\xa712). Owner authorization;\\nunder `Protected` also the condition's recorded approval of\\n`Upgrade { request_id, wasm_hash }` fresh until\\n`approval_valid_until` (`next_upgrade_request_id` names the id to\\napprove). Refused while a recovery attempt is authorized. Replaces any\\nearlier request. Returns the request id.",
+      "name": "schedule_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "approval_valid_until",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u64",
+            "error_type": {
+              "udt": {
+                "name": "PerchAccountError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The adopted recovery controller, if any.",
+      "name": "recovery_controller",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The account's recovery generation (spec \\xc2\\xa712).",
+      "name": "recovery_generation",
+      "inputs": [],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "OZ's count of the account's context rules, expired ones included.\\nRead-only rule surface, re-exposed here because `SmartAccount` itself\\nis deliberately not exported by doc-only accounts.",
+      "name": "get_context_rules_count",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The id the next `schedule_upgrade` will assign: what `Protected`\\napprovers approve.",
+      "name": "next_upgrade_request_id",
+      "inputs": [],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One pending account upgrade (spec \\xc2\\xa712).\\n\\nStaleness is judged against the account's own **recovery generation**, a\\n`u64` the account keeps in its own storage. It starts at 0 and is never\\nreset. It advances on every `rcv_sync` outcome other than `Unchanged`\\n(`controller::SyncOutcome::bumps_generation`) and on every executed\\nupgrade.\\n\\nThe controller's epoch cannot play this role. It belongs to one\\ncontroller and does not exist while the account is unenrolled, so a\\nrequest scheduled unenrolled would survive enrolling recovery and\\nremoving it again: the final state has no controller, just as at\\nscheduling.",
+      "lib": "",
+      "name": "UpgradeRequest",
+      "fields": [
+        {
+          "doc": "The adopted controller's epoch when scheduled, if a controller was\\nadopted. Passed back as `UpgradeStep::Execute` so the controller can\\ncheck it too.",
+          "name": "controller_epoch",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          }
+        },
+        {
+          "doc": "The first ledger at which the request may execute.",
+          "name": "executable_at",
+          "type_": "u32"
+        },
+        {
+          "doc": "The account's recovery generation when the request was scheduled.",
+          "name": "generation",
+          "type_": "u64"
+        },
+        {
+          "doc": "Per-account, never reused.",
+          "name": "request_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "The exact Wasm the account will run.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The shared infra an account resolves, pinned when it was built (see\\n[`infra`]): what a deployment check compares with its manifest.",
+      "lib": "",
+      "name": "InfraPins",
+      "fields": [
+        {
+          "doc": "",
+          "name": "doc_compiler",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "interpreter",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "spending_limit",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The `Protected` freeze, mirrored from the adopted controller through\\n[`PerchSmartAccount::rcv_gate`]: while `ledger < until`, the account\\nauthorizes nothing but `attempt_id`'s completion.",
+      "lib": "",
+      "name": "FreezeGate",
+      "fields": [
+        {
+          "doc": "The authorized attempt, the only one whose completion the account\\nauthorizes while frozen.",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "The authorized attempt's `expires_at`.",
+          "name": "until",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted after a document is applied: the new canonical `doc_hash`, the\\nconfiguration revision it was applied at, and what changed in the rule\\nset. The rule, signer, and policy mutations emit nothing themselves (OZ's\\n`_no_events` variants), so this is the whole record of the change;\\n`applied_doc` serves the document.",
+      "lib": "",
+      "name": "DocApplied",
+      "prefix_topics": [
+        "doc_applied"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "revision",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "rules_added",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "rules_removed",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "rules_edited",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "signers_added",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "signers_removed",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "policies_added",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "policies_removed",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when the adopted controller sets (`until > 0`) or clears the\\n`Protected` freeze.",
+      "lib": "",
+      "name": "FreezeChanged",
+      "prefix_topics": [
+        "freeze_changed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "until",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a scheduled upgrade is dropped: cancelled, replaced by a\\nnewer request, found stale at execution, or cleared by a recovery.",
+      "lib": "",
+      "name": "UpgradeDropped",
+      "prefix_topics": [
+        "upgrade_dropped"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "request_id",
+          "type_": "u64",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when an upgrade executes.",
+      "lib": "",
+      "name": "UpgradeExecuted",
+      "prefix_topics": [
+        "upgrade_executed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "request_id",
+          "type_": "u64",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when an upgrade is scheduled.",
+      "lib": "",
+      "name": "UpgradeScheduled",
+      "prefix_topics": [
+        "upgrade_scheduled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "request_id",
+          "type_": "u64",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "The first ledger at which `execute_upgrade` may run it.",
+          "name": "executable_at",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted when a recovery completion revokes a credential.",
+      "lib": "",
+      "name": "CredentialRevoked",
+      "prefix_topics": [
+        "credential_revoked"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "fingerprint",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Constants of the deployed account wasm a wallet checks before it builds\\nanything for this account: what [`PerchSmartAccount::capabilities`]\\nreturns.",
+      "lib": "",
+      "name": "AccountCapabilities",
+      "fields": [
+        {
+          "doc": "How a document is applied: `one_tx`, one `apply_doc` transaction.",
+          "name": "apply_modes",
+          "type_": {
+            "vec": {
+              "element_type": "symbol"
+            }
+          }
+        },
+        {
+          "doc": "What a signer signs: `addr_oz_v1`, OZ's\\n`sha256(bound_payload || context_rule_ids.to_xdr())`, where\\n`bound_payload = sha256(AUTH_ADDR_DOMAIN || account_id ||\\nsignature_payload)` binds the account's own address so a signature\\ncannot be replayed on another account ([`AUTH_ADDR_DOMAIN`]). The\\nearlier `oz_rule_ids` scheme omitted the account address; a client\\nreads this symbol to tell which digest an account expects.",
+          "name": "auth_digest",
+          "type_": "symbol"
+        },
+        {
+          "doc": "How the applied `doc_hash` is computed: `canon_v1`, `sha256` of the\\nCANON v1 canonical bytes.",
+          "name": "doc_identity",
+          "type_": "symbol"
+        },
+        {
+          "doc": "[`INTERFACE_VERSION`].",
+          "name": "interface_version",
+          "type_": "u32"
+        },
+        {
+          "doc": "[`SNAPSHOT_VERSION`].",
+          "name": "snapshot_version",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Everything rule selection and signing need, read at one ledger: what\\n[`PerchSmartAccount::configuration`] returns.",
+      "lib": "",
+      "name": "AccountConfiguration",
+      "fields": [
+        {
+          "doc": "The applied document's `doc_hash`, or `None` before the first apply.",
+          "name": "doc_hash",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The `Protected` freeze: zero or one entries (a `Vec` because\\n`#[contracttype]` has no conversion for `Option` of a custom struct).\\nIt is in force while the ledger is below its `until`.",
+          "name": "gate",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "FreezeGate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The shared infra the account pins, as [`PerchSmartAccount::infra`]\\nreturns it.",
+          "name": "infra",
+          "type_": {
+            "udt": {
+              "name": "InfraPins"
+            }
+          }
+        },
+        {
+          "doc": "The adopted recovery controller, if any.",
+          "name": "recovery_controller",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "The recovery generation (spec \\xc2\\xa712), as\\n[`PerchSmartAccount::recovery_generation`] returns it.",
+          "name": "recovery_generation",
+          "type_": "u64"
+        },
+        {
+          "doc": "The zero-signer recovery rule's OZ id, if one is installed.",
+          "name": "recovery_rule",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "The configuration revision every other field belongs to.",
+          "name": "revision",
+          "type_": "u64"
+        },
+        {
+          "doc": "Every installed context rule, with its OZ id.",
+          "name": "rules",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "InstalledRule"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One context rule as the account installed it.",
+      "lib": "",
+      "name": "InstalledRule",
+      "fields": [
+        {
+          "doc": "The rule's OZ scope.",
+          "name": "context_type",
+          "type_": {
+            "udt": {
+              "name": "ContextRuleType"
+            }
+          }
+        },
+        {
+          "doc": "The OZ context-rule id.",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "The rule's name: the document rule's, `admin` for the constructor's,\\n`recovery` for the recovery rule.",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "The policies attached to the rule.",
+          "name": "policies",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "InstalledPolicy"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The zero-signer recovery rule. Document rules are matched by name;\\nthe recovery rule by this flag, so a document rule that happens to be\\nnamed `recovery` is never confused with it.",
+          "name": "recovery",
+          "type_": "bool"
+        },
+        {
+          "doc": "The rule's signers.",
+          "name": "signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "OZ's inclusive last valid ledger, if bounded.",
+          "name": "valid_until",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One policy attached to an installed rule.",
+      "lib": "",
+      "name": "InstalledPolicy",
+      "fields": [
+        {
+          "doc": "`sha256` of the install parameters' XDR. A policy whose parameters\\nchange is uninstalled and installed again; one whose parameters are\\nunchanged is left alone.",
+          "name": "params",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The policy contract.",
+          "name": "policy",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Context of a single authorized call performed by an address.\\n\\nCustom account contracts that implement `__check_auth` special function\\nreceive a list of `Context` values corresponding to all the calls that\\nneed to be authorized.",
+      "lib": "",
+      "name": "Context",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "Contract invocation.",
+            "name": "Contract",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ContractContext"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Contract that has a constructor with no arguments is created.",
+            "name": "CreateContractHostFn",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CreateContractHostFnContext"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Contract that has a constructor with 1 or more arguments is created.",
+            "name": "CreateContractWithCtorHostFn",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CreateContractWithConstructorHostFnContext"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context of a single contract call.\\n\\nThis struct corresponds to a `require_auth_for_args` call for an address\\nfrom `contract` function with `fn_name` name and `args` arguments.",
+      "lib": "",
+      "name": "ContractContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "args",
+          "type_": {
+            "vec": {
+              "element_type": "val"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fn_name",
+          "type_": "symbol"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Contract executable used for creating a new contract and used in\\n`CreateContractHostFnContext`.",
+      "lib": "",
+      "name": "ContractExecutable",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Wasm",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context for `create_contract` host function that creates a\\nnew contract on behalf of authorizer address.",
+      "lib": "",
+      "name": "CreateContractHostFnContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "executable",
+          "type_": {
+            "udt": {
+              "name": "ContractExecutable"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context for `create_contract` host function that creates a\\nnew contract on behalf of authorizer address.\\nThis is the same as `CreateContractHostFnContext`, but also has\\ncontract constructor arguments.",
+      "lib": "",
+      "name": "CreateContractWithConstructorHostFnContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "constructor_args",
+          "type_": {
+            "vec": {
+              "element_type": "val"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "executable",
+          "type_": {
+            "udt": {
+              "name": "ContractExecutable"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a context rule is added.",
+      "lib": "",
+      "name": "ContextRuleAdded",
+      "prefix_topics": [
+        "context_rule_added"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "context_rule_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "context_type",
+          "type_": {
+            "udt": {
+              "name": "ContextRuleType"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "valid_until",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "signer_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "policy_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a policy is registered in the global registry.",
+      "lib": "",
+      "name": "PolicyRegistered",
+      "prefix_topics": [
+        "policy_registered"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "policy_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "policy",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a signer is registered in the global registry.",
+      "lib": "",
+      "name": "SignerRegistered",
+      "prefix_topics": [
+        "signer_registered"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "signer_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "signer",
+          "type_": {
+            "udt": {
+              "name": "Signer"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Error codes for smart account operations.",
+      "lib": "",
+      "name": "SmartAccountError",
+      "cases": [
+        {
+          "doc": "The specified context rule does not exist.",
+          "name": "ContextRuleNotFound",
+          "value": 3000
+        },
+        {
+          "doc": "The provided context cannot be validated against any rule.",
+          "name": "UnvalidatedContext",
+          "value": 3002
+        },
+        {
+          "doc": "External signature verification failed.",
+          "name": "ExternalVerificationFailed",
+          "value": 3003
+        },
+        {
+          "doc": "Context rule must have at least one signer or policy.",
+          "name": "NoSignersAndPolicies",
+          "value": 3004
+        },
+        {
+          "doc": "The valid_until timestamp is in the past.",
+          "name": "PastValidUntil",
+          "value": 3005
+        },
+        {
+          "doc": "The specified signer was not found.",
+          "name": "SignerNotFound",
+          "value": 3006
+        },
+        {
+          "doc": "The signer already exists in the context rule.",
+          "name": "DuplicateSigner",
+          "value": 3007
+        },
+        {
+          "doc": "The specified policy was not found.",
+          "name": "PolicyNotFound",
+          "value": 3008
+        },
+        {
+          "doc": "The policy already exists in the context rule.",
+          "name": "DuplicatePolicy",
+          "value": 3009
+        },
+        {
+          "doc": "Too many signers in the context rule.",
+          "name": "TooManySigners",
+          "value": 3010
+        },
+        {
+          "doc": "Too many policies in the context rule.",
+          "name": "TooManyPolicies",
+          "value": 3011
+        },
+        {
+          "doc": "An internal ID counter (context rule, signer, or policy) has reached\\nits maximum value (`u32::MAX`) and cannot be incremented further.",
+          "name": "MathOverflow",
+          "value": 3012
+        },
+        {
+          "doc": "External signer key data exceeds the maximum allowed size.",
+          "name": "KeyDataTooLarge",
+          "value": 3013
+        },
+        {
+          "doc": "context_rule_ids length does not match auth_contexts length.",
+          "name": "ContextRuleIdsLengthMismatch",
+          "value": 3014
+        },
+        {
+          "doc": "Context rule name exceeds the maximum allowed length.",
+          "name": "NameTooLong",
+          "value": 3015
+        },
+        {
+          "doc": "A signer in `AuthPayload` is not part of any selected context rule.",
+          "name": "UnauthorizedSigner",
+          "value": 3016
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Represents different types of signers in the smart account system.",
+      "lib": "",
+      "name": "Signer",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A delegated signer that uses built-in signature verification.",
+            "name": "Delegated",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "An external signer with custom verification logic.\\nContains the verifier contract address and the public key data.",
+            "name": "External",
+            "type_": [
+              "address",
+              "bytes"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The authorization payload passed to `__check_auth`, bundling cryptographic\\nproofs with context rule selection.\\n\\nThis struct carries two distinct pieces of information that are both\\nrequired for authorization but cannot be derived from each other:\\n\\n- `signers` maps each [`Signer`] to its raw signature bytes, providing\\ncryptographic proof that the signer actually signed the transaction\\npayload. A context rule stores which signer *identities* are authorized\\n(via `signer_ids`), but the rule does not contain the signatures\\nthemselves \\xe2\\x80\\x94 those must be supplied here.\\n\\n- `context_rule_ids` tells the system which rule to validate for each auth\\ncontext. Because multiple rules can exist for the same context type, the\\ncaller must explicitly select one per context rather than relying on\\nauto-discovery. Each entry is aligned by index with the `auth_contexts`\\npassed to `__check_auth`.\\n\\nThe length of `context_rule_ids` must equal the number of auth contexts;\\na mismatch is rejected with\\n[`SmartAccountError::ContextRuleIdsLen",
+      "lib": "",
+      "name": "AuthPayload",
+      "fields": [
+        {
+          "doc": "Per-context rule IDs, aligned by index with `auth_contexts`.",
+          "name": "context_rule_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "Signature data mapped to each signer.",
+          "name": "signers",
+          "type_": {
+            "map": {
+              "key_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              },
+              "value_type": "bytes"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A complete context rule defining authorization requirements.",
+      "lib": "",
+      "name": "ContextRule",
+      "fields": [
+        {
+          "doc": "The type of context this rule applies to.",
+          "name": "context_type",
+          "type_": {
+            "udt": {
+              "name": "ContextRuleType"
+            }
+          }
+        },
+        {
+          "doc": "Unique identifier for the context rule.",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "Human-readable name for the context rule.",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "List of policy contracts that must be satisfied.",
+          "name": "policies",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Global registry IDs for each policy, positionally aligned with\\n`policies`.",
+          "name": "policy_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "Global registry IDs for each signer, positionally aligned with\\n`signers`.",
+          "name": "signer_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "List of signers authorized by this rule.",
+          "name": "signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "Optional expiration ledger sequence for the rule.",
+          "name": "valid_until",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Types of contexts that can be authorized by smart account rules.",
+      "lib": "",
+      "name": "ContextRuleType",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Default rules that can authorize any context.",
+            "name": "Default"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Rules specific to calling a particular contract.",
+            "name": "CallContract",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Rules specific to creating a contract with a particular WASM hash.",
+            "name": "CreateContract",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

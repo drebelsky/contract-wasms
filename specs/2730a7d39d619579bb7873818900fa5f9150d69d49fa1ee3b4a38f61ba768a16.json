@@ -1,0 +1,1099 @@
+[
+  {
+    "udt_union_v0": {
+      "doc": "The document caps a compiler enforces, as [`PerchDocCompiler::limits`]\\nreturns them. Versioned: a later budget (a complexity-weighted one, say)\\nis a new variant, which a consumer that does not know it refuses rather\\nthan misreads.",
+      "lib": "",
+      "name": "DocLimits",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "V1",
+            "type_": [
+              {
+                "udt": {
+                  "name": "FlatDocLimits"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Where a compiled rule applies. `SelfAdmin` is account-agnostic: the\\napplying account resolves it to its own address.",
+      "lib": "",
+      "name": "RuleScope",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Calls to the applying account itself (`CallContract(self)`).",
+            "name": "SelfAdmin"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Calls to this contract.",
+            "name": "Contract",
+            "type_": [
+              "address"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A cumulative spend cap lowered to OZ `spending_limit`'s install params\\n(`SpendingLimitAccountParams`). The tracked token is the rule's scope\\ncontract, so it is not carried here.",
+      "lib": "",
+      "name": "CompiledCap",
+      "fields": [
+        {
+          "doc": "Rolling-window length in ledgers.",
+          "name": "period_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "Cumulative amount ceiling over the rolling window.",
+          "name": "spending_limit",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A compiled document: its canonical identity and the rules it becomes.",
+      "lib": "",
+      "name": "CompiledDoc",
+      "fields": [
+        {
+          "doc": "The canonical bytes `doc_hash` is the hash of. The account stores\\nthem so anyone, including the recovery controller, can read back the\\nfull applied document.",
+          "name": "canonical",
+          "type_": "bytes"
+        },
+        {
+          "doc": "`sha256(canonical bytes)` \\xe2\\x80\\x94 the hash the reviewer approved. Formatting\\nof the submitted JSON is irrelevant: a pretty-printed file and its\\nminified twin compile to the same hash.",
+          "name": "doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The fingerprint (`perch_recovery_interface::credential::Credential::\\nfingerprint`) of every declared signer's credential, with external\\nkeys canonicalized by their verifier. What revocation compares\\n(spec \\xc2\\xa78).",
+          "name": "fingerprints",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The compiled `recovery` member: zero or one entries (a `Vec` for the\\nsame reason as [`CompiledRule::install`]). Present \\xe2\\x87\\x92 the document\\nenrolls account recovery, and the applier syncs this configuration to\\nthe controller instance it names (`docs/recovery/`).",
+          "name": "recovery",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "CompiledRecoveryConfig"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "One compiled rule per document rule, in the submitted order.",
+          "name": "rules",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "CompiledRule"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One rule, compiled to the exact shapes OZ's `add_context_rule` takes:\\nresolved addresses, OZ `Signer`s, and (for constrained rules) the\\ninterpreter program as `InstallParams`.",
+      "lib": "",
+      "name": "CompiledRule",
+      "fields": [
+        {
+          "doc": "Zero or one entries (a `Vec` for the same reason as `install`).\\nPresent \\xe2\\x87\\x92 also attach OZ `spending_limit` with these params \\xe2\\x80\\x94 the\\ncumulative cap the stateless interpreter cannot express. The applier\\nresolves the policy's content-addressed address and keys it into the\\nrule's policy map beside the interpreter; the tracked token is the\\nrule's `Contract` scope (validation pins `token == scope`).",
+          "name": "cap",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "CompiledCap"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The interpreter program to attach: zero or one entries. A `Vec`\\nbecause `#[contracttype]` has no conversion for `Option` of a custom\\nstruct (`Option<u32>` on `valid_until` works because `u32` is a host\\ntype). Empty \\xe2\\x87\\x92 a policy-free rule.",
+          "name": "install",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "InstallParams"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The rule's name in the document. The account matches installed rules\\nby name and scope.",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "scope",
+          "type_": {
+            "udt": {
+              "name": "RuleScope"
+            }
+          }
+        },
+        {
+          "doc": "The rule's signers, with external keys as declared (already\\nverifier-canonical).",
+          "name": "signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The last ledger the rule authorizes, if bounded: OZ's inclusive\\n`valid_until`, one below the document's `not-after-ledger`.",
+          "name": "valid_until",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "What `derive_target` returns: the recovery target the controller binds\\ninto an attempt's statement (spec \\xc2\\xa77.1).",
+      "lib": "",
+      "name": "DerivedTarget",
+      "fields": [
+        {
+          "doc": "The target's canonical bytes: exactly what the completing `apply_doc`\\nmust submit.",
+          "name": "canonical",
+          "type_": "bytes"
+        },
+        {
+          "doc": "The target's recovery `config_hash` (the current one, or the current\\none with the declared ZK rotation).",
+          "name": "config_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "`sha256` of `canonical`: the target's `doc_hash`.",
+          "name": "doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "Fingerprints of every credential in the target (spec \\xc2\\xa77.3 rule 7).",
+          "name": "fingerprints",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The credentials occupying the replaced signer slots in the source:\\nthe applied document's for lost-key, the baseline's for compromise.\\nExternal keys are canonicalized by their verifier, so a credential's\\n`fingerprint` is the one revocation compares. The controller records\\nthem at T1 and the completion revokes them (spec \\xc2\\xa78).",
+          "name": "replaced",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Credential"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Flat per-document caps: [`MAX_DOC_SIGNERS`], [`MAX_DOC_RULES`],\\n[`MAX_DOC_CANONICAL_BYTES`], [`MAX_RULE_NAME_BYTES`].",
+      "lib": "",
+      "name": "FlatDocLimits",
+      "fields": [
+        {
+          "doc": "",
+          "name": "max_canonical_bytes",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "max_rule_name_bytes",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "max_rules",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "max_signers",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Everything `compile_doc` can refuse. (`#[scerr]` assigns sequential codes\\nfrom 1, in variant order.)",
+      "lib": "",
+      "name": "DocCompilerError",
+      "cases": [
+        {
+          "doc": "The submitted document bytes are not UTF-8.",
+          "name": "DocNotUtf8",
+          "value": 1
+        },
+        {
+          "doc": "The document failed fail-closed parsing (unknown field, bad shape, unsupported version, duplicate key, \\xe2\\x80\\xa6).",
+          "name": "DocParse",
+          "value": 2
+        },
+        {
+          "doc": "The document failed semantic validation (dangling signer ref, malformed address or key, ambiguous empty list, \\xe2\\x80\\xa6).",
+          "name": "DocInvalid",
+          "value": 3
+        },
+        {
+          "doc": "The document names no network, or a network that is not this chain.",
+          "name": "WrongNetwork",
+          "value": 4
+        },
+        {
+          "doc": "The document cannot be lowered to rules (unsupported rule shape).",
+          "name": "DocCompile",
+          "value": 5
+        },
+        {
+          "doc": "The document exceeds a document cap ([`MAX_DOC_SIGNERS`], [`MAX_DOC_RULES`], [`MAX_DOC_CANONICAL_BYTES`], [`MAX_RULE_NAME_BYTES`]).",
+          "name": "DocTooLarge",
+          "value": 6
+        },
+        {
+          "doc": "A signer's external `key` is not its verifier-canonical form: either the verifier could not canonicalize it at all, or the declared bytes differ from the canonical form the verifier returns (e.g. a WebAuthn key carrying a credential-id suffix the verifier drops, or a non-canonical point encoding). The compiler refuses it rather than silently canonicalizing, so the bytes the document hash \\xe2\\x80\\x94 and a recovery attempt's `replacements_hash` \\xe2\\x80\\x94 bind are exactly the bytes the installed credential uses, and two signers cannot hide one physical key under two spellings.",
+          "name": "KeyNotCanonicalizable",
+          "value": 7
+        },
+        {
+          "doc": "`derive_target`: the current document enrolls no recovery.",
+          "name": "NotEnrolled",
+          "value": 8
+        },
+        {
+          "doc": "`derive_target`: the replacement set breaks spec \\xc2\\xa77.3 rules 1-3 (not canonical, empty for lost-key, a signer id that is not replaceable or not declared in the source, or a change of credential kind or verifier), or the action is not a recovery attempt.",
+          "name": "ReplacementRefused",
+          "value": 9
+        },
+        {
+          "doc": "`derive_target`: the ZK enrollment is missing for a ZK mode, present for a guardian-only mode, or reuses the enrolled id.",
+          "name": "ZkEnrollmentMismatch",
+          "value": 10
+        },
+        {
+          "doc": "`derive_target`: the target has no policy-free self-admin rule with a signer (the anti-brick check).",
+          "name": "AdminLockout",
+          "value": 11
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The canonical form and fragment hashes a compiler produces, as\\n[`PerchDocCompiler::capabilities`] returns them.",
+      "lib": "",
+      "name": "CompilerCapabilities",
+      "fields": [
+        {
+          "doc": "The CANON version `doc_hash` is `sha256` of (`CANONICAL.md`).",
+          "name": "canon_version",
+          "type_": "u32"
+        },
+        {
+          "doc": "The domain tag of a recovery member's `config_hash` (spec \\xc2\\xa73.2).",
+          "name": "config_hash_tag",
+          "type_": "string"
+        },
+        {
+          "doc": "The domain tag of a rule's `rule_hash` (spec \\xc2\\xa73.2).",
+          "name": "rule_hash_tag",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The document caps every `compile_doc` and `derive_target` enforces.",
+      "name": "limits",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "DocLimits"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "JSON bytes in \\xe2\\x86\\x92 compiled rules + canonical `doc_hash` out. Pure:\\nno auth, no storage. The document must name THIS network (its\\n`network` string must hash to the chain's network id), so a testnet\\ndocument can never compile on mainnet or vice versa. It must also fit\\nthe document caps ([`Self::limits`]), and every external signer key\\nmust already be its verifier-canonical form: the compiler calls each\\nnamed verifier's `batch_canonicalize_key` to check.",
+      "name": "compile_doc",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "doc_json",
+          "type_": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "CompiledDoc"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "DocCompilerError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The CANON version and the fragment hash domain tags this compiler\\nproduces.",
+      "name": "capabilities",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "CompilerCapabilities"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Derive a recovery target (`docs/recovery/spec.md` \\xc2\\xa77): `source_json`\\nis the account's applied document (lost-key) or the published\\nbaseline (compromise); `current_json` is the applied document, whose\\nrecovery member the target keeps. The target is the source with\\nexactly the declared replacements and ZK rotation, then validated,\\nnetwork-bound, capped, compiled, and anti-brick-checked like any\\napplied document. Pure: no auth, no storage. The controller calls it\\nwhen an attempt begins, and completers simulate it to obtain the\\ncanonical bytes.",
+      "name": "derive_target",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "source_json",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "current_json",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "action",
+          "type_": {
+            "udt": {
+              "name": "RecoveryAction"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "replacements",
+          "type_": {
+            "udt": {
+              "name": "ReplacementSet"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "DerivedTarget"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "DocCompilerError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "One op of a postfix-encoded constraint program.",
+      "lib": "",
+      "name": "Op",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "Pop `n` verdicts, push their Kleene conjunction.",
+            "name": "All",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Pop `n` verdicts, push their Kleene disjunction.",
+            "name": "Any",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Pop one verdict, push its Kleene negation.",
+            "name": "Not"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "At least this many authenticated signers.",
+            "name": "MinSigners",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Invoked function is one of these symbols.",
+            "name": "FnIn",
+            "type_": [
+              {
+                "vec": {
+                  "element_type": "symbol"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals this address.",
+            "name": "ArgAddrEq",
+            "type_": [
+              "u32",
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index is the protected account itself.",
+            "name": "ArgAddrIsSelf",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals this symbol.",
+            "name": "ArgSymEq",
+            "type_": [
+              "u32",
+              "symbol"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index (a string) is one of these strings.",
+            "name": "ArgStrIn",
+            "type_": [
+              "u32",
+              {
+                "vec": {
+                  "element_type": "string"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index (a string) starts with this prefix.",
+            "name": "ArgStrPrefix",
+            "type_": [
+              "u32",
+              "string"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals these bytes.",
+            "name": "ArgBytesEq",
+            "type_": [
+              "u32",
+              "bytes"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals this i128.",
+            "name": "ArgI128Eq",
+            "type_": [
+              "u32",
+              "i128"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals this u32.",
+            "name": "ArgU32Eq",
+            "type_": [
+              "u32",
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "The call has exactly this many arguments.",
+            "name": "ArgCount",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Current ledger sequence is strictly below this.",
+            "name": "LedgerBefore",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Current ledger sequence is at least this.",
+            "name": "LedgerAtOrAfter",
+            "type_": [
+              "u32"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A postfix-encoded constraint program. The last op produces the root\\nverdict.",
+      "lib": "",
+      "name": "RpnProgram",
+      "fields": [
+        {
+          "doc": "The ops, evaluated left to right.",
+          "name": "ops",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Op"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The wire-format version; only [`PROGRAM_VERSION`] validates.",
+          "name": "version",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "What the compiler stores in the interpreter for one `(account, rule)`: the\\nprogram plus the provenance hash of the rule it was compiled from. Sharing\\nthis `#[contracttype]` between the compiler and the interpreter is what\\nkeeps install params from ever being a hand-built `ScVal` \\xe2\\x80\\x94 both sides\\nencode and decode through exactly these types.",
+      "lib": "",
+      "name": "InstallParams",
+      "fields": [
+        {
+          "doc": "The source rule's `perch_ir::rule_hash`, not the whole document's\\nhash (the field keeps its original name). It binds the on-chain\\nprogram to the reviewed rule (provenance for lift/diff).",
+          "name": "doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "program",
+          "type_": {
+            "udt": {
+              "name": "RpnProgram"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "A signer credential, shaped like OZ `stellar_accounts::smart_account::Signer`.",
+      "lib": "",
+      "name": "Credential",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "`Signer::Delegated(address)`: a `G...` or `C...` address that\\nauthenticates through CAP-0071 delegated auth.",
+            "name": "Delegated",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "`Signer::External(verifier, key)`: a key checked by a verifier\\ncontract.",
+            "name": "External",
+            "type_": [
+              "address",
+              "bytes"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One designated signer slot and the credential that replaces whatever\\nthat slot holds in the source document.",
+      "lib": "",
+      "name": "Replacement",
+      "fields": [
+        {
+          "doc": "The credential the target document gives that signer id.",
+          "name": "credential",
+          "type_": {
+            "udt": {
+              "name": "Credential"
+            }
+          }
+        },
+        {
+          "doc": "A document signer id listed in the enrolled `recovery.replaceable`.",
+          "name": "signer_id",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A ZK enrollment a recovery completion installs.\\n\\nThe commitment is bound here, not only the id: completion runs under the\\nzero-signer recovery rule, so nothing signs its arguments, and a\\ncommitment supplied only at completion could be swapped by whoever\\nsubmits the completing transaction first \\xe2\\x80\\x94 handing them the account's\\nnext ZK factor.",
+      "lib": "",
+      "name": "ZkEnrollment",
+      "fields": [
+        {
+          "doc": "The new leaf's inner commitment, `Poseidon2(DOM_LEAF, secret)`.\\nDerivation writes `id` and `commitment` into the target document's\\nrecovery section, so the target hash binds them, and the completing\\n`apply_doc` inserts the leaf from the compiled target, never from a\\ncall argument.",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The new enrollment id. Must never have been enrolled for this\\naccount before.",
+          "name": "id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Everything a `LostKey`/`Compromise` attempt changes about the source\\ndocument. See `docs/recovery/spec.md` \\xc2\\xa77.",
+      "lib": "",
+      "name": "ReplacementSet",
+      "fields": [
+        {
+          "doc": "Signer replacements in strictly ascending `signer_id` byte order\\n(sorted, no duplicates) \\xe2\\x80\\x94 the one canonical order.",
+          "name": "signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Replacement"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The fresh ZK enrollment the completion installs, required exactly\\nwhen the enrolled mode has a ZK factor (a ZK-evidenced completion\\nconsumes the enrolled credential, so it must install a fresh one).\\nEmpty or one entry \\xe2\\x80\\x94 a `Vec` because `#[contracttype]` cannot derive\\n`Option<CustomStruct>`.",
+          "name": "zk_enrollment",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "ZkEnrollment"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Who may change the recovery configuration, and whether an authorized\\nattempt freezes ordinary activity (spec \\xc2\\xa72, \\xc2\\xa79).",
+      "lib": "",
+      "name": "RecoveryProfile",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Owner authorization alone reconfigures; activity continues while an\\nattempt is authorized; the owner can always cancel.",
+            "name": "Loss"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Reconfiguration and upgrades also need the enrolled condition; an\\nauthorized attempt freezes the account.",
+            "name": "Protected"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The ZK factor (spec \\xc2\\xa73.1, \\xc2\\xa73.4).",
+      "lib": "",
+      "name": "CompiledZkFactor",
+      "fields": [
+        {
+          "doc": "The constructorless ZK adapter the controller calls.",
+          "name": "adapter",
+          "type_": "address"
+        },
+        {
+          "doc": "`sha256` of the adapter's verification key; must equal the adapter's\\n`circuit_id()`.",
+          "name": "circuit_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The current credential's inner commitment, `Poseidon2(DOM_LEAF,\\nsecret)`, from which the account inserts the leaf.",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The current credential's id, bound into its leaf and nullifier.",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The membership pool roots are accepted from.",
+          "name": "pool",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The guardian factor.",
+      "lib": "",
+      "name": "CompiledGuardianSet",
+      "fields": [
+        {
+          "doc": "Guardian addresses (`G...` or `C...`), never the account itself.",
+          "name": "guardians",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "`1 <= quorum <= guardians.len()`.",
+          "name": "quorum",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Which factors a statement needs.",
+      "lib": "",
+      "name": "CompiledRecoveryMode",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A quorum of guardians.",
+            "name": "GuardianOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledGuardianSet"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "One ZK proof.",
+            "name": "ZkOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledZkFactor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "A quorum of guardians and one ZK proof.",
+            "name": "Combined",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledGuardianSet"
+                }
+              },
+              {
+                "udt": {
+                  "name": "CompiledZkFactor"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A compiled `recovery` member.",
+      "lib": "",
+      "name": "CompiledRecoveryConfig",
+      "fields": [
+        {
+          "doc": "The enrolled baseline's canonical document hash, if compromise\\nrecovery is enrolled.",
+          "name": "baseline",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "[`config_hash`] of the canonical JSON of the recovery member, computed\\nby the doc compiler (spec \\xc2\\xa73.2). Configuration\\nidentity: two compiled configurations with the same `config_hash` are\\nthe same configuration.",
+          "name": "config_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The adopted controller instance.",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "Ledgers from an attempt's authorization until it can complete.",
+          "name": "delay_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "The evidence window of a collecting attempt and the completion\\nwindow of an authorized one, in ledgers.",
+          "name": "expiry_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "Lifetime cap on evidence-based cancellations of authorized attempts.",
+          "name": "max_cancels",
+          "type_": "u32"
+        },
+        {
+          "doc": "The factors evidence must satisfy.",
+          "name": "mode",
+          "type_": {
+            "udt": {
+              "name": "CompiledRecoveryMode"
+            }
+          }
+        },
+        {
+          "doc": "Who may change the configuration, and whether an authorized attempt\\nfreezes the account.",
+          "name": "profile",
+          "type_": {
+            "udt": {
+              "name": "RecoveryProfile"
+            }
+          }
+        },
+        {
+          "doc": "Signer ids (not credential fingerprints) a recovery may replace, so\\nrotating a key does not change the configuration (#92).",
+          "name": "replaceable",
+          "type_": {
+            "vec": {
+              "element_type": "string"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "The action domain a statement authorizes. Evidence for one action never\\nsatisfies another: the action code is the encoding's 26th byte and selects\\nthe subject layout, so two statements that differ only in action have\\ndifferent digests (and different encoded lengths for most pairs).\\n\\nThe numeric codes are part of the wire format.",
+      "lib": "",
+      "name": "RecoveryAction",
+      "cases": [
+        {
+          "doc": "Lost-key recovery: replace designated credentials in an agreed\\nsnapshot of the current document.",
+          "name": "LostKey",
+          "value": 1
+        },
+        {
+          "doc": "Compromise recovery: restore the enrolled baseline, with designated\\ncredentials replaced.",
+          "name": "Compromise",
+          "value": 2
+        },
+        {
+          "doc": "Cancel one identified attempt.",
+          "name": "Cancel",
+          "value": 3
+        },
+        {
+          "doc": "Change or remove the enrolled recovery configuration (the evidence a\\n`Protected` account needs in addition to owner authorization).",
+          "name": "Reconfigure",
+          "value": 4
+        },
+        {
+          "doc": "Approve one scheduled account upgrade (the evidence a `Protected`\\naccount needs in addition to owner authorization).",
+          "name": "Upgrade",
+          "value": 5
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Represents different types of signers in the smart account system.",
+      "lib": "",
+      "name": "Signer",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A delegated signer that uses built-in signature verification.",
+            "name": "Delegated",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "An external signer with custom verification logic.\\nContains the verifier contract address and the public key data.",
+            "name": "External",
+            "type_": [
+              "address",
+              "bytes"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

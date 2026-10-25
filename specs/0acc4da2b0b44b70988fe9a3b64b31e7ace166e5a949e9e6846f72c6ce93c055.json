@@ -1,0 +1,781 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The manager account which gates initial publishes / constructorless deploys.",
+      "name": "manager",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Publish a binary. Contract uploads bytes ensuring hash is correct.\\nIf contract had been previously published only previous author can publish again",
+      "name": "publish",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "author",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "wasm",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "version",
+          "type_": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Upgrades the contract to a new hash.\\nAdmin Only.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Fetch the hash of a Wasm binary from the registry",
+      "name": "fetch_hash",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "version",
+          "type_": {
+            "option": {
+              "value_type": "string"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "bytes_n": {
+                "n": 32
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin can set a new manager.",
+      "name": "set_manager",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_manager",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Publish a hash of a binary.\\nIf contract had been previously published only previous author can publish again",
+      "name": "publish_hash",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "author",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "version",
+          "type_": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Construct the managed `constructorless` subregistry.\\n\\n- `admin`: upgrades this registry and adds/sets/removes the manager.\\n- `manager`: the perch smart account. Being *managed* means the\\nmanager gates the initial publish/deploy of any wasm \\xe2\\x80\\x94 the enforcement\\npoint for the eligibility policy.\\n- `root`: the root registry. This subregistry defers to `root` to\\nresolve sibling subregistry names during cross-registry deploys.\\n\\nUnlike the base registry \\xe2\\x80\\x94 where `manager`/`root` are `Option` and a\\n`None` root makes it the root registry \\xe2\\x80\\x94 this contract requires both:\\nit is *definitionally* a managed subregistry rooted at the perch/root\\nregistry, and there is no unmanaged or root mode.\\n\\nModeled on the `root = Some(_)` (subregistry) branch of\\n`registry::Contract::__constructor`. `manager`/`root` are set via the\\npublic `Storage` seam; `admin` via admin-sep's\\n`Administratable::set_admin` (which, at construction time, has no\\nprior admin to auth against and simply writes the `ADMIN` key).",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "manager",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "root",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Flag contract, marking contract as compromised or\\nun-marking it as being compromised",
+      "name": "flag_contract",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "contract_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "flagged",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Admin can remove the manager.",
+      "name": "remove_manager",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Most recent version of the published Wasm binary",
+      "name": "current_version",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_name",
+          "type_": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "string",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Rename a registered contract.\\nRequires current owner auth, or manager auth if manager is set.",
+      "name": "rename_contract",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "old_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "new_name",
+          "type_": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Content-addressed deploy: `salt = wasm_hash` and the constructor is\\ninvoked with **no arguments, ever**.\\n\\nBecause the salt is the wasm hash and the init args are always empty,\\nthe deployed address is a pure function of `(deployer, wasm_hash)` \\xe2\\x80\\x94 so\\nanyone deploying the same wasm from the same deployer lands on the exact\\nsame contract id, with no shared secret and no ABI introspection. A wasm\\nwhose `__constructor` requires arguments simply traps; that is the\\nintended, self-enforcing \"deployer-independent\" guarantee.\\n\\nIdempotent: if the derived address already holds an executable this is a\\nno-op success returning the existing instance \\xe2\\x80\\x94 it never traps with\\n[`Error::AlreadyDeployed`].",
+      "name": "deploy_stateless",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "version",
+          "type_": {
+            "option": {
+              "value_type": "string"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "deployer",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Fetch the hash and version of a Wasm binary from the registry and bump TTL\\nThis is used for cross contract calls (xcc)",
+      "name": "xcc_hash_and_version",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "version",
+          "type_": {
+            "option": {
+              "value_type": "string"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "string",
+                  {
+                    "bytes_n": {
+                      "n": 32
+                    }
+                  }
+                ]
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Update the owner of a registered contract.\\nRequires current owner auth, or manager auth if manager is set.",
+      "name": "update_contract_owner",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "contract_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Update the contract address of a registered contract.\\nRequires current owner auth, or manager auth if manager is set.",
+      "name": "update_contract_address",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "contract_name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "new_address",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Registry error codes.\\n\\nHand-written (rather than derived by `soroban-sdk-tools::scerr`) so this\\ncrate carries no soroban-sdk-tools dependency. The discriminants are frozen\\nto the values the previous `scerr` derivation produced, and the enum is\\nexported into the contract spec just as `scerr` did, keeping the wire ABI\\nand client-facing error names identical to the already-deployed registry.",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NoSuchWasmPublished",
+          "value": 1
+        },
+        {
+          "doc": "No such version of the contact has been published",
+          "name": "NoSuchVersion",
+          "value": 2
+        },
+        {
+          "doc": "Wasm name already claimed",
+          "name": "WasmNameAlreadyTaken",
+          "value": 3
+        },
+        {
+          "doc": "No such contract deployed",
+          "name": "NoSuchContractDeployed",
+          "value": 4
+        },
+        {
+          "doc": "Contract already deployed",
+          "name": "AlreadyDeployed",
+          "value": 5
+        },
+        {
+          "doc": "Failed to upgrade a contract",
+          "name": "UpgradeInvokeFailed",
+          "value": 6
+        },
+        {
+          "doc": "Only Admin is allowed",
+          "name": "AdminOnly",
+          "value": 7
+        },
+        {
+          "doc": "New version must be greater than the most recent version",
+          "name": "VersionMustBeGreaterThanCurrent",
+          "value": 8
+        },
+        {
+          "doc": "Invalid name.\\nMust be at most 64 characters and non-empty;\\nascii alphanumeric, '-', or '_';\\nstart with a ascii alphabetic character;\\nand not be a Rust keyword",
+          "name": "InvalidName",
+          "value": 9
+        },
+        {
+          "doc": "Must be valid cargo version",
+          "name": "InvalidVersion",
+          "value": 10
+        },
+        {
+          "doc": "Hash has aleady been published",
+          "name": "HashAlreadyPublished",
+          "value": 11
+        },
+        {
+          "doc": "Root registry requires manager when deploying",
+          "name": "ManagerRequired",
+          "value": 12
+        },
+        {
+          "doc": "No pending batch entries to process",
+          "name": "NoPendingBatch",
+          "value": 13
+        },
+        {
+          "doc": "Caller is not the contract owner",
+          "name": "NotContractOwner",
+          "value": 14
+        },
+        {
+          "doc": "Batch entry missing from temporary storage (likely expired)",
+          "name": "BatchEntryExpired",
+          "value": 15
+        },
+        {
+          "doc": "Given \"contract ID\" appears to be a G-address, not a contract ID",
+          "name": "AccountAddressNotValid",
+          "value": 16
+        },
+        {
+          "doc": "Given contract ID does not exist on this network",
+          "name": "ContractIdAddressDoesNotExist",
+          "value": 17
+        },
+        {
+          "doc": "Invoking contract's function has failed",
+          "name": "ProxyInvocationFailed",
+          "value": 18
+        },
+        {
+          "doc": "Contract to be invoked is compromised",
+          "name": "ProxyContractCompromised",
+          "value": 19
+        },
+        {
+          "doc": "Subregistry contract call failed",
+          "name": "SubRegistryCrossContractCallFailed",
+          "value": 20
+        },
+        {
+          "doc": "Subregistry must be a different contract than the current registry",
+          "name": "SubRegistryIsSelf",
+          "value": 21
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Deploy",
+      "prefix_topics": [
+        "deploy"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "wasm_name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "version",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "deployer",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "contract_id",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "registry",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Rename",
+      "prefix_topics": [
+        "rename"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old_name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_name",
+          "type_": "string",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Publish",
+      "prefix_topics": [
+        "publish"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "wasm_name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "version",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "author",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Register",
+      "prefix_topics": [
+        "register"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "contract_name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "contract_id",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sac",
+          "type_": "bool",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SubRegistry",
+      "prefix_topics": [
+        "sub_reg"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "contract_id",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UpdateOwner",
+      "prefix_topics": [
+        "update_owner"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "contract_name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UpdateAddress",
+      "prefix_topics": [
+        "update_address"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "contract_name",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new_address",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SecurityFlagContract",
+      "prefix_topics": [
+        "security_flag"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "flagged",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  }
+]

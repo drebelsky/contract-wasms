@@ -1,0 +1,692 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "The program evaluated to something other than `True`, or no signer\\nauthenticated. The transaction is not authorized.",
+          "name": "Denied",
+          "value": 1
+        },
+        {
+          "doc": "No program is installed for this `(account, rule)`.",
+          "name": "NotInstalled",
+          "value": 2
+        },
+        {
+          "doc": "A program is already installed for this `(account, rule)`.",
+          "name": "AlreadyInstalled",
+          "value": 3
+        },
+        {
+          "doc": "The install params carry a program that fails structural validation.",
+          "name": "InvalidProgram",
+          "value": 4
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Authorize one context for `(smart_account, context_rule.id)`: panics\\n`Denied` unless at least one signer authenticated and the installed\\nprogram evaluates to `True` for this call, and `NotInstalled` when no\\nprogram is installed. Requires the account's authorization.",
+      "name": "enforce",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "context",
+          "type_": {
+            "udt": {
+              "name": "Context"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "authenticated_signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "context_rule",
+          "type_": {
+            "udt": {
+              "name": "ContextRule"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "smart_account",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Store `install_params` for `(smart_account, context_rule.id)`. Panics\\n`AlreadyInstalled` if a program is already stored there and\\n`InvalidProgram` if the program fails structural validation. Requires\\nthe account's authorization.",
+      "name": "install",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "install_params",
+          "type_": {
+            "udt": {
+              "name": "InstallParams"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "context_rule",
+          "type_": {
+            "udt": {
+              "name": "ContextRule"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "smart_account",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Remove the program for `(smart_account, context_rule.id)`. Panics\\n`NotInstalled` if there is none. Requires the account's authorization.",
+      "name": "uninstall",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "context_rule",
+          "type_": {
+            "udt": {
+              "name": "ContextRule"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "smart_account",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The install params stored for one `(account, rule)`, or `None`.\\nExposes `doc_hash` (the source rule's `rule_hash`) so lift/diff can\\ncheck provenance against the reviewed document rather than guess from\\nthe lowered rule.\\n\\nDeliberately unauthenticated (unlike the C1-gated entry points):\\nprograms are ledger state and readable over RPC by anyone, so gating\\nthis view would only break tooling, not hide anything.",
+      "name": "get_program",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "smart_account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "context_rule_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "InstallParams"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Program wire-format version this interpreter evaluates. Unknown versions\\nare rejected at install time \\xe2\\x80\\x94 fail closed. Used by lift/diff + wallets.",
+      "name": "program_version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "One op of a postfix-encoded constraint program.",
+      "lib": "",
+      "name": "Op",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "Pop `n` verdicts, push their Kleene conjunction.",
+            "name": "All",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Pop `n` verdicts, push their Kleene disjunction.",
+            "name": "Any",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Pop one verdict, push its Kleene negation.",
+            "name": "Not"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "At least this many authenticated signers.",
+            "name": "MinSigners",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Invoked function is one of these symbols.",
+            "name": "FnIn",
+            "type_": [
+              {
+                "vec": {
+                  "element_type": "symbol"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals this address.",
+            "name": "ArgAddrEq",
+            "type_": [
+              "u32",
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index is the protected account itself.",
+            "name": "ArgAddrIsSelf",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals this symbol.",
+            "name": "ArgSymEq",
+            "type_": [
+              "u32",
+              "symbol"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index (a string) is one of these strings.",
+            "name": "ArgStrIn",
+            "type_": [
+              "u32",
+              {
+                "vec": {
+                  "element_type": "string"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index (a string) starts with this prefix.",
+            "name": "ArgStrPrefix",
+            "type_": [
+              "u32",
+              "string"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals these bytes.",
+            "name": "ArgBytesEq",
+            "type_": [
+              "u32",
+              "bytes"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals this i128.",
+            "name": "ArgI128Eq",
+            "type_": [
+              "u32",
+              "i128"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Argument at index equals this u32.",
+            "name": "ArgU32Eq",
+            "type_": [
+              "u32",
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "The call has exactly this many arguments.",
+            "name": "ArgCount",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Current ledger sequence is strictly below this.",
+            "name": "LedgerBefore",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Current ledger sequence is at least this.",
+            "name": "LedgerAtOrAfter",
+            "type_": [
+              "u32"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A postfix-encoded constraint program. The last op produces the root\\nverdict.",
+      "lib": "",
+      "name": "RpnProgram",
+      "fields": [
+        {
+          "doc": "The ops, evaluated left to right.",
+          "name": "ops",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Op"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The wire-format version; only [`PROGRAM_VERSION`] validates.",
+          "name": "version",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "What the compiler stores in the interpreter for one `(account, rule)`: the\\nprogram plus the provenance hash of the rule it was compiled from. Sharing\\nthis `#[contracttype]` between the compiler and the interpreter is what\\nkeeps install params from ever being a hand-built `ScVal` \\xe2\\x80\\x94 both sides\\nencode and decode through exactly these types.",
+      "lib": "",
+      "name": "InstallParams",
+      "fields": [
+        {
+          "doc": "The source rule's `perch_ir::rule_hash`, not the whole document's\\nhash (the field keeps its original name). It binds the on-chain\\nprogram to the reviewed rule (provenance for lift/diff).",
+          "name": "doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "program",
+          "type_": {
+            "udt": {
+              "name": "RpnProgram"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Context of a single authorized call performed by an address.\\n\\nCustom account contracts that implement `__check_auth` special function\\nreceive a list of `Context` values corresponding to all the calls that\\nneed to be authorized.",
+      "lib": "",
+      "name": "Context",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "Contract invocation.",
+            "name": "Contract",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ContractContext"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Contract that has a constructor with no arguments is created.",
+            "name": "CreateContractHostFn",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CreateContractHostFnContext"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Contract that has a constructor with 1 or more arguments is created.",
+            "name": "CreateContractWithCtorHostFn",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CreateContractWithConstructorHostFnContext"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context of a single contract call.\\n\\nThis struct corresponds to a `require_auth_for_args` call for an address\\nfrom `contract` function with `fn_name` name and `args` arguments.",
+      "lib": "",
+      "name": "ContractContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "args",
+          "type_": {
+            "vec": {
+              "element_type": "val"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fn_name",
+          "type_": "symbol"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Contract executable used for creating a new contract and used in\\n`CreateContractHostFnContext`.",
+      "lib": "",
+      "name": "ContractExecutable",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Wasm",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context for `create_contract` host function that creates a\\nnew contract on behalf of authorizer address.",
+      "lib": "",
+      "name": "CreateContractHostFnContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "executable",
+          "type_": {
+            "udt": {
+              "name": "ContractExecutable"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context for `create_contract` host function that creates a\\nnew contract on behalf of authorizer address.\\nThis is the same as `CreateContractHostFnContext`, but also has\\ncontract constructor arguments.",
+      "lib": "",
+      "name": "CreateContractWithConstructorHostFnContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "constructor_args",
+          "type_": {
+            "vec": {
+              "element_type": "val"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "executable",
+          "type_": {
+            "udt": {
+              "name": "ContractExecutable"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Represents different types of signers in the smart account system.",
+      "lib": "",
+      "name": "Signer",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A delegated signer that uses built-in signature verification.",
+            "name": "Delegated",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "An external signer with custom verification logic.\\nContains the verifier contract address and the public key data.",
+            "name": "External",
+            "type_": [
+              "address",
+              "bytes"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A complete context rule defining authorization requirements.",
+      "lib": "",
+      "name": "ContextRule",
+      "fields": [
+        {
+          "doc": "The type of context this rule applies to.",
+          "name": "context_type",
+          "type_": {
+            "udt": {
+              "name": "ContextRuleType"
+            }
+          }
+        },
+        {
+          "doc": "Unique identifier for the context rule.",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "Human-readable name for the context rule.",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "List of policy contracts that must be satisfied.",
+          "name": "policies",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Global registry IDs for each policy, positionally aligned with\\n`policies`.",
+          "name": "policy_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "Global registry IDs for each signer, positionally aligned with\\n`signers`.",
+          "name": "signer_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "List of signers authorized by this rule.",
+          "name": "signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "Optional expiration ledger sequence for the rule.",
+          "name": "valid_until",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Types of contexts that can be authorized by smart account rules.",
+      "lib": "",
+      "name": "ContextRuleType",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Default rules that can authorize any context.",
+            "name": "Default"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Rules specific to calling a particular contract.",
+            "name": "CallContract",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Rules specific to creating a contract with a particular WASM hash.",
+            "name": "CreateContract",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
