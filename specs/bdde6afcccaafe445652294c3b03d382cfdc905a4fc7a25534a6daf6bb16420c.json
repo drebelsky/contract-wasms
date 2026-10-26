@@ -1,0 +1,1539 @@
+[
+  {
+    "function_v0": {
+      "doc": "Buys tokens with up to `quote_in` quote (fee included). Reverts unless at least `min_tokens_out`\\n(strictly positive) tokens are delivered. A buy that would cross the graduation target is CLAMPED:\\nonly the quote needed to reach the target is charged and the remainder stays with the buyer, so the\\ncall is a partial fill, never a revert. Returns the tokens delivered.",
+      "name": "buy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_tokens_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sells `tokens_in` back to the curve. Reverts unless at least `min_quote_out` (strictly positive) quote\\nis paid out. Allowed in `Trading` and `Graduatable` (holders are never locked in while a graduation is\\npending); a sell that takes `real_quote` below the target moves the phase back to `Trading`.",
+      "name": "sell",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "tokens_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_quote_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Immediate upgrade (house rule). `admin` must be the launch factory, which exposes it to its own admin.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless graduation, one step per call (Soroban bounds the ledger entries a transaction may touch).\\nEach call performs the NEXT step and returns the step reached; the last one returns `Graduated`:\\n1. `PoolCreated`: pulls the Aquarius creation fee (live from the router, in AQUA) from `payer`, creates the\\nstandard 30 bps pool, seeds it with all raised quote and `lp_supply`, burns the LP shares and the unsold\\ncurve tokens. Trading is closed from here on. Only this step needs `payer`'s signature; later steps\\nignore it. Unspent fee (pool already existed) is refunded to `payer`.\\n2. `GroupCreated`: `market_factory.create_group(owner = this curve, name = token symbol)`.\\n3. `QuoteMarketAdded`, 4. `QuoteMarketActivated`: the quote asset market.\\n5. `TokenMarketAdded`, 6. `Graduated`: the token market priced from the pool (`AquariusOnly`).\\nReverts `NotGraduatable` before the target, `AlreadyGraduated` after the last step.",
+      "name": "graduate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "payer",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "GradStep"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_state",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "CurveInfo"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Quote for a buy of up to `quote_in`. Does not apply the per-address creator cap.",
+      "name": "quote_buy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "quote_in",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "BuyQuote"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless: pays the accrued fees to the treasury and the creator. This can only move the fee\\ncounters, never `real_quote`. Returns `(treasury_amount, creator_amount)`.",
+      "name": "claim_fees",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "i128",
+                  "i128"
+                ]
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Config"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "quote_sell",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "tokens_in",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "SellQuote"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The creator takes the market group (the curve is its owner until now). Requires `Graduated` and the\\ncreator's signature (the market factory needs the new owner to sign `transfer_ownership`).",
+      "name": "claim_group",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`token` must already hold at least `curve_supply + lp_supply` for this contract (the factory deploys the\\ntoken first, minting its whole supply to this contract's pre-computed address).",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "factory",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "CurveParams"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "graduation",
+          "type_": {
+            "udt": {
+              "name": "GraduationConfig"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Graduation facts (None until the pool step ran).",
+      "name": "get_graduation",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Graduation"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`(fee token, amount)` the payer of the pool step must hold: read live from the Aquarius router (a pool\\nthat already exists costs nothing, and any unspent amount is refunded).",
+      "name": "graduation_cost",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "address",
+                  "i128"
+                ]
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "CurveError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "Lifecycle: `Trading -> Graduatable -> Graduating -> Graduated`.\\n- `Graduatable` is STICKY: it is entered once `real_quote` reaches the target and never left. Buys are\\nclosed from then on; sells keep working until the first graduation step.\\n- `Graduating` starts with the first graduation step (the pool step). All trading is closed.\\n- `Graduated` is terminal (the last market step ran).\\n`Graduating = 3` keeps the stage 1 numbering (`Graduated = 2`) stable for existing readers.",
+      "lib": "",
+      "name": "Phase",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Trading",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "Graduatable",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "Graduated",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Graduating",
+          "value": 3
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Immutable configuration, written once by the constructor.",
+      "lib": "",
+      "name": "Config",
+      "fields": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "The launch factory: the only address that may call `upgrade`.",
+          "name": "factory",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "graduation",
+          "type_": {
+            "udt": {
+              "name": "GraduationConfig"
+            }
+          }
+        },
+        {
+          "doc": "`virtual_quote * virtual_token`.",
+          "name": "k",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "CurveParams"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "BuyQuote",
+      "fields": [
+        {
+          "doc": "",
+          "name": "clamped",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "Quote that would be charged (less than requested when clamped).",
+          "name": "quote_spent",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "tokens_out",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "Steps of the permissionless `graduate` state machine. Each call performs the NEXT step.",
+      "lib": "",
+      "name": "GradStep",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotStarted",
+          "value": 0
+        },
+        {
+          "doc": "Pool created and seeded, LP shares burned, unsold curve tokens burned.",
+          "name": "PoolCreated",
+          "value": 1
+        },
+        {
+          "doc": "Market group created (the curve is its owner).",
+          "name": "GroupCreated",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "QuoteMarketAdded",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "QuoteMarketActivated",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "TokenMarketAdded",
+          "value": 5
+        },
+        {
+          "doc": "Token market activated: graduation is complete.",
+          "name": "Graduated",
+          "value": 6
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Read model for the app.",
+      "lib": "",
+      "name": "CurveInfo",
+      "fields": [
+        {
+          "doc": "",
+          "name": "creator_bought",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "creator_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "fees_creator_pending",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "fees_treasury_pending",
+          "type_": "i128"
+        },
+        {
+          "doc": "Fully diluted value in quote: `price * (curve_supply + lp_supply) / 1e7`.",
+          "name": "fully_diluted_value",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "graduation_target",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "phase",
+          "type_": {
+            "udt": {
+              "name": "Phase"
+            }
+          }
+        },
+        {
+          "doc": "Marginal price: quote base units per token base unit, scaled by 1e7.",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "`real_quote / graduation_target` in bps, capped at 10_000.",
+          "name": "progress_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "real_quote",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "sold",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "tokens_remaining",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "virtual_quote",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "virtual_token",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SellQuote",
+      "fields": [
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "gross_quote",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "quote_out",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Facts recorded by the graduation steps.",
+      "lib": "",
+      "name": "Graduation",
+      "fields": [
+        {
+          "doc": "True once the creator took the group with `claim_group`.",
+          "name": "claimed",
+          "type_": "bool"
+        },
+        {
+          "doc": "Valid from `GroupCreated`.",
+          "name": "group_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "lp_shares_burned",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool_index",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "Quote and token amounts seeded into the pool.",
+          "name": "quote_in_pool",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "quote_market",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "share_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "step",
+          "type_": {
+            "udt": {
+              "name": "GradStep"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "token_in_pool",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "token_market",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "unsold_burned",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "Where the graduated liquidity lives. Extension point only: `Aquarius` is the single implemented venue\\n(standard constant-product pool, 30 bps).",
+      "lib": "",
+      "name": "GraduationVenue",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Aquarius",
+          "value": 0
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Immutable graduation wiring, chosen by the launch factory at deployment.",
+      "lib": "",
+      "name": "GraduationConfig",
+      "fields": [
+        {
+          "doc": "Peridot market factory (the curve becomes the owner of the new group until `claim_group`).",
+          "name": "market_factory",
+          "type_": "address"
+        },
+        {
+          "doc": "Price config of the QUOTE asset market (a `ReflectorOnly` mapping the market factory has approved).",
+          "name": "quote_price",
+          "type_": {
+            "udt": {
+              "name": "PriceConfig"
+            }
+          }
+        },
+        {
+          "doc": "Aquarius AMM router.",
+          "name": "router",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "venue",
+          "type_": {
+            "udt": {
+              "name": "GraduationVenue"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CurveError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NonPositiveParam",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "ParamTooLarge",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "CurveSupplyNotBelowVirtual",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "FeeTooHigh",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "CreatorShareTooHigh",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "CreatorCapTooHigh",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "TargetSellsTooMuch",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "SameTokens",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "CurveNotFunded",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 10
+        },
+        {
+          "doc": "`min_*_out` must be positive: a zero bound is no bound.",
+          "name": "InvalidSlippageBound",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "SlippageExceeded",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "TradingClosed",
+          "value": 13
+        },
+        {
+          "doc": "The trade is too small: it rounds to zero tokens or zero quote.",
+          "name": "DustTrade",
+          "value": 14
+        },
+        {
+          "doc": "",
+          "name": "CreatorCapExceeded",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "ExceedsSold",
+          "value": 16
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 17
+        },
+        {
+          "doc": "",
+          "name": "NotFactory",
+          "value": 18
+        },
+        {
+          "doc": "",
+          "name": "NotGraduatable",
+          "value": 19
+        },
+        {
+          "doc": "",
+          "name": "AlreadyGraduated",
+          "value": 21
+        },
+        {
+          "doc": "The Aquarius pool already held liquidity at another ratio: the deposit did not take the exact amounts.",
+          "name": "PoolNotFresh",
+          "value": 22
+        },
+        {
+          "doc": "",
+          "name": "NothingBurned",
+          "value": 23
+        },
+        {
+          "doc": "",
+          "name": "NotCreator",
+          "value": 24
+        },
+        {
+          "doc": "",
+          "name": "NotGraduated",
+          "value": 25
+        },
+        {
+          "doc": "",
+          "name": "GroupAlreadyClaimed",
+          "value": 26
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Buy",
+      "prefix_topics": [
+        "buy"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "Quote charged, including the fee.",
+          "name": "quote_in",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "tokens_out",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "True when the buy was clamped at the graduation target.",
+          "name": "clamped",
+          "type_": "bool",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "real_quote",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sold",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Sell",
+      "prefix_topics": [
+        "sell"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "tokens_in",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "Quote paid to the seller, after the fee.",
+          "name": "quote_out",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "real_quote",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sold",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Upgraded",
+      "prefix_topics": [
+        "upgraded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Graduated",
+      "prefix_topics": [
+        "graduated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FeesClaimed",
+      "prefix_topics": [
+        "fees_claimed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "treasury_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "creator_amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarketAdded",
+      "prefix_topics": [
+        "market_added"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "underlying",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "is_quote",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolCreated",
+      "prefix_topics": [
+        "pool_created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "pool_index",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "share_token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "payer",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "quote_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "token_amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "lp_shares_burned",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "unsold_burned",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee_token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee_paid",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "GroupClaimed",
+      "prefix_topics": [
+        "group_claimed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "GroupCreated",
+      "prefix_topics": [
+        "group_created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "StateChanged",
+      "prefix_topics": [
+        "state_changed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": {
+            "udt": {
+              "name": "Phase"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": {
+            "udt": {
+              "name": "Phase"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "real_quote",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MarketActivated",
+      "prefix_topics": [
+        "market_activated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "group_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "is_quote",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Immutable economic parameters of one launch.\\n\\nReserve naming: `virtual_quote` and `virtual_token` are the initial virtual reserves; the curve invariant is\\n`(virtual_quote + real_quote) * (virtual_token - sold) >= k` with `k = virtual_quote * virtual_token`.",
+      "lib": "",
+      "name": "CurveParams",
+      "fields": [
+        {
+          "doc": "Cumulative creator buy cap in bps of `curve_supply`.",
+          "name": "creator_cap_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Share of each trade fee that accrues to the creator (rest to the treasury), in bps of the fee.",
+          "name": "creator_fee_share_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Tokens that can be sold along the curve.",
+          "name": "curve_supply",
+          "type_": "i128"
+        },
+        {
+          "doc": "Real quote (net of fees) at which trading stops and the curve becomes graduatable.",
+          "name": "graduation_target",
+          "type_": "i128"
+        },
+        {
+          "doc": "Tokens reserved for the liquidity pool at graduation (stage 2).",
+          "name": "lp_supply",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "trade_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "virtual_quote",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "virtual_token",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "6.2 Per-token price derivation mode of the group price router.",
+      "lib": "",
+      "name": "PriceConfig",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "Phase 1.",
+            "name": "ReflectorOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ReflectorOnlyCfg"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 3.",
+            "name": "ReflectorWithAquariusGuard",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ReflectorGuardCfg"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 3, restricted (lower CF, no margin).",
+            "name": "AquariusOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AquariusOnlyCfg"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AquariusOnlyCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "6.2 Payloads of [`PriceConfig`]. `#[contracttype]` enums allow only unit and tuple\\nvariants, so the named fields of the handoff sketch live in these structs.",
+      "lib": "",
+      "name": "ReflectorOnlyCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ReflectorGuardCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "max_dev_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Copied byte for byte from core `simple-peridottroller/src/reflector.rs`.\\nThe `contracttype` layout must match what the controller decodes.",
+      "lib": "",
+      "name": "Asset",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stellar",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Other",
+            "type_": [
+              "symbol"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

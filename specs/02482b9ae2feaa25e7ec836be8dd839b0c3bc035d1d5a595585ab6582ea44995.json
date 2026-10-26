@@ -1,0 +1,331 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The address that must authorize `create_account`, or `None` if anyone\\nmay.",
+      "name": "manager",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Replace the factory's wasm with the installed wasm `wasm_hash`, and\\nwith it the account wasm hash new accounts are deployed from. Admin\\nonly.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The factory's wasm was replaced; the new wasm runs from the next\\ninvocation, and with it the account wasm hash that wasm pins.",
+      "lib": "",
+      "name": "Upgraded",
+      "prefix_topics": [
+        "upgraded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "admin-sep's default, plus an `AdminChanged` event so watchers see who\\ncan change the factory.",
+      "name": "set_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Require `manager`'s authorization on every `create_account` from now\\non, or nobody's with `None`. Admin only.",
+      "name": "set_manager",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "manager",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The admin was set, at construction or by `set_admin`.",
+      "lib": "",
+      "name": "AdminChanged",
+      "prefix_topics": [
+        "admin_changed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pin `verifier` for every account created afterwards. Admin only.",
+      "name": "pin_verifier",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "verifier",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`verifier` pins the `WebAuthn` verifier from the first account on\\n(`None` leaves it to the registry). `manager` must authorize every\\n`create_account` (`None` lets anyone).",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "verifier",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "manager",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The address `create_account` deploys to for `setup_pk`.",
+      "name": "get_c_address",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "setup_pk",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "An account was created at `account` for the passkey `key`, bound by the\\nsetup key `setup_pk`.",
+      "lib": "",
+      "name": "AccountCreated",
+      "prefix_topics": [
+        "account_created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "setup_pk",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "key",
+          "type_": {
+            "bytes_n": {
+              "n": 65
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Who must authorize `create_account` from now on; `None` lets anyone.",
+      "lib": "",
+      "name": "ManagerChanged",
+      "prefix_topics": [
+        "manager_changed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "manager",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Accounts created from now on name this `WebAuthn` verifier.",
+      "lib": "",
+      "name": "VerifierPinned",
+      "prefix_topics": [
+        "verifier_pinned"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "verifier",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploy a Perch smart account at `get_c_address(setup_pk)` whose\\nconstructor rule (\"admin\", scoped to the account itself) is the passkey\\n`key`, checked by the `WebAuthn` verifier. Everything else \\xe2\\x80\\x94 further\\nsigners, rules, and recovery \\xe2\\x80\\x94 arrives through the account's first\\n`apply_doc`.\\n\\n`setup_sig` is the setup key's Ed25519 signature over\\n`sha256(\"nido/bind/v1\" || network_id || factory_id || key)`, so only\\nthe holder of the setup key chooses the passkey at its address; the\\nmanager, if one is set, decides only whether the account is created.",
+      "name": "create_account",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "setup_pk",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "key",
+          "type_": {
+            "bytes_n": {
+              "n": 65
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "setup_sig",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The pinned `verifier` address, or `None` if unpinned.",
+      "name": "pinned_verifier",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The installed `perch-account` wasm hash `create_account` deploys,\\npinned when this wasm was built.",
+      "name": "account_wasm_hash",
+      "inputs": [],
+      "outputs": [
+        {
+          "bytes_n": {
+            "n": 32
+          }
+        }
+      ]
+    }
+  }
+]

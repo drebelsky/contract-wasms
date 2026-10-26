@@ -1,0 +1,683 @@
+[
+  {
+    "function_v0": {
+      "doc": "Exact quote input, rejected rather than partially filled when the hard cap would be exceeded.\\nEach purchase rounds tokens down. Dust that buys no token base unit is rejected.",
+      "name": "buy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "IcoError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Auto-finalizes, so buyers do not depend on the creator or admin to unlock their claim.",
+      "name": "claim",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "IcoError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "refund",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": {
+              "udt": {
+                "name": "IcoError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "IcoError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "finalize",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": {
+              "udt": {
+                "name": "IcoError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Success: raised quote and unsold tokens. Failure: all tokens, with quote reserved for refunds.",
+      "name": "withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "i128",
+                  "i128"
+                ]
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "IcoError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_state",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "State"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Config"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_paused",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "IcoError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Bought",
+      "prefix_topics": [
+        "buy"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "quote",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "tokens",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Claimed",
+      "prefix_topics": [
+        "claim"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "tokens",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Created",
+      "prefix_topics": [
+        "create"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "IcoParams"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "IcoError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "InvalidParams",
+          "value": 101
+        },
+        {
+          "doc": "",
+          "name": "NotFunded",
+          "value": 102
+        },
+        {
+          "doc": "",
+          "name": "NotAdmin",
+          "value": 103
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 104
+        },
+        {
+          "doc": "",
+          "name": "BeforeStart",
+          "value": 105
+        },
+        {
+          "doc": "",
+          "name": "SaleClosed",
+          "value": 106
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 107
+        },
+        {
+          "doc": "",
+          "name": "HardCap",
+          "value": 108
+        },
+        {
+          "doc": "",
+          "name": "BuyerCap",
+          "value": 109
+        },
+        {
+          "doc": "",
+          "name": "Dust",
+          "value": 110
+        },
+        {
+          "doc": "",
+          "name": "NotEnded",
+          "value": 111
+        },
+        {
+          "doc": "",
+          "name": "NotSuccessful",
+          "value": 112
+        },
+        {
+          "doc": "",
+          "name": "NotFailed",
+          "value": 113
+        },
+        {
+          "doc": "",
+          "name": "NothingToClaim",
+          "value": 114
+        },
+        {
+          "doc": "",
+          "name": "AlreadyClaimed",
+          "value": 115
+        },
+        {
+          "doc": "",
+          "name": "AlreadyRefunded",
+          "value": 116
+        },
+        {
+          "doc": "",
+          "name": "NotCreator",
+          "value": 117
+        },
+        {
+          "doc": "",
+          "name": "AlreadyWithdrawn",
+          "value": 118
+        },
+        {
+          "doc": "",
+          "name": "UpgradeLocked",
+          "value": 119
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_position",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Position"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Refunded",
+      "prefix_topics": [
+        "refund"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "quote",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "IcoParams"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Finalized",
+      "prefix_topics": [
+        "finalize"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "phase",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "raised",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Withdrawn",
+      "prefix_topics": [
+        "withdraw"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "quote",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "tokens",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "State",
+      "fields": [
+        {
+          "doc": "",
+          "name": "allocated",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        },
+        {
+          "doc": "0 = open, 1 = succeeded, 2 = failed. Finalization only after end.",
+          "name": "phase",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "raised",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "withdrawn",
+          "type_": "bool"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Config",
+      "fields": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "IcoParams"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Position",
+      "fields": [
+        {
+          "doc": "",
+          "name": "claimed",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "paid",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "refunded",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "tokens",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "IcoParams",
+      "fields": [
+        {
+          "doc": "Cumulative quote per buyer; zero disables the cap.",
+          "name": "buyer_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "end",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "hard_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "Quote base units per whole token. Quote must have seven decimals.",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "soft_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "start",
+          "type_": "u64"
+        },
+        {
+          "doc": "Token supply in base units, with seven decimals.",
+          "name": "supply",
+          "type_": "i128"
+        }
+      ]
+    }
+  }
+]

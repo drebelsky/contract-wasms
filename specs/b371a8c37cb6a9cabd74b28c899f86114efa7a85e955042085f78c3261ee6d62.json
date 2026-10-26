@@ -1,0 +1,2057 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "FactoryConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_ico",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "IcoInfo"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "icos_of",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "IcoInfo"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Immediate upgrade of the factory itself (house rule).",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "True for every curve this factory deployed. The market factory asks this before it lets a curve own\\ngroups with pool-priced (`AquariusOnly`) markets.",
+      "name": "is_curve",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "curve",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Registers the token and curve Wasm used by new launches. Existing launches are unaffected.",
+      "name": "set_wasm",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "curve_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "ico_count",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "list_icos",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "start",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "IcoInfo"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploys an escrow and immutable token atomically. All amounts are in seven-decimal base units.",
+      "name": "create_ico",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "metadata_uri",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "IcoParams"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "address",
+                  "address"
+                ]
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Looks a launch up by its token address.",
+      "name": "get_launch",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "LaunchInfo"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_preset",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "preset",
+          "type_": {
+            "udt": {
+              "name": "Preset"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "CurveParams"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_paused",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Sets the numbers behind one preset for one quote token. Validated with the curve's own guardrails.",
+      "name": "set_preset",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "preset",
+          "type_": {
+            "udt": {
+              "name": "Preset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "CurveParams"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "launches_of",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "LaunchInfo"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "launch_count",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploys a token and its curve. `creator` authorizes (and pays the launch fee and the optional first\\nbuy). Returns `(token, curve)`.",
+      "name": "launch_curve",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "LaunchParams"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "address",
+                  "address"
+                ]
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_ico_wasm",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Treasury for new launches (existing curves keep the treasury they were deployed with).",
+      "name": "set_treasury",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless: extends the TTL of one launch record and its indexes.",
+      "name": "extend_launch",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Launches with ids in `[start, start + limit)`, oldest first. `limit` is capped at 50.",
+      "name": "list_launches",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "start",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "LaunchInfo"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Removes a preset; launches with that (quote, preset) pair then revert with `PresetNotSet`.",
+      "name": "remove_preset",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "preset",
+          "type_": {
+            "udt": {
+              "name": "Preset"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Registers the Aquarius router and the Peridot market factory every NEW curve graduates through.\\nExisting curves keep the wiring they were deployed with.",
+      "name": "set_graduation",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "router",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "market_factory",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Optional launch fee, paid by the creator to the treasury inside `launch_curve`. `amount == 0` disables.",
+      "name": "set_launch_fee",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fee_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Immediate upgrade of the curve of one launch, identified by its token (hotfix path; the curve accepts\\n`upgrade` only from this factory). Tokens are immutable and cannot be upgraded.",
+      "name": "upgrade_launch",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Looks a plain token up by its address.",
+      "name": "get_plain_token",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "PlainTokenInfo"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_quote_price",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PriceConfig"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "plain_tokens_of",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "PlainTokenInfo"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Price config of the QUOTE asset market that graduated groups create (a `ReflectorOnly` mapping that\\nthe market factory has approved with `set_price_feed_allowed`). Frozen into each curve at launch.",
+      "name": "set_quote_price",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "price",
+          "type_": {
+            "udt": {
+              "name": "PriceConfig"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Plain tokens with ids in `[start, start + limit)`, oldest first. `limit` is capped at 50.",
+      "name": "list_plain_tokens",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "start",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "limit",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "PlainTokenInfo"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "plain_token_count",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Simple token: deploys ONE fixed-supply token (no curve, no ICO, no fee beyond network fees) and mints\\nthe whole supply to `creator`. `supply` is in WHOLE tokens (1..=1e12); decimals are fixed at 7 so the\\ntoken can later be listed in a Peridot market. The token is the immutable launchpad template: no mint,\\nno admin, no freeze. Recorded in the plain-token registry. Returns the token address.",
+      "name": "create_plain_token",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "supply",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "metadata_uri",
+          "type_": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "graduation_targets",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "GraduationTargets"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Installs the three built-in presets (Fast, Standard, Slow) for a quote token whose unit is worth\\nroughly one XLM and has 7 decimals.",
+      "name": "set_default_presets",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "FactoryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "Graduation-speed presets. The numbers behind a preset are configured per quote token by the admin\\n(`set_preset` / `set_default_presets`) and pass the same guardrails as the curve constructor.",
+      "lib": "",
+      "name": "Preset",
+      "cases": [
+        {
+          "doc": "Lowest graduation target.",
+          "name": "Fast",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "Standard",
+          "value": 1
+        },
+        {
+          "doc": "Highest graduation target.",
+          "name": "Slow",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "IcoInfo",
+      "fields": [
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "ico",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LaunchInfo",
+      "fields": [
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "curve",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "preset",
+          "type_": {
+            "udt": {
+              "name": "Preset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "What a creator chooses. Everything else comes from the preset.",
+      "lib": "",
+      "name": "LaunchParams",
+      "fields": [
+        {
+          "doc": "Optional atomic first buy by the creator, in quote (0 = none). Counts against the creator cap.",
+          "name": "creator_buy",
+          "type_": "i128"
+        },
+        {
+          "doc": "Optional image or metadata URI; empty string for none.",
+          "name": "metadata_uri",
+          "type_": "string"
+        },
+        {
+          "doc": "Slippage bound for `creator_buy` (must be positive when `creator_buy > 0`).",
+          "name": "min_tokens_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "preset",
+          "type_": {
+            "udt": {
+              "name": "Preset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FactoryConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fee_token",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "launch_count",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "launch_fee",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "wasm_set",
+          "type_": "bool"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A simple token created with `create_plain_token`: no curve, the whole supply went to the creator.",
+      "lib": "",
+      "name": "PlainTokenInfo",
+      "fields": [
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "Total supply in base units (7 decimals).",
+          "name": "supply",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The addresses the admin registers once for graduation.",
+      "lib": "",
+      "name": "GraduationTargets",
+      "fields": [
+        {
+          "doc": "",
+          "name": "market_factory",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "router",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "FactoryError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotAdmin",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "WasmNotSet",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 3
+        },
+        {
+          "doc": "No preset configured for this (quote token, preset) pair.",
+          "name": "PresetNotSet",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidName",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "InvalidSymbol",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "InvalidMetadataUri",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "InvalidCreatorBuy",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "TooManyLaunches",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "LaunchNotFound",
+          "value": 10
+        },
+        {
+          "doc": "The curve parameters failed the shared guardrails (see `launchpad-curve/src/params.rs`).",
+          "name": "BadCurveParams",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "InvalidFee",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 13
+        },
+        {
+          "doc": "`set_graduation` has not been called.",
+          "name": "GraduationNotSet",
+          "value": 14
+        },
+        {
+          "doc": "No price config for this quote token (`set_quote_price`).",
+          "name": "QuotePriceNotSet",
+          "value": 15
+        },
+        {
+          "doc": "The quote price must be a `ReflectorOnly` mapping.",
+          "name": "InvalidQuotePrice",
+          "value": 16
+        },
+        {
+          "doc": "Plain token supply must be 1..=1e12 whole tokens.",
+          "name": "InvalidSupply",
+          "value": 17
+        },
+        {
+          "doc": "",
+          "name": "BadIcoParams",
+          "value": 18
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WasmSet",
+      "prefix_topics": [
+        "wasm_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "token_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "curve_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AdminSet",
+      "prefix_topics": [
+        "admin_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Launched",
+      "prefix_topics": [
+        "launched"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "curve",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "preset",
+          "type_": {
+            "udt": {
+              "name": "Preset"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Upgraded",
+      "prefix_topics": [
+        "upgraded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PausedSet",
+      "prefix_topics": [
+        "paused"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PresetSet",
+      "prefix_topics": [
+        "preset_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "preset",
+          "type_": {
+            "udt": {
+              "name": "Preset"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "enabled",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "IcoCreated",
+      "prefix_topics": [
+        "ico_created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "info",
+          "type_": {
+            "udt": {
+              "name": "IcoInfo"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TreasurySet",
+      "prefix_topics": [
+        "treasury_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "treasury",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LaunchFeeSet",
+      "prefix_topics": [
+        "launch_fee_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "fee_token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "GraduationSet",
+      "prefix_topics": [
+        "graduation_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "router",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "market_factory",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "QuotePriceSet",
+      "prefix_topics": [
+        "quote_price_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "price",
+          "type_": {
+            "udt": {
+              "name": "PriceConfig"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LaunchUpgraded",
+      "prefix_topics": [
+        "launch_upgraded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "curve",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PlainTokenCreated",
+      "prefix_topics": [
+        "plain_token_created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "creator",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "symbol",
+          "type_": "string",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "supply",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Immutable economic parameters of one launch.\\n\\nReserve naming: `virtual_quote` and `virtual_token` are the initial virtual reserves; the curve invariant is\\n`(virtual_quote + real_quote) * (virtual_token - sold) >= k` with `k = virtual_quote * virtual_token`.",
+      "lib": "",
+      "name": "CurveParams",
+      "fields": [
+        {
+          "doc": "Cumulative creator buy cap in bps of `curve_supply`.",
+          "name": "creator_cap_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Share of each trade fee that accrues to the creator (rest to the treasury), in bps of the fee.",
+          "name": "creator_fee_share_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Tokens that can be sold along the curve.",
+          "name": "curve_supply",
+          "type_": "i128"
+        },
+        {
+          "doc": "Real quote (net of fees) at which trading stops and the curve becomes graduatable.",
+          "name": "graduation_target",
+          "type_": "i128"
+        },
+        {
+          "doc": "Tokens reserved for the liquidity pool at graduation (stage 2).",
+          "name": "lp_supply",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "trade_fee_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "virtual_quote",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "virtual_token",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "IcoParams",
+      "fields": [
+        {
+          "doc": "Cumulative quote per buyer; zero disables the cap.",
+          "name": "buyer_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "end",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "hard_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "Quote base units per whole token. Quote must have seven decimals.",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "soft_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "start",
+          "type_": "u64"
+        },
+        {
+          "doc": "Token supply in base units, with seven decimals.",
+          "name": "supply",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "6.2 Per-token price derivation mode of the group price router.",
+      "lib": "",
+      "name": "PriceConfig",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "Phase 1.",
+            "name": "ReflectorOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ReflectorOnlyCfg"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 3.",
+            "name": "ReflectorWithAquariusGuard",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ReflectorGuardCfg"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Phase 3, restricted (lower CF, no margin).",
+            "name": "AquariusOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AquariusOnlyCfg"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AquariusOnlyCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "6.2 Payloads of [`PriceConfig`]. `#[contracttype]` enums allow only unit and tuple\\nvariants, so the named fields of the handoff sketch live in these structs.",
+      "lib": "",
+      "name": "ReflectorOnlyCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ReflectorGuardCfg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "max_dev_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote_token",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Copied byte for byte from core `simple-peridottroller/src/reflector.rs`.\\nThe `contracttype` layout must match what the controller decodes.",
+      "lib": "",
+      "name": "Asset",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stellar",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Other",
+            "type_": [
+              "symbol"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

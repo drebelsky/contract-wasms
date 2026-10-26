@@ -1,0 +1,1138 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotAdmin",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotMarket",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "NotKeeper",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "InvalidVector",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "SlippageExceeded",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "InsufficientShares",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "ZeroShares",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "VaultImpaired",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "ZenexUnavailable",
+          "value": 12
+        },
+        {
+          "doc": "The local buffer cannot pay this withdrawal. No state was changed.",
+          "name": "LiquidityShortfall",
+          "value": 13
+        },
+        {
+          "doc": "",
+          "name": "UnexpectedBalance",
+          "value": 14
+        },
+        {
+          "doc": "",
+          "name": "InvalidConfig",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "CapExceeded",
+          "value": 16
+        },
+        {
+          "doc": "",
+          "name": "NothingToDo",
+          "value": 17
+        },
+        {
+          "doc": "",
+          "name": "OrderPending",
+          "value": 18
+        },
+        {
+          "doc": "",
+          "name": "Cooldown",
+          "value": 19
+        },
+        {
+          "doc": "",
+          "name": "AlreadyBound",
+          "value": 20
+        },
+        {
+          "doc": "",
+          "name": "NotOwner",
+          "value": 21
+        },
+        {
+          "doc": "",
+          "name": "NoOpenOrder",
+          "value": 22
+        },
+        {
+          "doc": "Deposits are refused until the depositing market is bound.",
+          "name": "NotBound",
+          "value": 23
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Strategy",
+      "fields": [
+        {
+          "doc": "",
+          "name": "address",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "kind",
+      "inputs": [],
+      "outputs": [
+        "symbol"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Keeper (or owner). One order at a time, at most one per `SYNC_COOLDOWN_SECS`. Returns the Zenex\\norder id created. Deposit orders are blocked while paused; redeem orders never are.",
+      "name": "sync",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Owner or platform admin. Blocks new deposits and new deposit orders only; withdrawals and redeem\\norders stay open.",
+      "name": "pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ZenexState",
+      "fields": [
+        {
+          "doc": "",
+          "name": "bound",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "buffer",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "next_sync_after",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "pending_deposit_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "pending_redeem_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "zenex_shares",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "ZenexConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "keeper",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "market",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Owner or keeper: unwind from Zenex until the buffer reaches `want_buffer` (token units), regardless of the\\nrefill threshold. For an oversized withdrawal that failed with `LiquidityShortfall`, or to wind the vault\\ndown. One order at a time; the owner may top the buffer up with a plain USDC transfer to cover the fee.",
+      "name": "unwind",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "want_buffer",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "BoundEvent",
+      "prefix_topics": [
+        "bound"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "OrderEvent",
+      "prefix_topics": [
+        "order"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Per-vault customization. All bounds are enforced in the constructor and `set_params`.",
+      "lib": "",
+      "name": "ZenexConfig",
+      "fields": [
+        {
+          "doc": "Maximum total value (token units), between Zenex min deposit and Zenex max vault balance.",
+          "name": "cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "Valuation haircut on everything held in Zenex, 50..=2000 (default 200). Owner may only raise it.",
+          "name": "haircut_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address"
+        },
+        {
+          "doc": "Below this a redeem order is created, 500 <= min < target.",
+          "name": "min_buffer_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Slippage tolerance applied to `min_out`, 50..=500 (covers the 0.1%/0.25% Zenex fees).",
+          "name": "slippage_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Share of total value kept as local USDC buffer, >= 2000 (20%).",
+          "name": "target_buffer_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "zenex_market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "zenex_vault",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "balance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Only the bound market deposits. Funds go to the local buffer; nothing is sent to Zenex here.",
+      "name": "deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amounts_desired",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amounts_min",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "invest",
+          "type_": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "vec": {
+                "element_type": "i128"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Fees accrue inside the Zenex vault share price; there is nothing to claim. Returns 0.",
+      "name": "harvest",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Platform admin only, immediate, no timelock.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CancelEvent",
+      "prefix_topics": [
+        "cancel"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "id",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "KeeperEvent",
+      "prefix_topics": [
+        "keeper"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ParamsEvent",
+      "prefix_topics": [
+        "params"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "target_buffer_bps",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "min_buffer_bps",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "slippage_bps",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "haircut_bps",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PausedEvent",
+      "prefix_topics": [
+        "paused"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pays only from the local buffer. `LiquidityShortfall` (no state change) if the buffer is short.\\nStays open while paused.",
+      "name": "withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_amounts_out",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "vec": {
+                "element_type": "i128"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DepositEvent",
+      "prefix_topics": [
+        "deposit"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_state",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "VaultState"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UpgradedEvent",
+      "prefix_topics": [
+        "upgraded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WithdrawEvent",
+      "prefix_topics": [
+        "withdraw"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "DeFindex `get_assets` shape (one asset, one strategy = this contract).",
+      "name": "get_assets",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "AssetStrategySet"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_keeper",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Bounded parameter update. The haircut can only be raised (never loosened) so the owner cannot\\ninflate the reported value.",
+      "name": "set_params",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "target_buffer_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "min_buffer_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "slippage_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "haircut_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "underlying",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "One-time: bind the depositing market once its receipt-vault exists.",
+      "name": "bind_market",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "DeFindex `get_assets` shape, so the market-factory `Defindex` attach check accepts this vault.",
+      "lib": "",
+      "name": "AssetStrategySet",
+      "fields": [
+        {
+          "doc": "",
+          "name": "address",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "strategies",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Strategy"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "total_supply",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "market",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "underlying",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cfg",
+          "type_": {
+            "udt": {
+              "name": "ZenexConfig"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Cancels the open order (owner or keeper). Zenex refunds principal and exec fee. For a stuck order,\\ne.g. a deposit that would exceed Zenex's vault cap or a redeem blocked by pending PnL.",
+      "name": "cancel_pending",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_zenex_state",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "ZenexState"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Owner or keeper: claim a Zenex credit parked after a failed payout into the buffer.",
+      "name": "claim_zenex_credit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`[underlying]`. Never panics: any read failure or empty vault quotes `[0]`.",
+      "name": "get_asset_amounts_per_shares",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "6.1 State snapshot every YieldVault adapter reports.",
+      "lib": "",
+      "name": "VaultState",
+      "fields": [
+        {
+          "doc": "",
+          "name": "apy_hint_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": "symbol"
+        },
+        {
+          "doc": "",
+          "name": "last_harvest_amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "last_harvest_ts",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "principal",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "reserve",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "total_shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "total_value",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "underlying",
+          "type_": "address"
+        }
+      ]
+    }
+  }
+]
