@@ -1,0 +1,243 @@
+[
+  {
+    "event_v0": {
+      "doc": "Emitted for every account the factory creates.",
+      "lib": "",
+      "name": "AccountCreated",
+      "prefix_topics": [
+        "account_created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "admin_signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploy an account whose constructor installs `admin_signers` as its\\nadmin rule, at [`Self::address_of`], and emit `AccountCreated`.\\nPermissionless. Fails if that account already exists.",
+      "name": "create",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "admin_signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The factory's interface version ([`VERSION`]). A new version is a\\nnew wasm and a new address.",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The address [`Self::create`] deploys for `salt` and `admin_signers`.",
+      "name": "address_of",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "admin_signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Deploy an account administered by one passkey, verified by the pinned\\nWebAuthn verifier.",
+      "name": "create_passkey",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": "bytes"
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The admin signer [`Self::create_passkey`] installs for `key_data`\\n(the 65-byte secp256r1 public key, optionally followed by the\\ncredential id).",
+      "name": "passkey_signer",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Signer"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The address [`Self::create_passkey`] deploys.",
+      "name": "passkey_address",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": "bytes"
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The pinned `perch-account` wasm hash every account is deployed from.",
+      "name": "account_wasm_hash",
+      "inputs": [],
+      "outputs": [
+        {
+          "bytes_n": {
+            "n": 32
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The pinned WebAuthn verifier passkey signers name.",
+      "name": "webauthn_verifier",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Represents different types of signers in the smart account system.",
+      "lib": "",
+      "name": "Signer",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A delegated signer that uses built-in signature verification.",
+            "name": "Delegated",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "An external signer with custom verification logic.\\nContains the verifier contract address and the public key data.",
+            "name": "External",
+            "type_": [
+              "address",
+              "bytes"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,51 @@
+[
+  {
+    "function_v0": {
+      "doc": "Execute one or more parallel multi-hop swap branches across Aqua and\\nSoroswap pools with a single `user` authorization and optional\\nper-ledger/signal `Temporary` mutex (`mutex_id != 0`).",
+      "name": "ss",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_in",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_out",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "branches",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Branch"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "out_min",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "mutex_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "u128"
+      ]
+    }
+  }
+]

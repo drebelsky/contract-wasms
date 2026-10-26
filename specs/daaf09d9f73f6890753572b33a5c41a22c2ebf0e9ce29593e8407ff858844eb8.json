@@ -1,0 +1,2606 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "One lost-key or compromise recovery attempt (spec \\xc2\\xa76.3 T1).",
+      "lib": "",
+      "name": "Attempt",
+      "fields": [
+        {
+          "doc": "`LostKey` or `Compromise`.",
+          "name": "action",
+          "type_": {
+            "udt": {
+              "name": "RecoveryAction"
+            }
+          }
+        },
+        {
+          "doc": "Set at authorization; `0` while collecting.",
+          "name": "authorized_at",
+          "type_": "u32"
+        },
+        {
+          "doc": "Distinct enrolled guardians that approved the cancel statement.",
+          "name": "cancel_guardians",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "The `Cancel` statement's freshness bound: never earlier than the\\nattempt's last live ledger.",
+          "name": "cancel_until",
+          "type_": "u32"
+        },
+        {
+          "doc": "Whether a cancellation proof was accepted.",
+          "name": "cancel_zk",
+          "type_": "bool"
+        },
+        {
+          "doc": "The ledger the attempt was opened in (T1).",
+          "name": "created_at",
+          "type_": "u32"
+        },
+        {
+          "doc": "The epoch the attempt was opened under; it is dead under any other.",
+          "name": "epoch",
+          "type_": "u64"
+        },
+        {
+          "doc": "Last ledger (inclusive) initiation evidence is accepted.",
+          "name": "evidence_deadline",
+          "type_": "u32"
+        },
+        {
+          "doc": "First completable ledger; `0` while collecting.",
+          "name": "executable_after",
+          "type_": "u32"
+        },
+        {
+          "doc": "First ledger the authorized attempt is no longer live; `0` while\\ncollecting.",
+          "name": "expires_at",
+          "type_": "u32"
+        },
+        {
+          "doc": "Distinct enrolled guardians that approved the initiation statement.",
+          "name": "guardians",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Per-account, never reused.",
+          "name": "id",
+          "type_": "u64"
+        },
+        {
+          "doc": "The credentials occupying the replaced signer slots in the source\\n(the baseline's, for compromise), keys canonicalized. The completion\\nreturns them for the account to revoke (spec \\xc2\\xa78).",
+          "name": "replaced",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Credential"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "`ReplacementSet::hash` of the declared replacements.",
+          "name": "replacements_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The source document's identity: lost-key, the account's applied\\nidentity at T1; compromise, the enrolled baseline. Read, never\\ncomputed here, so the controller does not depend on how identities\\nare computed.",
+          "name": "source_doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The stored state; see [`AttemptState`] for what is derived instead.",
+          "name": "state",
+          "type_": {
+            "udt": {
+              "name": "AttemptState"
+            }
+          }
+        },
+        {
+          "doc": "`sha256` of the canonical bytes `derive_target` returned, computed by\\nthe controller from the same derivation: what `enforce` requires the\\ncompleting `apply_doc` argument to hash to. Under CANON v1 it equals\\n`target_doc_hash`; a structured identity would differ (spec \\xc2\\xa76.3 T1,\\nT5).",
+          "name": "target_bytes_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The derived target's recovery `config_hash` (the current one, or the\\ncurrent one with the declared ZK rotation).",
+          "name": "target_config_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The derived target's document identity, as the compiler computed it:\\nwhat the statement names and what the completing `apply_doc` must\\ncompile to.",
+          "name": "target_doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The nullifier of the initiation proof, once one was accepted. A\\ncompletion spends it.",
+          "name": "zk_nullifier",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "What recovery currently restricts for an account (the controller's\\n`activity_gate` view, for clients; the account enforces the freeze from\\nits own mirror).",
+      "lib": "",
+      "name": "ActivityGate",
+      "fields": [
+        {
+          "doc": "The authorized, live attempt, if any. While it is set, policy\\nchanges and upgrades are refused in both profiles.",
+          "name": "authorized_attempt",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          }
+        },
+        {
+          "doc": "`Protected` with an authorized attempt: the account authorizes\\nnothing but that attempt's completion.",
+          "name": "frozen",
+          "type_": "bool"
+        },
+        {
+          "doc": "The authorized attempt's `expires_at`; `0` when none is authorized.",
+          "name": "until",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "An attempt's stored state. `Expired` is not a state, and neither is\\ninvalidation by an epoch change or a sibling's authorization: those are\\nderived from the ledger, the account's epoch, and its `invalidate_below`\\n(see `contract::is_live`), so no transition can leave them out of date.\\nOnly a stale lost-key source is recorded ([`AttemptState::Invalidated`]).",
+      "lib": "",
+      "name": "AttemptState",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Opened; collecting initiation evidence. Blocks nothing.",
+            "name": "Collecting"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The condition was satisfied: timelock, then completion window.",
+            "name": "Authorized"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Completed by the account's `apply_doc`.",
+            "name": "Completed"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Cancelled by evidence (T6) or, under `Loss`, by the owner (T7).",
+            "name": "Cancelled"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "A lost-key attempt whose condition was met after the account's\\ndocument moved off its source (T4). Recorded by the evidence call\\nthat found it, which succeeds: a refusal would roll the check back\\nand leave the attempt promotable once the document changed back.",
+            "name": "Invalidated"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Evidence recorded for one `Reconfigure` or `Upgrade` statement digest\\n(spec \\xc2\\xa75). Consumed by `rcv_sync`/`rcv_upgrade`, which rebuild the digest\\nfrom the change actually being made.",
+      "lib": "",
+      "name": "ChangeApproval",
+      "fields": [
+        {
+          "doc": "Distinct enrolled guardians that approved the statement.",
+          "name": "guardians",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Whether a proof for the statement was accepted.",
+          "name": "zk",
+          "type_": "bool"
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "Which evidence an attempt-bound submission counts toward.",
+      "lib": "",
+      "name": "EvidenceDomain",
+      "cases": [
+        {
+          "doc": "The attempt's own `LostKey`/`Compromise` statement (T2-T4).",
+          "name": "Initiate",
+          "value": 0
+        },
+        {
+          "doc": "The attempt's `Cancel` statement (T6).",
+          "name": "Cancel",
+          "value": 1
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "T1: an attempt was opened.",
+      "lib": "",
+      "name": "AttemptBegun",
+      "prefix_topics": [
+        "attempt_begun"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "action",
+          "type_": {
+            "udt": {
+              "name": "RecoveryAction"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "target_doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "T9: the account's configuration at this controller changed (enrolled,\\nreconfigured, or removed), or an upgrade executed. `config_hash` is the\\nconfiguration now stored, if any.",
+      "lib": "",
+      "name": "EpochAdvanced",
+      "prefix_topics": [
+        "epoch_advanced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "epoch",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "config_hash",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "T6/T7: an attempt was cancelled.",
+      "lib": "",
+      "name": "AttemptCancelled",
+      "prefix_topics": [
+        "attempt_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "Whether this cancellation counted toward `max-cancels`.",
+          "name": "counted",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "T4: an attempt's condition was satisfied.",
+      "lib": "",
+      "name": "AttemptAuthorized",
+      "prefix_topics": [
+        "attempt_authorized"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "executable_after",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "expires_at",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "T5: an attempt completed and its target was applied.",
+      "lib": "",
+      "name": "RecoveryCompleted",
+      "prefix_topics": [
+        "recovery_completed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "target_doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "T4: a lost-key attempt's condition was met, but the account's document\\nis no longer its source; the attempt is dead and a fresh one is needed.",
+      "lib": "",
+      "name": "AttemptInvalidated",
+      "prefix_topics": [
+        "attempt_invalidated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Evidence for a `Reconfigure` or `Upgrade` statement was recorded.",
+      "lib": "",
+      "name": "ChangeEvidenceRecorded",
+      "prefix_topics": [
+        "change_evidence_recorded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "digest",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The account's configuration epoch (spec \\xc2\\xa73.3).",
+      "name": "epoch",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Extend every persistent entry the account's recovery depends on to\\nthe network maximum (spec T10). Permissionless; changes no meaning.",
+      "name": "renew",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The account's configuration at this controller.",
+      "name": "config",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "CompiledRecoveryConfig"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "An attempt's stored record, live or not.",
+      "name": "attempt",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Attempt"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "T5: authorize the completing `apply_doc`. The recovery rule has no\\nsigners, so this is the whole check: the context must be this\\naccount's `apply_doc` of the authorized attempt's exact target bytes,\\ninside the completion window. It then leaves a marker that only the\\nsame invocation's `rcv_sync` consumes.",
+      "name": "enforce",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "context",
+          "type_": {
+            "udt": {
+              "name": "Context"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "authenticated_signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "context_rule",
+          "type_": {
+            "udt": {
+              "name": "ContextRule"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "smart_account",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Bookkeeping only: `rcv_sync` already wrote the configuration, earlier\\nin the same `apply_doc`. Checks that the recovery rule has the\\nrequired shape and was installed for the stored configuration.",
+      "name": "install",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "install_params",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "context_rule",
+          "type_": {
+            "udt": {
+              "name": "ContextRule"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "smart_account",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The published content of the enrolled baseline, if any.",
+      "name": "baseline",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "bytes"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The recovery side of the account's `apply_doc` (spec \\xc2\\xa710). Called\\nbefore any context rule changes. Classifies the call as exactly one of\\ncompletion, no change, enrollment, reconfiguration, or removal, and\\nwrites this controller's state for it.",
+      "name": "rcv_sync",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "recovery",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "CompiledRecoveryConfig"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "approval_valid_until",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "SyncOutcome"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The exact statement evidence for an attempt must sign or prove in\\n`domain`.",
+      "name": "statement",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "domain",
+          "type_": {
+            "udt": {
+              "name": "EvidenceDomain"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "RecoveryStatement"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "T3: a ZK proof for an attempt's statement in `domain`.\\nPermissionless: the proof is the authorization.",
+      "name": "submit_zk",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "domain",
+          "type_": {
+            "udt": {
+              "name": "EvidenceDomain"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "evidence",
+          "type_": {
+            "udt": {
+              "name": "ZkEvidence"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Writes nothing: OZ discards `uninstall` failures, so it can gate\\nnothing, and removal is decided by `rcv_sync`. Invoker-only like every\\nhook, so no signature can call it either.",
+      "name": "uninstall",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "context_rule",
+          "type_": {
+            "udt": {
+              "name": "ContextRule"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "smart_account",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "T7: a `Loss` owner cancels an attempt, through the account's\\n`cancel_recovery`. Never counted toward `max-cancels`.",
+      "name": "rcv_cancel",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The controller's half of the account's upgrade entry points\\n(spec \\xc2\\xa712). Both steps are refused while an attempt is authorized.\\n`Schedule` checks the recorded condition under `Protected` and\\nreturns the epoch the request binds; `Execute` refuses a request\\nrecorded under another epoch, then bumps the epoch and returns the\\nnew one.",
+      "name": "rcv_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "step",
+          "type_": {
+            "udt": {
+              "name": "UpgradeStep"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u64",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Whether an attempt is live (spec \\xc2\\xa76.2).",
+      "name": "attempt_live",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "What recovery currently restricts for the account.",
+      "name": "activity_gate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "ActivityGate"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "One guardian's approval of a `Reconfigure` or `Upgrade` statement,\\nfresh until `valid_until`. Recorded by digest for the consuming\\n`rcv_sync`/`rcv_upgrade`.",
+      "name": "approve_change",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "subject",
+          "type_": {
+            "udt": {
+              "name": "StatementSubject"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "valid_until",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "T1, lost-key: the target is the applied document with `replacements`\\napplied. Permissionless. Returns the attempt id.",
+      "name": "begin_lost_key",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "replacements",
+          "type_": {
+            "udt": {
+              "name": "ReplacementSet"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u64",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Recorded evidence for a change statement digest.",
+      "name": "change_evidence",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "digest",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "ChangeApproval"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The id the next `begin_*` will assign.",
+      "name": "next_attempt_id",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Whether `account` spent `nullifier` (spec \\xc2\\xa711).",
+      "name": "nullifier_spent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "nullifier",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Extend a spent nullifier's record to the network maximum.\\nPermissionless; changes no meaning.",
+      "name": "renew_nullifier",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "nullifier",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "T2: one guardian's approval of an attempt's statement in `domain`.\\nThe guardian authorizes `require_auth_for_args((digest,))` for\\nexactly that statement.",
+      "name": "submit_guardian",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "domain",
+          "type_": {
+            "udt": {
+              "name": "EvidenceDomain"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "T1, compromise: the target is the published baseline's signers and\\nrules, with the current recovery member and `replacements` applied.\\nPermissionless. Returns the attempt id.",
+      "name": "begin_compromise",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "replacements",
+          "type_": {
+            "udt": {
+              "name": "ReplacementSet"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u64",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The exact statement a `Reconfigure` or `Upgrade` approval must sign\\nor prove.",
+      "name": "change_statement",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "subject",
+          "type_": {
+            "udt": {
+              "name": "StatementSubject"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "valid_until",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "RecoveryStatement"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Store the enrolled baseline's canonical bytes (spec \\xc2\\xa73.5).\\nPermissionless: `doc_json` must compile, through the account's own\\ncompiler, to exactly the enrolled baseline hash and keep an admin\\nrule. Publishing changes no authority.",
+      "name": "publish_baseline",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "doc_json",
+          "type_": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "A ZK proof for a `Reconfigure` or `Upgrade` statement, fresh until\\n`valid_until`. Permissionless. Does not spend the nullifier.",
+      "name": "submit_zk_change",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "subject",
+          "type_": {
+            "udt": {
+              "name": "StatementSubject"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "valid_until",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "evidence",
+          "type_": {
+            "udt": {
+              "name": "ZkEvidence"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "RecoveryError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "What a completion hands back to the account.",
+      "lib": "",
+      "name": "Completion",
+      "fields": [
+        {
+          "doc": "The attempt that completed.",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "The credentials that occupied the replaced signer slots **in the\\nattempt's source document**, as derived at T1: the applied document\\nfor lost-key, the baseline for compromise. The account fingerprints\\nthem over canonical keys and revokes them together with every\\ncredential the completion removed from its current document. Without\\nthese, a baseline credential replaced by a compromise recovery, and\\nalready absent from the current document, would stay unrevoked and\\ncould be restored by a later recovery from the same baseline.",
+          "name": "replaced",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Credential"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "What `rcv_sync` did, so the account knows which of its own effects to\\napply (spec \\xc2\\xa710).",
+      "lib": "",
+      "name": "SyncOutcome",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Nothing about recovery changed.",
+            "name": "Unchanged"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "A configuration was enrolled at this controller.",
+            "name": "Enrolled"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The enrolled configuration was replaced.",
+            "name": "Reconfigured"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The configuration was removed from this controller (recovery\\nremoved, or the account switched to another controller).",
+            "name": "Removed"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "The authorized attempt completed in this invocation. The account\\ninserts the new leaf if the enrollment id changed, records the\\nenrollment id, revokes [`Completion::replaced`] together with every\\ncredential the completion removed from its current document (spec \\xc2\\xa78;\\n`credential::revocations` computes the union), clears\\nits pending upgrade, and clears its freeze mirror.",
+            "name": "Completed",
+            "type_": [
+              {
+                "udt": {
+                  "name": "Completion"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Which phase of an account upgrade `rcv_upgrade` is checking (spec \\xc2\\xa712).",
+      "lib": "",
+      "name": "UpgradeStep",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "`schedule_upgrade`: refuse during an authorized window; under\\n`Protected`, require recorded approvals of this subject valid through\\nthe given ledger.",
+            "name": "Schedule",
+            "type_": [
+              {
+                "udt": {
+                  "name": "UpgradeSubject"
+                }
+              },
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "`execute_upgrade` of a request recorded at this epoch: refuse during\\nan authorized window or if the epoch moved, then bump the epoch.",
+            "name": "Execute",
+            "type_": [
+              "u64"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Everything a recovery controller can refuse. Codes are sequential from 1\\nin declaration order and are wire format: append new variants at the\\nend, never reorder.",
+      "lib": "",
+      "name": "RecoveryError",
+      "cases": [
+        {
+          "doc": "No configuration is enrolled for this account at this controller.",
+          "name": "NotEnrolled",
+          "value": 1
+        },
+        {
+          "doc": "An attempt is authorized and live: begin, policy changes, and upgrades are refused until it completes, is cancelled, or expires.",
+          "name": "AttemptAuthorized",
+          "value": 2
+        },
+        {
+          "doc": "No attempt with this id exists for the account.",
+          "name": "NoSuchAttempt",
+          "value": 3
+        },
+        {
+          "doc": "The attempt is terminal, expired, from an older epoch, or invalidated by a sibling's authorization.",
+          "name": "AttemptNotLive",
+          "value": 4
+        },
+        {
+          "doc": "Initiation evidence for an attempt that is no longer collecting.",
+          "name": "AttemptNotCollecting",
+          "value": 5
+        },
+        {
+          "doc": "Completion before `executable_after`.",
+          "name": "NotExecutableYet",
+          "value": 6
+        },
+        {
+          "doc": "The completion context, or the compiled document hash, does not match the authorized attempt's target.",
+          "name": "WrongTarget",
+          "value": 7
+        },
+        {
+          "doc": "The address is not an enrolled guardian.",
+          "name": "NotAGuardian",
+          "value": 8
+        },
+        {
+          "doc": "This guardian or factor already counted for this statement.",
+          "name": "AlreadyCounted",
+          "value": 9
+        },
+        {
+          "doc": "The enrolled mode has no guardian factor.",
+          "name": "ModeHasNoGuardians",
+          "value": 10
+        },
+        {
+          "doc": "The enrolled mode has no ZK factor.",
+          "name": "ModeHasNoZk",
+          "value": 11
+        },
+        {
+          "doc": "The adapter refused the proof (its `ZkAdapterError` says why).",
+          "name": "ZkEvidenceRejected",
+          "value": 12
+        },
+        {
+          "doc": "The proof's nullifier is spent.",
+          "name": "NullifierSpent",
+          "value": 13
+        },
+        {
+          "doc": "The statement's freshness bound has passed or reaches too far.",
+          "name": "EvidenceExpired",
+          "value": 14
+        },
+        {
+          "doc": "The statement cannot be encoded (a non-contract account or controller).",
+          "name": "InvalidStatement",
+          "value": 15
+        },
+        {
+          "doc": "Recorded approvals do not satisfy the enrolled condition for this reconfiguration or upgrade.",
+          "name": "ConditionNotMet",
+          "value": 16
+        },
+        {
+          "doc": "The account's `max-cancels` is used up.",
+          "name": "MaxCancelsReached",
+          "value": 17
+        },
+        {
+          "doc": "Owner cancellation is only available under `Loss`.",
+          "name": "OwnerCancelRefused",
+          "value": 18
+        },
+        {
+          "doc": "The replacement set breaks a \\xc2\\xa77.3 rule, or derivation refused it.",
+          "name": "InvalidReplacements",
+          "value": 19
+        },
+        {
+          "doc": "The target or a replacement contains a revoked credential.",
+          "name": "CredentialRevoked",
+          "value": 20
+        },
+        {
+          "doc": "The ZK enrollment id was enrolled for this account before (the controller checks the account's `is_enrolled_id` at T1; the pure `derive_target` cannot see the account's history).",
+          "name": "EnrollmentIdReused",
+          "value": 21
+        },
+        {
+          "doc": "Compromise recovery with no baseline enrolled.",
+          "name": "NoBaseline",
+          "value": 22
+        },
+        {
+          "doc": "Compromise recovery before the baseline's content was published.",
+          "name": "BaselineNotPublished",
+          "value": 23
+        },
+        {
+          "doc": "The published document does not hash to the enrolled baseline.",
+          "name": "BaselineMismatch",
+          "value": 24
+        },
+        {
+          "doc": "The adapter's circuit id or tree depth does not match the enrolled factor and pool.",
+          "name": "ZkWiringMismatch",
+          "value": 25
+        },
+        {
+          "doc": "The ZK factor changed without a new enrollment id.",
+          "name": "ZkFactorChangedInPlace",
+          "value": 26
+        },
+        {
+          "doc": "The configuration is malformed (for example, the account is one of its own guardians, or the quorum is out of range).",
+          "name": "InvalidConfiguration",
+          "value": 27
+        },
+        {
+          "doc": "An upgrade request recorded under an older epoch.",
+          "name": "StaleUpgrade",
+          "value": 28
+        },
+        {
+          "doc": "A ledger-sequence computation overflowed `u32`.",
+          "name": "LedgerOverflow",
+          "value": 29
+        },
+        {
+          "doc": "The policy was attached to a context rule of the wrong shape.",
+          "name": "MalformedContextRule",
+          "value": 30
+        },
+        {
+          "doc": "A credential the replacement set replaces still appears in the target (a swap or a no-op replacement, spec \\xc2\\xa77.3 rule 8).",
+          "name": "ReplacedCredentialRetained",
+          "value": 31
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "A signer credential, shaped like OZ `stellar_accounts::smart_account::Signer`.",
+      "lib": "",
+      "name": "Credential",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "`Signer::Delegated(address)`: a `G...` or `C...` address that\\nauthenticates through CAP-0071 delegated auth.",
+            "name": "Delegated",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "`Signer::External(verifier, key)`: a key checked by a verifier\\ncontract.",
+            "name": "External",
+            "type_": [
+              "address",
+              "bytes"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One designated signer slot and the credential that replaces whatever\\nthat slot holds in the source document.",
+      "lib": "",
+      "name": "Replacement",
+      "fields": [
+        {
+          "doc": "The credential the target document gives that signer id.",
+          "name": "credential",
+          "type_": {
+            "udt": {
+              "name": "Credential"
+            }
+          }
+        },
+        {
+          "doc": "A document signer id listed in the enrolled `recovery.replaceable`.",
+          "name": "signer_id",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A ZK enrollment a recovery completion installs.\\n\\nThe commitment is bound here, not only the id: completion runs under the\\nzero-signer recovery rule, so nothing signs its arguments, and a\\ncommitment supplied only at completion could be swapped by whoever\\nsubmits the completing transaction first \\xe2\\x80\\x94 handing them the account's\\nnext ZK factor.",
+      "lib": "",
+      "name": "ZkEnrollment",
+      "fields": [
+        {
+          "doc": "The new leaf's inner commitment, `Poseidon2(DOM_LEAF, secret)`.\\nDerivation writes `id` and `commitment` into the target document's\\nrecovery section, so the target hash binds them, and the completing\\n`apply_doc` inserts the leaf from the compiled target, never from a\\ncall argument.",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The new enrollment id. Must never have been enrolled for this\\naccount before.",
+          "name": "id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Everything a `LostKey`/`Compromise` attempt changes about the source\\ndocument. See `docs/recovery/spec.md` \\xc2\\xa77.",
+      "lib": "",
+      "name": "ReplacementSet",
+      "fields": [
+        {
+          "doc": "Signer replacements in strictly ascending `signer_id` byte order\\n(sorted, no duplicates) \\xe2\\x80\\x94 the one canonical order.",
+          "name": "signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Replacement"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The fresh ZK enrollment the completion installs, required exactly\\nwhen the enrolled mode has a ZK factor (a ZK-evidenced completion\\nconsumes the enrolled credential, so it must install a fresh one).\\nEmpty or one entry \\xe2\\x80\\x94 a `Vec` because `#[contracttype]` cannot derive\\n`Option<CustomStruct>`.",
+          "name": "zk_enrollment",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "ZkEnrollment"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One ZK proof as submitted.",
+      "lib": "",
+      "name": "ZkEvidence",
+      "fields": [
+        {
+          "doc": "The credential's nullifier (the circuit's second public input).",
+          "name": "nullifier",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The serialized proof.",
+          "name": "proof",
+          "type_": "bytes"
+        },
+        {
+          "doc": "The root the proof was generated against; must be acceptable to the\\nenrolled pool for `tree_id`.",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The pool tree the proof's Merkle path is in.",
+          "name": "tree_id",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Who may change the recovery configuration, and whether an authorized\\nattempt freezes ordinary activity (spec \\xc2\\xa72, \\xc2\\xa79).",
+      "lib": "",
+      "name": "RecoveryProfile",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Owner authorization alone reconfigures; activity continues while an\\nattempt is authorized; the owner can always cancel.",
+            "name": "Loss"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Reconfiguration and upgrades also need the enrolled condition; an\\nauthorized attempt freezes the account.",
+            "name": "Protected"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The ZK factor (spec \\xc2\\xa73.1, \\xc2\\xa73.4).",
+      "lib": "",
+      "name": "CompiledZkFactor",
+      "fields": [
+        {
+          "doc": "The constructorless ZK adapter the controller calls.",
+          "name": "adapter",
+          "type_": "address"
+        },
+        {
+          "doc": "`sha256` of the adapter's verification key; must equal the adapter's\\n`circuit_id()`.",
+          "name": "circuit_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The current credential's inner commitment, `Poseidon2(DOM_LEAF,\\nsecret)`, from which the account inserts the leaf.",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The current credential's id, bound into its leaf and nullifier.",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The membership pool roots are accepted from.",
+          "name": "pool",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The guardian factor.",
+      "lib": "",
+      "name": "CompiledGuardianSet",
+      "fields": [
+        {
+          "doc": "Guardian addresses (`G...` or `C...`), never the account itself.",
+          "name": "guardians",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "`1 <= quorum <= guardians.len()`.",
+          "name": "quorum",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Which factors a statement needs.",
+      "lib": "",
+      "name": "CompiledRecoveryMode",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A quorum of guardians.",
+            "name": "GuardianOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledGuardianSet"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "One ZK proof.",
+            "name": "ZkOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledZkFactor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "A quorum of guardians and one ZK proof.",
+            "name": "Combined",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledGuardianSet"
+                }
+              },
+              {
+                "udt": {
+                  "name": "CompiledZkFactor"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A compiled `recovery` member.",
+      "lib": "",
+      "name": "CompiledRecoveryConfig",
+      "fields": [
+        {
+          "doc": "The enrolled baseline's canonical document hash, if compromise\\nrecovery is enrolled.",
+          "name": "baseline",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "[`config_hash`] of the canonical JSON of the recovery member, computed\\nby the doc compiler (spec \\xc2\\xa73.2). Configuration\\nidentity: two compiled configurations with the same `config_hash` are\\nthe same configuration.",
+          "name": "config_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The adopted controller instance.",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "Ledgers from an attempt's authorization until it can complete.",
+          "name": "delay_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "The evidence window of a collecting attempt and the completion\\nwindow of an authorized one, in ledgers.",
+          "name": "expiry_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "Lifetime cap on evidence-based cancellations of authorized attempts.",
+          "name": "max_cancels",
+          "type_": "u32"
+        },
+        {
+          "doc": "The factors evidence must satisfy.",
+          "name": "mode",
+          "type_": {
+            "udt": {
+              "name": "CompiledRecoveryMode"
+            }
+          }
+        },
+        {
+          "doc": "Who may change the configuration, and whether an authorized attempt\\nfreezes the account.",
+          "name": "profile",
+          "type_": {
+            "udt": {
+              "name": "RecoveryProfile"
+            }
+          }
+        },
+        {
+          "doc": "Signer ids (not credential fingerprints) a recovery may replace, so\\nrotating a key does not change the configuration (#92).",
+          "name": "replaceable",
+          "type_": {
+            "vec": {
+              "element_type": "string"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "What a `Reconfigure` statement changes the enrolled configuration to.",
+      "lib": "",
+      "name": "ConfigChange",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Remove recovery from the account.",
+            "name": "Remove"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Replace the configuration with the one whose\\n[`ConfigBinding::config_hash`] is this value (which may name a\\ndifferent controller instance).",
+            "name": "Set",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The subject of a `Cancel` statement.",
+      "lib": "",
+      "name": "CancelSubject",
+      "fields": [
+        {
+          "doc": "The attempt being cancelled.",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "That attempt's own initiation statement digest, so cancellation\\nevidence names exactly one proposal, not just an id.",
+          "name": "attempt_statement",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The enrolled configuration a statement is evaluated against.",
+      "lib": "",
+      "name": "ConfigBinding",
+      "fields": [
+        {
+          "doc": "`sha256(\"perch/recovery/config\" || canonical JSON of the enrolled\\ndocument's recovery member)`, as [`crate::config::config_hash`]\\ncomputes it (`docs/recovery/spec.md` \\xc2\\xa73.2). Binds the whole\\nconfiguration: profile, mode, guardians, quorum, ZK adapter, circuit\\nid, pool, enrollment id and commitment, controller, baseline,\\nreplaceable signer ids, and timing.",
+          "name": "config_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The controller's per-account configuration epoch. It increments on\\nevery enrollment, reconfiguration, removal, completed recovery, and\\nexecuted account upgrade, so evidence produced under one epoch is\\ndead under every later one.",
+          "name": "epoch",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The subject of a `LostKey` or `Compromise` attempt.",
+      "lib": "",
+      "name": "AttemptSubject",
+      "fields": [
+        {
+          "doc": "The controller-assigned, per-account, never-reused attempt id.",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "[`crate::credential::ReplacementSet::hash`] of the declared\\nreplacements.",
+          "name": "replacements_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "`LostKey`: the canonical hash of the account's applied document when\\nthe attempt began (the agreed snapshot). `Compromise`: the enrolled\\nbaseline's canonical hash.",
+          "name": "source_doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The canonical hash of the target document, derived on-chain from\\nthe source and the replacement set \\xe2\\x80\\x94 never caller-chosen.",
+          "name": "target_doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "The action domain a statement authorizes. Evidence for one action never\\nsatisfies another: the action code is the encoding's 26th byte and selects\\nthe subject layout, so two statements that differ only in action have\\ndifferent digests (and different encoded lengths for most pairs).\\n\\nThe numeric codes are part of the wire format.",
+      "lib": "",
+      "name": "RecoveryAction",
+      "cases": [
+        {
+          "doc": "Lost-key recovery: replace designated credentials in an agreed\\nsnapshot of the current document.",
+          "name": "LostKey",
+          "value": 1
+        },
+        {
+          "doc": "Compromise recovery: restore the enrolled baseline, with designated\\ncredentials replaced.",
+          "name": "Compromise",
+          "value": 2
+        },
+        {
+          "doc": "Cancel one identified attempt.",
+          "name": "Cancel",
+          "value": 3
+        },
+        {
+          "doc": "Change or remove the enrolled recovery configuration (the evidence a\\n`Protected` account needs in addition to owner authorization).",
+          "name": "Reconfigure",
+          "value": 4
+        },
+        {
+          "doc": "Approve one scheduled account upgrade (the evidence a `Protected`\\naccount needs in addition to owner authorization).",
+          "name": "Upgrade",
+          "value": 5
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The subject of an `Upgrade` statement.",
+      "lib": "",
+      "name": "UpgradeSubject",
+      "fields": [
+        {
+          "doc": "The account's per-account, never-reused upgrade request id.",
+          "name": "request_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "The exact Wasm hash the account would run after the upgrade.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Timing terms, all in ledger-sequence units.",
+      "lib": "",
+      "name": "StatementTiming",
+      "fields": [
+        {
+          "doc": "The enrolled `delay-ledgers`: ledgers between an attempt becoming\\nauthorized and becoming completable.",
+          "name": "delay_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "The enrolled `expiry-ledgers`: the evidence window for a collecting\\nattempt, the completion window for an authorized one, and the upper\\nbound on how far ahead a provider-chosen `valid_until_ledger` may\\nreach.",
+          "name": "expiry_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "The last ledger sequence (inclusive) at which this evidence may be\\naccepted. The controller fixes it for attempt-bound actions:\\n`LostKey`/`Compromise` use the attempt's evidence deadline, and\\n`Cancel` the last ledger the attempt could possibly be live, so\\napprovals collected over several transactions all sign one\\nstatement. For `Reconfigure`/`Upgrade` the evidence provider chooses\\nit, within `expiry_ledgers` of submission.",
+          "name": "valid_until_ledger",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The action-specific part of a statement. The variant determines\\n[`RecoveryStatement::action`]; there is no separate action field that\\ncould disagree with it.",
+      "lib": "",
+      "name": "StatementSubject",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A lost-key attempt's initiation statement.",
+            "name": "LostKey",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AttemptSubject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "A compromise attempt's initiation statement.",
+            "name": "Compromise",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AttemptSubject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Cancel one attempt.",
+            "name": "Cancel",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CancelSubject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Change or remove the enrolled configuration.",
+            "name": "Reconfigure",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ConfigChange"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Approve one account upgrade request, checked when it is scheduled.",
+            "name": "Upgrade",
+            "type_": [
+              {
+                "udt": {
+                  "name": "UpgradeSubject"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The one recovery statement. See the module docs.",
+      "lib": "",
+      "name": "RecoveryStatement",
+      "fields": [
+        {
+          "doc": "The recovering account. Must be a contract address.",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "The enrolled configuration and epoch the evidence is for.",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "ConfigBinding"
+            }
+          }
+        },
+        {
+          "doc": "The controller instance evaluating the evidence (for `Reconfigure`,\\nthe currently adopted one, even when the change adopts another).\\nMust be a contract address.",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "The network id (`sha256` of the network passphrase), as\\n`Env::ledger().network_id()` returns it.",
+          "name": "network_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "What the evidence approves.",
+          "name": "subject",
+          "type_": {
+            "udt": {
+              "name": "StatementSubject"
+            }
+          }
+        },
+        {
+          "doc": "The enrolled timing terms and the evidence's freshness bound.",
+          "name": "timing",
+          "type_": {
+            "udt": {
+              "name": "StatementTiming"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Context of a single authorized call performed by an address.\\n\\nCustom account contracts that implement `__check_auth` special function\\nreceive a list of `Context` values corresponding to all the calls that\\nneed to be authorized.",
+      "lib": "",
+      "name": "Context",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "Contract invocation.",
+            "name": "Contract",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ContractContext"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Contract that has a constructor with no arguments is created.",
+            "name": "CreateContractHostFn",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CreateContractHostFnContext"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Contract that has a constructor with 1 or more arguments is created.",
+            "name": "CreateContractWithCtorHostFn",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CreateContractWithConstructorHostFnContext"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context of a single contract call.\\n\\nThis struct corresponds to a `require_auth_for_args` call for an address\\nfrom `contract` function with `fn_name` name and `args` arguments.",
+      "lib": "",
+      "name": "ContractContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "args",
+          "type_": {
+            "vec": {
+              "element_type": "val"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "contract",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "fn_name",
+          "type_": "symbol"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Contract executable used for creating a new contract and used in\\n`CreateContractHostFnContext`.",
+      "lib": "",
+      "name": "ContractExecutable",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Wasm",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context for `create_contract` host function that creates a\\nnew contract on behalf of authorizer address.",
+      "lib": "",
+      "name": "CreateContractHostFnContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "executable",
+          "type_": {
+            "udt": {
+              "name": "ContractExecutable"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Authorization context for `create_contract` host function that creates a\\nnew contract on behalf of authorizer address.\\nThis is the same as `CreateContractHostFnContext`, but also has\\ncontract constructor arguments.",
+      "lib": "",
+      "name": "CreateContractWithConstructorHostFnContext",
+      "fields": [
+        {
+          "doc": "",
+          "name": "constructor_args",
+          "type_": {
+            "vec": {
+              "element_type": "val"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "executable",
+          "type_": {
+            "udt": {
+              "name": "ContractExecutable"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Represents different types of signers in the smart account system.",
+      "lib": "",
+      "name": "Signer",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A delegated signer that uses built-in signature verification.",
+            "name": "Delegated",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "An external signer with custom verification logic.\\nContains the verifier contract address and the public key data.",
+            "name": "External",
+            "type_": [
+              "address",
+              "bytes"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A complete context rule defining authorization requirements.",
+      "lib": "",
+      "name": "ContextRule",
+      "fields": [
+        {
+          "doc": "The type of context this rule applies to.",
+          "name": "context_type",
+          "type_": {
+            "udt": {
+              "name": "ContextRuleType"
+            }
+          }
+        },
+        {
+          "doc": "Unique identifier for the context rule.",
+          "name": "id",
+          "type_": "u32"
+        },
+        {
+          "doc": "Human-readable name for the context rule.",
+          "name": "name",
+          "type_": "string"
+        },
+        {
+          "doc": "List of policy contracts that must be satisfied.",
+          "name": "policies",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "Global registry IDs for each policy, positionally aligned with\\n`policies`.",
+          "name": "policy_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "Global registry IDs for each signer, positionally aligned with\\n`signers`.",
+          "name": "signer_ids",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "List of signers authorized by this rule.",
+          "name": "signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Signer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "Optional expiration ledger sequence for the rule.",
+          "name": "valid_until",
+          "type_": {
+            "option": {
+              "value_type": "u32"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Types of contexts that can be authorized by smart account rules.",
+      "lib": "",
+      "name": "ContextRuleType",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Default rules that can authorize any context.",
+            "name": "Default"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Rules specific to calling a particular contract.",
+            "name": "CallContract",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Rules specific to creating a contract with a particular WASM hash.",
+            "name": "CreateContract",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

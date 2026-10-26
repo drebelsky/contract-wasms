@@ -1,0 +1,1759 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "A tree's public summary.",
+      "lib": "",
+      "name": "TreeInfo",
+      "fields": [
+        {
+          "doc": "The most leaves the tree holds, `2^TREE_DEPTH`.",
+          "name": "capacity",
+          "type_": "u64"
+        },
+        {
+          "doc": "The latest root (the empty-tree root before any insertion).",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "Full, and never written again.",
+          "name": "sealed",
+          "type_": "bool"
+        },
+        {
+          "doc": "Leaves inserted so far.",
+          "name": "size",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Where an insertion landed (the `LeafInserted` event's payload).\\n`(tree_id, index)` is the leaf's permanent position; `root` is the\\ntree's root right after the insertion.",
+      "lib": "",
+      "name": "Insertion",
+      "fields": [
+        {
+          "doc": "",
+          "name": "index",
+          "type_": "u64"
+        },
+        {
+          "doc": "The stored leaf, `H(DOM_BIND, account, enrollment_id, inner)`.",
+          "name": "leaf",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Everything the pool can refuse.",
+      "lib": "",
+      "name": "PoolError",
+      "cases": [
+        {
+          "doc": "The commitment is not a canonical BN254 field element (`>= r`).",
+          "name": "NonCanonicalCommitment",
+          "value": 1
+        },
+        {
+          "doc": "The inserting address is not a contract. Leaves bind a contract id.",
+          "name": "AccountNotContract",
+          "value": 2
+        },
+        {
+          "doc": "This account already inserted a leaf under this enrollment id.",
+          "name": "EnrollmentIdTaken",
+          "value": 3
+        },
+        {
+          "doc": "No tree with this id has been opened.",
+          "name": "UnknownTree",
+          "value": 4
+        },
+        {
+          "doc": "A page request exceeds `MAX_PAGE`.",
+          "name": "PageTooLarge",
+          "value": 5
+        },
+        {
+          "doc": "The tree id counter would overflow (2^32 full trees).",
+          "name": "TreeIdOverflow",
+          "value": 6
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A leaf's permanent position.",
+      "lib": "",
+      "name": "LeafPosition",
+      "fields": [
+        {
+          "doc": "The leaf's index in that tree.",
+          "name": "index",
+          "type_": "u64"
+        },
+        {
+          "doc": "The tree the leaf is in.",
+          "name": "tree_id",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The pool's storage keys (see the layout table in the module docs).",
+      "lib": "",
+      "name": "PoolKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "The tree insertions go into (absent = tree 0).",
+            "name": "CurrentTree"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "A tree's [`TreeState`].",
+            "name": "Tree",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "A root the tree has had, holding the tree size right after it.",
+            "name": "Root",
+            "type_": [
+              "u32",
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "The leaf at an index of a tree.",
+            "name": "Leaf",
+            "type_": [
+              "u32",
+              "u64"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "An account's enrollment's [`LeafPosition`].",
+            "name": "Enrollment",
+            "type_": [
+              "address",
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A tree's incremental-Merkle state.",
+      "lib": "",
+      "name": "TreeState",
+      "fields": [
+        {
+          "doc": "`frontier[level]` is the most recent node at `level` that was a left\\nchild: the left sibling the next right child at that level hashes\\nwith. Entries are written before they are ever read.",
+          "name": "frontier",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The root after the latest insertion.",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "Leaves inserted so far; also the index the next insertion takes.",
+          "name": "size",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Emitted for every insertion. Together with the `Leaf` storage entries,\\nthis is what an indexer replays to rebuild a tree and serve witnesses.",
+      "lib": "",
+      "name": "LeafInserted",
+      "prefix_topics": [
+        "leaf_inserted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "index",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "leaf",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Tree `tree_id`'s summary. `UnknownTree` if it was never opened.",
+      "name": "tree",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "TreeInfo"
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "PoolError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`MembershipPoolInterface::depth`: each tree's Merkle depth\\n([`TREE_DEPTH`]), a build constant.",
+      "name": "depth",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Leaves `start..start + count` of `tree_id`, clamped to its size, for\\nrebuilding witnesses from storage. `count` is at most\\n[`MAX_PAGE`](crate::MAX_PAGE) (`PageTooLarge`).",
+      "name": "leaves",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "start",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "count",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "vec": {
+                "element_type": {
+                  "bytes_n": {
+                    "n": 32
+                  }
+                }
+              }
+            },
+            "error_type": {
+              "udt": {
+                "name": "PoolError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The pool's interface and semantics version ([`VERSION`]). A new\\nversion is a new wasm and a new address.",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Where `account`'s enrollment `enrollment_id` landed, if it exists.",
+      "name": "enrollment",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "LeafPosition"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Insert `commitment` (`H(DOM_LEAF, secret)`) for `account` under\\n`enrollment_id` (spec \\xc2\\xa714.2). Invoker-only: `account.require_auth()`\\nis satisfiable only by the account's own code calling, because the\\naccount refuses to sign reserved `rcv_*` names (spec \\xc2\\xa715). The pool,\\nnot the caller, derives the stored leaf from the account and the id,\\nand refuses a second insertion under the same id. Returns nothing:\\nthe leaf's position is in the `LeafInserted` event and in\\n[`Self::enrollment`].",
+      "name": "rcv_insert",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "PoolError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless keep-alive for one historical root a prover relies on.",
+      "name": "renew_root",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless keep-alive: extend `tree_id`'s state and latest root\\n(and the current-tree pointer) to the network's maximum TTL. Changes\\nnothing else.",
+      "name": "renew_tree",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "PoolError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The tree insertions currently go into.",
+      "name": "current_tree",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless keep-alive for leaves `start..start + count` of\\n`tree_id`, as [`Self::leaves`] pages them.",
+      "name": "renew_leaves",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "start",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "count",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "PoolError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`MembershipPoolInterface::is_known_root`: whether `root` is a root\\ntree `tree_id` of this pool has ever had.",
+      "name": "is_known_root",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "tree_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Permissionless keep-alive for one enrollment's record and leaf.",
+      "name": "renew_enrollment",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "What a completion hands back to the account.",
+      "lib": "",
+      "name": "Completion",
+      "fields": [
+        {
+          "doc": "The attempt that completed.",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "The credentials that occupied the replaced signer slots **in the\\nattempt's source document**, as derived at T1: the applied document\\nfor lost-key, the baseline for compromise. The account fingerprints\\nthem over canonical keys and revokes them together with every\\ncredential the completion removed from its current document. Without\\nthese, a baseline credential replaced by a compromise recovery, and\\nalready absent from the current document, would stay unrevoked and\\ncould be restored by a later recovery from the same baseline.",
+          "name": "replaced",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Credential"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "What `rcv_sync` did, so the account knows which of its own effects to\\napply (spec \\xc2\\xa710).",
+      "lib": "",
+      "name": "SyncOutcome",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Nothing about recovery changed.",
+            "name": "Unchanged"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "A configuration was enrolled at this controller.",
+            "name": "Enrolled"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The enrolled configuration was replaced.",
+            "name": "Reconfigured"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The configuration was removed from this controller (recovery\\nremoved, or the account switched to another controller).",
+            "name": "Removed"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "The authorized attempt completed in this invocation. The account\\ninserts the new leaf if the enrollment id changed, records the\\nenrollment id, revokes [`Completion::replaced`] together with every\\ncredential the completion removed from its current document (spec \\xc2\\xa78;\\n`credential::revocations` computes the union), clears\\nits pending upgrade, and clears its freeze mirror.",
+            "name": "Completed",
+            "type_": [
+              {
+                "udt": {
+                  "name": "Completion"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Which phase of an account upgrade `rcv_upgrade` is checking (spec \\xc2\\xa712).",
+      "lib": "",
+      "name": "UpgradeStep",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "`schedule_upgrade`: refuse during an authorized window; under\\n`Protected`, require recorded approvals of this subject valid through\\nthe given ledger.",
+            "name": "Schedule",
+            "type_": [
+              {
+                "udt": {
+                  "name": "UpgradeSubject"
+                }
+              },
+              "u32"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "`execute_upgrade` of a request recorded at this epoch: refuse during\\nan authorized window or if the epoch moved, then bump the epoch.",
+            "name": "Execute",
+            "type_": [
+              "u64"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Everything a recovery controller can refuse. Codes are sequential from 1\\nin declaration order and are wire format: append new variants at the\\nend, never reorder.",
+      "lib": "",
+      "name": "RecoveryError",
+      "cases": [
+        {
+          "doc": "No configuration is enrolled for this account at this controller.",
+          "name": "NotEnrolled",
+          "value": 1
+        },
+        {
+          "doc": "An attempt is authorized and live: begin, policy changes, and upgrades are refused until it completes, is cancelled, or expires.",
+          "name": "AttemptAuthorized",
+          "value": 2
+        },
+        {
+          "doc": "No attempt with this id exists for the account.",
+          "name": "NoSuchAttempt",
+          "value": 3
+        },
+        {
+          "doc": "The attempt is terminal, expired, from an older epoch, or invalidated by a sibling's authorization.",
+          "name": "AttemptNotLive",
+          "value": 4
+        },
+        {
+          "doc": "Initiation evidence for an attempt that is no longer collecting.",
+          "name": "AttemptNotCollecting",
+          "value": 5
+        },
+        {
+          "doc": "Completion before `executable_after`.",
+          "name": "NotExecutableYet",
+          "value": 6
+        },
+        {
+          "doc": "The completion context, or the compiled document hash, does not match the authorized attempt's target.",
+          "name": "WrongTarget",
+          "value": 7
+        },
+        {
+          "doc": "The address is not an enrolled guardian.",
+          "name": "NotAGuardian",
+          "value": 8
+        },
+        {
+          "doc": "This guardian or factor already counted for this statement.",
+          "name": "AlreadyCounted",
+          "value": 9
+        },
+        {
+          "doc": "The enrolled mode has no guardian factor.",
+          "name": "ModeHasNoGuardians",
+          "value": 10
+        },
+        {
+          "doc": "The enrolled mode has no ZK factor.",
+          "name": "ModeHasNoZk",
+          "value": 11
+        },
+        {
+          "doc": "The adapter refused the proof (its `ZkAdapterError` says why).",
+          "name": "ZkEvidenceRejected",
+          "value": 12
+        },
+        {
+          "doc": "The proof's nullifier is spent.",
+          "name": "NullifierSpent",
+          "value": 13
+        },
+        {
+          "doc": "The statement's freshness bound has passed or reaches too far.",
+          "name": "EvidenceExpired",
+          "value": 14
+        },
+        {
+          "doc": "The statement cannot be encoded (a non-contract account or controller).",
+          "name": "InvalidStatement",
+          "value": 15
+        },
+        {
+          "doc": "Recorded approvals do not satisfy the enrolled condition for this reconfiguration or upgrade.",
+          "name": "ConditionNotMet",
+          "value": 16
+        },
+        {
+          "doc": "The account's `max-cancels` is used up.",
+          "name": "MaxCancelsReached",
+          "value": 17
+        },
+        {
+          "doc": "Owner cancellation is only available under `Loss`.",
+          "name": "OwnerCancelRefused",
+          "value": 18
+        },
+        {
+          "doc": "The replacement set breaks a \\xc2\\xa77.3 rule, or derivation refused it.",
+          "name": "InvalidReplacements",
+          "value": 19
+        },
+        {
+          "doc": "The target or a replacement contains a revoked credential.",
+          "name": "CredentialRevoked",
+          "value": 20
+        },
+        {
+          "doc": "The ZK enrollment id was enrolled for this account before (the controller checks the account's `is_enrolled_id` at T1; the pure `derive_target` cannot see the account's history).",
+          "name": "EnrollmentIdReused",
+          "value": 21
+        },
+        {
+          "doc": "Compromise recovery with no baseline enrolled.",
+          "name": "NoBaseline",
+          "value": 22
+        },
+        {
+          "doc": "Compromise recovery before the baseline's content was published.",
+          "name": "BaselineNotPublished",
+          "value": 23
+        },
+        {
+          "doc": "The published document does not hash to the enrolled baseline.",
+          "name": "BaselineMismatch",
+          "value": 24
+        },
+        {
+          "doc": "The adapter's circuit id or tree depth does not match the enrolled factor and pool.",
+          "name": "ZkWiringMismatch",
+          "value": 25
+        },
+        {
+          "doc": "The ZK factor changed without a new enrollment id.",
+          "name": "ZkFactorChangedInPlace",
+          "value": 26
+        },
+        {
+          "doc": "The configuration is malformed (for example, the account is one of its own guardians, or the quorum is out of range).",
+          "name": "InvalidConfiguration",
+          "value": 27
+        },
+        {
+          "doc": "An upgrade request recorded under an older epoch.",
+          "name": "StaleUpgrade",
+          "value": 28
+        },
+        {
+          "doc": "A ledger-sequence computation overflowed `u32`.",
+          "name": "LedgerOverflow",
+          "value": 29
+        },
+        {
+          "doc": "The policy was attached to a context rule of the wrong shape.",
+          "name": "MalformedContextRule",
+          "value": 30
+        },
+        {
+          "doc": "A credential the replacement set replaces still appears in the target (a swap or a no-op replacement, spec \\xc2\\xa77.3 rule 8).",
+          "name": "ReplacedCredentialRetained",
+          "value": 31
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "A signer credential, shaped like OZ `stellar_accounts::smart_account::Signer`.",
+      "lib": "",
+      "name": "Credential",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "`Signer::Delegated(address)`: a `G...` or `C...` address that\\nauthenticates through CAP-0071 delegated auth.",
+            "name": "Delegated",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "`Signer::External(verifier, key)`: a key checked by a verifier\\ncontract.",
+            "name": "External",
+            "type_": [
+              "address",
+              "bytes"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One designated signer slot and the credential that replaces whatever\\nthat slot holds in the source document.",
+      "lib": "",
+      "name": "Replacement",
+      "fields": [
+        {
+          "doc": "The credential the target document gives that signer id.",
+          "name": "credential",
+          "type_": {
+            "udt": {
+              "name": "Credential"
+            }
+          }
+        },
+        {
+          "doc": "A document signer id listed in the enrolled `recovery.replaceable`.",
+          "name": "signer_id",
+          "type_": "string"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A ZK enrollment a recovery completion installs.\\n\\nThe commitment is bound here, not only the id: completion runs under the\\nzero-signer recovery rule, so nothing signs its arguments, and a\\ncommitment supplied only at completion could be swapped by whoever\\nsubmits the completing transaction first \\xe2\\x80\\x94 handing them the account's\\nnext ZK factor.",
+      "lib": "",
+      "name": "ZkEnrollment",
+      "fields": [
+        {
+          "doc": "The new leaf's inner commitment, `Poseidon2(DOM_LEAF, secret)`.\\nDerivation writes `id` and `commitment` into the target document's\\nrecovery section, so the target hash binds them, and the completing\\n`apply_doc` inserts the leaf from the compiled target, never from a\\ncall argument.",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The new enrollment id. Must never have been enrolled for this\\naccount before.",
+          "name": "id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Everything a `LostKey`/`Compromise` attempt changes about the source\\ndocument. See `docs/recovery/spec.md` \\xc2\\xa77.",
+      "lib": "",
+      "name": "ReplacementSet",
+      "fields": [
+        {
+          "doc": "Signer replacements in strictly ascending `signer_id` byte order\\n(sorted, no duplicates) \\xe2\\x80\\x94 the one canonical order.",
+          "name": "signers",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Replacement"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "The fresh ZK enrollment the completion installs, required exactly\\nwhen the enrolled mode has a ZK factor (a ZK-evidenced completion\\nconsumes the enrolled credential, so it must install a fresh one).\\nEmpty or one entry \\xe2\\x80\\x94 a `Vec` because `#[contracttype]` cannot derive\\n`Option<CustomStruct>`.",
+          "name": "zk_enrollment",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "ZkEnrollment"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Which enrolled ZK factor a statement is checked against. The controller\\nbuilds this from its stored configuration \\xe2\\x80\\x94 never from caller input.",
+      "lib": "",
+      "name": "ZkBinding",
+      "fields": [
+        {
+          "doc": "The circuit identity the enrolling document named. The adapter\\nrefuses any binding whose `circuit_id` is not its own.",
+          "name": "circuit_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The enrolled credential's id, bound into its leaf and its nullifier.\\nA leaf enrolled under any other id \\xe2\\x80\\x94 including the account's own\\nearlier enrollments \\xe2\\x80\\x94 cannot satisfy a proof for this binding.",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The enrolled membership pool. Roots are accepted only from this pool.",
+          "name": "pool",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One ZK proof as submitted.",
+      "lib": "",
+      "name": "ZkEvidence",
+      "fields": [
+        {
+          "doc": "The credential's nullifier (the circuit's second public input).",
+          "name": "nullifier",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The serialized proof.",
+          "name": "proof",
+          "type_": "bytes"
+        },
+        {
+          "doc": "The root the proof was generated against; must be acceptable to the\\nenrolled pool for `tree_id`.",
+          "name": "root",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The pool tree the proof's Merkle path is in.",
+          "name": "tree_id",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Everything [`ZkAdapterInterface::verify`] can refuse. Each is a refusal\\nof this evidence only; none is a statement about the account.",
+      "lib": "",
+      "name": "ZkAdapterError",
+      "cases": [
+        {
+          "doc": "The binding names a circuit this adapter does not verify.",
+          "name": "CircuitMismatch",
+          "value": 1
+        },
+        {
+          "doc": "The statement cannot be projected (its account or controller is not a contract address).",
+          "name": "InvalidStatement",
+          "value": 2
+        },
+        {
+          "doc": "The root or nullifier is not a canonical field element.",
+          "name": "NonCanonicalField",
+          "value": 3
+        },
+        {
+          "doc": "The enrolled pool does not accept `(tree_id, root)`.",
+          "name": "UnknownRoot",
+          "value": 4
+        },
+        {
+          "doc": "The enrolled pool could not be called.",
+          "name": "PoolUnavailable",
+          "value": 5
+        },
+        {
+          "doc": "The proof is not the length/shape the circuit produces.",
+          "name": "MalformedProof",
+          "value": 6
+        },
+        {
+          "doc": "The verifier rejected the proof.",
+          "name": "ProofRejected",
+          "value": 7
+        },
+        {
+          "doc": "The verifier could not be called or failed to parse its own key.",
+          "name": "VerifierUnavailable",
+          "value": 8
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "A backend verifier's refusals. Same names, order, and codes (1, 2, 3)\\nas Nido's constructorless `nido-recovery-verifier`, so either can sit\\nbehind an adapter unchanged.",
+      "lib": "",
+      "name": "ProofVerifierError",
+      "cases": [
+        {
+          "doc": "The verification key could not be parsed.",
+          "name": "VkParseError",
+          "value": 1
+        },
+        {
+          "doc": "The proof could not be parsed (for example, it has the wrong length).",
+          "name": "ProofParseError",
+          "value": 2
+        },
+        {
+          "doc": "The proof does not verify against the public inputs.",
+          "name": "VerificationFailed",
+          "value": 3
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Who may change the recovery configuration, and whether an authorized\\nattempt freezes ordinary activity (spec \\xc2\\xa72, \\xc2\\xa79).",
+      "lib": "",
+      "name": "RecoveryProfile",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Owner authorization alone reconfigures; activity continues while an\\nattempt is authorized; the owner can always cancel.",
+            "name": "Loss"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "Reconfiguration and upgrades also need the enrolled condition; an\\nauthorized attempt freezes the account.",
+            "name": "Protected"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The ZK factor (spec \\xc2\\xa73.1, \\xc2\\xa73.4).",
+      "lib": "",
+      "name": "CompiledZkFactor",
+      "fields": [
+        {
+          "doc": "The constructorless ZK adapter the controller calls.",
+          "name": "adapter",
+          "type_": "address"
+        },
+        {
+          "doc": "`sha256` of the adapter's verification key; must equal the adapter's\\n`circuit_id()`.",
+          "name": "circuit_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The current credential's inner commitment, `Poseidon2(DOM_LEAF,\\nsecret)`, from which the account inserts the leaf.",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The current credential's id, bound into its leaf and nullifier.",
+          "name": "enrollment_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The membership pool roots are accepted from.",
+          "name": "pool",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The guardian factor.",
+      "lib": "",
+      "name": "CompiledGuardianSet",
+      "fields": [
+        {
+          "doc": "Guardian addresses (`G...` or `C...`), never the account itself.",
+          "name": "guardians",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "`1 <= quorum <= guardians.len()`.",
+          "name": "quorum",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "Which factors a statement needs.",
+      "lib": "",
+      "name": "CompiledRecoveryMode",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A quorum of guardians.",
+            "name": "GuardianOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledGuardianSet"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "One ZK proof.",
+            "name": "ZkOnly",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledZkFactor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "A quorum of guardians and one ZK proof.",
+            "name": "Combined",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CompiledGuardianSet"
+                }
+              },
+              {
+                "udt": {
+                  "name": "CompiledZkFactor"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A compiled `recovery` member.",
+      "lib": "",
+      "name": "CompiledRecoveryConfig",
+      "fields": [
+        {
+          "doc": "The enrolled baseline's canonical document hash, if compromise\\nrecovery is enrolled.",
+          "name": "baseline",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "[`config_hash`] of the canonical JSON of the recovery member, computed\\nby the doc compiler (spec \\xc2\\xa73.2). Configuration\\nidentity: two compiled configurations with the same `config_hash` are\\nthe same configuration.",
+          "name": "config_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The adopted controller instance.",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "Ledgers from an attempt's authorization until it can complete.",
+          "name": "delay_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "The evidence window of a collecting attempt and the completion\\nwindow of an authorized one, in ledgers.",
+          "name": "expiry_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "Lifetime cap on evidence-based cancellations of authorized attempts.",
+          "name": "max_cancels",
+          "type_": "u32"
+        },
+        {
+          "doc": "The factors evidence must satisfy.",
+          "name": "mode",
+          "type_": {
+            "udt": {
+              "name": "CompiledRecoveryMode"
+            }
+          }
+        },
+        {
+          "doc": "Who may change the configuration, and whether an authorized attempt\\nfreezes the account.",
+          "name": "profile",
+          "type_": {
+            "udt": {
+              "name": "RecoveryProfile"
+            }
+          }
+        },
+        {
+          "doc": "Signer ids (not credential fingerprints) a recovery may replace, so\\nrotating a key does not change the configuration (#92).",
+          "name": "replaceable",
+          "type_": {
+            "vec": {
+              "element_type": "string"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "One pending account upgrade (spec \\xc2\\xa712).\\n\\nStaleness is judged against the account's own **recovery generation**, a\\n`u64` the account keeps in its own storage. It starts at 0 and is never\\nreset. It advances on every `rcv_sync` outcome other than `Unchanged`\\n(`controller::SyncOutcome::bumps_generation`) and on every executed\\nupgrade.\\n\\nThe controller's epoch cannot play this role. It belongs to one\\ncontroller and does not exist while the account is unenrolled, so a\\nrequest scheduled unenrolled would survive enrolling recovery and\\nremoving it again: the final state has no controller, just as at\\nscheduling.",
+      "lib": "",
+      "name": "UpgradeRequest",
+      "fields": [
+        {
+          "doc": "The adopted controller's epoch when scheduled, if a controller was\\nadopted. Passed back as `UpgradeStep::Execute` so the controller can\\ncheck it too.",
+          "name": "controller_epoch",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          }
+        },
+        {
+          "doc": "The first ledger at which the request may execute.",
+          "name": "executable_at",
+          "type_": "u32"
+        },
+        {
+          "doc": "The account's recovery generation when the request was scheduled.",
+          "name": "generation",
+          "type_": "u64"
+        },
+        {
+          "doc": "Per-account, never reused.",
+          "name": "request_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "The exact Wasm the account will run.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "What a `Reconfigure` statement changes the enrolled configuration to.",
+      "lib": "",
+      "name": "ConfigChange",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "Remove recovery from the account.",
+            "name": "Remove"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Replace the configuration with the one whose\\n[`ConfigBinding::config_hash`] is this value (which may name a\\ndifferent controller instance).",
+            "name": "Set",
+            "type_": [
+              {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The subject of a `Cancel` statement.",
+      "lib": "",
+      "name": "CancelSubject",
+      "fields": [
+        {
+          "doc": "The attempt being cancelled.",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "That attempt's own initiation statement digest, so cancellation\\nevidence names exactly one proposal, not just an id.",
+          "name": "attempt_statement",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The enrolled configuration a statement is evaluated against.",
+      "lib": "",
+      "name": "ConfigBinding",
+      "fields": [
+        {
+          "doc": "`sha256(\"perch/recovery/config\" || canonical JSON of the enrolled\\ndocument's recovery member)`, as [`crate::config::config_hash`]\\ncomputes it (`docs/recovery/spec.md` \\xc2\\xa73.2). Binds the whole\\nconfiguration: profile, mode, guardians, quorum, ZK adapter, circuit\\nid, pool, enrollment id and commitment, controller, baseline,\\nreplaceable signer ids, and timing.",
+          "name": "config_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The controller's per-account configuration epoch. It increments on\\nevery enrollment, reconfiguration, removal, completed recovery, and\\nexecuted account upgrade, so evidence produced under one epoch is\\ndead under every later one.",
+          "name": "epoch",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The subject of a `LostKey` or `Compromise` attempt.",
+      "lib": "",
+      "name": "AttemptSubject",
+      "fields": [
+        {
+          "doc": "The controller-assigned, per-account, never-reused attempt id.",
+          "name": "attempt_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "[`crate::credential::ReplacementSet::hash`] of the declared\\nreplacements.",
+          "name": "replacements_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "`LostKey`: the canonical hash of the account's applied document when\\nthe attempt began (the agreed snapshot). `Compromise`: the enrolled\\nbaseline's canonical hash.",
+          "name": "source_doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "The canonical hash of the target document, derived on-chain from\\nthe source and the replacement set \\xe2\\x80\\x94 never caller-chosen.",
+          "name": "target_doc_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "The action domain a statement authorizes. Evidence for one action never\\nsatisfies another: the action code is the encoding's 26th byte and selects\\nthe subject layout, so two statements that differ only in action have\\ndifferent digests (and different encoded lengths for most pairs).\\n\\nThe numeric codes are part of the wire format.",
+      "lib": "",
+      "name": "RecoveryAction",
+      "cases": [
+        {
+          "doc": "Lost-key recovery: replace designated credentials in an agreed\\nsnapshot of the current document.",
+          "name": "LostKey",
+          "value": 1
+        },
+        {
+          "doc": "Compromise recovery: restore the enrolled baseline, with designated\\ncredentials replaced.",
+          "name": "Compromise",
+          "value": 2
+        },
+        {
+          "doc": "Cancel one identified attempt.",
+          "name": "Cancel",
+          "value": 3
+        },
+        {
+          "doc": "Change or remove the enrolled recovery configuration (the evidence a\\n`Protected` account needs in addition to owner authorization).",
+          "name": "Reconfigure",
+          "value": 4
+        },
+        {
+          "doc": "Approve one scheduled account upgrade (the evidence a `Protected`\\naccount needs in addition to owner authorization).",
+          "name": "Upgrade",
+          "value": 5
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Everything encoding a statement or its parts can refuse.",
+      "lib": "",
+      "name": "StatementError",
+      "cases": [
+        {
+          "doc": "`account` is not a contract (`C...`) address.",
+          "name": "AccountNotContract",
+          "value": 1
+        },
+        {
+          "doc": "`controller` is not a contract (`C...`) address.",
+          "name": "ControllerNotContract",
+          "value": 2
+        },
+        {
+          "doc": "A credential names an address shape the recovery stack does not accept (muxed, claimable-balance, liquidity-pool, ...).",
+          "name": "UnsupportedAddress",
+          "value": 3
+        },
+        {
+          "doc": "A replacement set's signer ids are not strictly ascending (sorted, no duplicates), so it has no single canonical encoding.",
+          "name": "ReplacementsNotCanonical",
+          "value": 4
+        },
+        {
+          "doc": "A replacement set replaces nothing.",
+          "name": "EmptyReplacements",
+          "value": 5
+        },
+        {
+          "doc": "The current ledger is past the statement's `valid_until_ledger`.",
+          "name": "EvidenceExpired",
+          "value": 6
+        },
+        {
+          "doc": "A provider-chosen `valid_until_ledger` reaches further past the current ledger than the enrolled `expiry_ledgers` allows.",
+          "name": "EvidenceWindowTooLong",
+          "value": 7
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The subject of an `Upgrade` statement.",
+      "lib": "",
+      "name": "UpgradeSubject",
+      "fields": [
+        {
+          "doc": "The account's per-account, never-reused upgrade request id.",
+          "name": "request_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "The exact Wasm hash the account would run after the upgrade.",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Timing terms, all in ledger-sequence units.",
+      "lib": "",
+      "name": "StatementTiming",
+      "fields": [
+        {
+          "doc": "The enrolled `delay-ledgers`: ledgers between an attempt becoming\\nauthorized and becoming completable.",
+          "name": "delay_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "The enrolled `expiry-ledgers`: the evidence window for a collecting\\nattempt, the completion window for an authorized one, and the upper\\nbound on how far ahead a provider-chosen `valid_until_ledger` may\\nreach.",
+          "name": "expiry_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "The last ledger sequence (inclusive) at which this evidence may be\\naccepted. The controller fixes it for attempt-bound actions:\\n`LostKey`/`Compromise` use the attempt's evidence deadline, and\\n`Cancel` the last ledger the attempt could possibly be live, so\\napprovals collected over several transactions all sign one\\nstatement. For `Reconfigure`/`Upgrade` the evidence provider chooses\\nit, within `expiry_ledgers` of submission.",
+          "name": "valid_until_ledger",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The action-specific part of a statement. The variant determines\\n[`RecoveryStatement::action`]; there is no separate action field that\\ncould disagree with it.",
+      "lib": "",
+      "name": "StatementSubject",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "A lost-key attempt's initiation statement.",
+            "name": "LostKey",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AttemptSubject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "A compromise attempt's initiation statement.",
+            "name": "Compromise",
+            "type_": [
+              {
+                "udt": {
+                  "name": "AttemptSubject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Cancel one attempt.",
+            "name": "Cancel",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CancelSubject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Change or remove the enrolled configuration.",
+            "name": "Reconfigure",
+            "type_": [
+              {
+                "udt": {
+                  "name": "ConfigChange"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "Approve one account upgrade request, checked when it is scheduled.",
+            "name": "Upgrade",
+            "type_": [
+              {
+                "udt": {
+                  "name": "UpgradeSubject"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The one recovery statement. See the module docs.",
+      "lib": "",
+      "name": "RecoveryStatement",
+      "fields": [
+        {
+          "doc": "The recovering account. Must be a contract address.",
+          "name": "account",
+          "type_": "address"
+        },
+        {
+          "doc": "The enrolled configuration and epoch the evidence is for.",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "ConfigBinding"
+            }
+          }
+        },
+        {
+          "doc": "The controller instance evaluating the evidence (for `Reconfigure`,\\nthe currently adopted one, even when the change adopts another).\\nMust be a contract address.",
+          "name": "controller",
+          "type_": "address"
+        },
+        {
+          "doc": "The network id (`sha256` of the network passphrase), as\\n`Env::ledger().network_id()` returns it.",
+          "name": "network_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "What the evidence approves.",
+          "name": "subject",
+          "type_": {
+            "udt": {
+              "name": "StatementSubject"
+            }
+          }
+        },
+        {
+          "doc": "The enrolled timing terms and the evidence's freshness bound.",
+          "name": "timing",
+          "type_": {
+            "udt": {
+              "name": "StatementTiming"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,899 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "asset",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "pause",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Valor de `shares` en el vault y adelanto para `term_days`, con todos\\nlos topes aplicados. Falla con el mismo error que fallar\\xc3\\xada `open_advance`.",
+      "name": "quote",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "term_days",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "i128",
+                  "i128"
+                ]
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Devuelve el adelanto en USDC a la tesorer\\xc3\\xada y recupera todas las\\nacciones. Funciona tambi\\xc3\\xa9n en pausa.",
+      "name": "repay",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "vault",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "params",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Params"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Cierra una posici\\xc3\\xb3n cuyo rendimiento ya cubre el adelanto. Cualquiera\\npuede llamarla, tambi\\xc3\\xa9n en pausa.\\n\\nRetira del vault las acciones que valen el adelanto (el rendimiento\\ngenerado) hacia la tesorer\\xc3\\xada y devuelve el resto al usuario: su\\nprincipal completo m\\xc3\\xa1s el rendimiento sobrante. Si el rendimiento a\\xc3\\xban no\\nalcanza, las acciones siguen bloqueadas.",
+      "name": "settle",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "unpause",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "position",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Position"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Saldo libre de la tesorer\\xc3\\xada: el USDC del contrato, que es lo \\xc3\\xbanico que\\npueden pagar los adelantos y retirar el admin.",
+      "name": "treasury",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_paused",
+      "inputs": [],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_params",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "Params"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "outstanding",
+      "inputs": [],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_allowed",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Segundo paso: el admin propuesto acepta con su firma.",
+      "name": "accept_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Bloquea `shares` del vault en el contrato y paga el adelanto en USDC\\ndesde la tesorer\\xc3\\xada. Es lo \\xc3\\xbanico que frena la pausa.",
+      "name": "open_advance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "term_days",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "min_advance",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "vault",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "Params"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Aporta `amount` USDC de `from` a la tesorer\\xc3\\xada. Cualquiera puede fondear.",
+      "name": "fund_treasury",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Primer paso del cambio de admin: el admin actual propone al nuevo.",
+      "name": "propose_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Valor actual de la posici\\xc3\\xb3n y el valor que debe alcanzar para liberarse.",
+      "name": "unlock_status",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "i128",
+                  "i128"
+                ]
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Retira `amount` USDC del saldo libre de la tesorer\\xc3\\xada hacia `to`. Solo el\\nadmin. Mueve \\xc3\\xbanicamente USDC: las acciones bloqueadas no salen por aqu\\xc3\\xad.",
+      "name": "withdraw_treasury",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "NotAllowed",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "PositionExists",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "NoPosition",
+          "value": 4
+        },
+        {
+          "doc": "El rendimiento de la posici\\xc3\\xb3n a\\xc3\\xban no cubre el adelanto.",
+          "name": "YieldNotCovered",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "TermOutOfRange",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "ZeroShares",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "ExceedsLtv",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "ExceedsUserCap",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "ExceedsGlobalCap",
+          "value": 10
+        },
+        {
+          "doc": "La tesorer\\xc3\\xada del contrato no tiene saldo libre para el adelanto o el retiro.",
+          "name": "InsufficientTreasury",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "AdvanceBelowMin",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "InvalidParams",
+          "value": 13
+        },
+        {
+          "doc": "",
+          "name": "InvalidAmount",
+          "value": 14
+        },
+        {
+          "doc": "",
+          "name": "NoPendingAdmin",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "InvalidVaultValue",
+          "value": 16
+        },
+        {
+          "doc": "",
+          "name": "MathOverflow",
+          "value": 17
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AllowedSet",
+      "prefix_topics": [
+        "allowed_set"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "allowed",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AdminChanged",
+      "prefix_topics": [
+        "admin_changed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "previous",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AdminProposed",
+      "prefix_topics": [
+        "admin_proposed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "current",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "proposed",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AdvanceOpened",
+      "prefix_topics": [
+        "advance_opened"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "value",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "advance",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "expected_unlock_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AdvanceRepaid",
+      "prefix_topics": [
+        "advance_repaid"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "advance",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ParamsUpdated",
+      "prefix_topics": [
+        "params_updated"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "params",
+          "type_": {
+            "udt": {
+              "name": "Params"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AdvanceSettled",
+      "prefix_topics": [
+        "advance_settled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "shares_redeemed",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares_returned",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "USDC retirado del vault hacia la tesorer\\xc3\\xada del contrato (>= adelanto).",
+          "name": "recovered",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ContractPaused",
+      "prefix_topics": [
+        "paused"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TreasuryFunded",
+      "prefix_topics": [
+        "treasury_funded"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ContractUnpaused",
+      "prefix_topics": [
+        "unpaused"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "TreasuryWithdrawn",
+      "prefix_topics": [
+        "treasury_withdrawn"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Par\\xc3\\xa1metros que el admin puede ajustar (secci\\xc3\\xb3n 5.1 de la spec).",
+      "lib": "",
+      "name": "Params",
+      "fields": [
+        {
+          "doc": "Si es `true`, solo los usuarios aprobados pueden abrir.",
+          "name": "allowlist_on",
+          "type_": "bool"
+        },
+        {
+          "doc": "APY que se adelanta, en puntos base.",
+          "name": "apy_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "Tope de adelantos vivos en total, en unidades m\\xc3\\xadnimas del activo.",
+          "name": "global_cap",
+          "type_": "i128"
+        },
+        {
+          "doc": "Tope del adelanto sobre el valor de la posici\\xc3\\xb3n, en puntos base.",
+          "name": "max_advance_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "max_term_days",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "min_term_days",
+          "type_": "u32"
+        },
+        {
+          "doc": "Tope de adelanto por usuario, en unidades m\\xc3\\xadnimas del activo.",
+          "name": "per_user_cap",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Posici\\xc3\\xb3n activa de un usuario (secci\\xc3\\xb3n 5.2). Una por usuario.",
+      "lib": "",
+      "name": "Position",
+      "fields": [
+        {
+          "doc": "",
+          "name": "advance",
+          "type_": "i128"
+        },
+        {
+          "doc": "Fecha estimada en que el rendimiento cubre el adelanto (al APY de\\n`params`). Solo informativa: el desbloqueo depende del valor real.",
+          "name": "expected_unlock_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "opened_at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "value_at_open",
+          "type_": "i128"
+        }
+      ]
+    }
+  }
+]
