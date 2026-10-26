@@ -1,0 +1,92 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "init",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "platform",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Connoisseur authorizes a piece (`piece_id` = sha256 bytes) for deceased-author cert paths.",
+      "name": "authorize",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "connoisseur",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "piece_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "revoke_auth",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "connoisseur",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "piece_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "is_authorized",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "connoisseur",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "piece_id",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  }
+]

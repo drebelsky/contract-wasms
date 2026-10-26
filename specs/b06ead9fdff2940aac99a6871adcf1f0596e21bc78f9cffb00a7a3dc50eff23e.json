@@ -1,0 +1,975 @@
+[
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Game",
+      "fields": [
+        {
+          "doc": "Indexes of the players still in the round (those who had sealed when the phase closed).",
+          "name": "active",
+          "type_": {
+            "vec": {
+              "element_type": "u32"
+            }
+          }
+        },
+        {
+          "doc": "After this ledger anyone may `close` the sealing phase; before it only the admin may.",
+          "name": "commit_until",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "commits",
+          "type_": {
+            "map": {
+              "key_type": "u32",
+              "value_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "created_at",
+          "type_": "u32"
+        },
+        {
+          "doc": "Whether a tie (or several silent players) was decided by lot.",
+          "name": "drawn",
+          "type_": "bool"
+        },
+        {
+          "doc": "Index into `players` of who pays.",
+          "name": "loser",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "max_coins",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "moves",
+          "type_": {
+            "map": {
+              "key_type": "u32",
+              "value_type": {
+                "udt": {
+                  "name": "Move"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "phase",
+          "type_": {
+            "udt": {
+              "name": "Phase"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "players",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "Reason"
+            }
+          }
+        },
+        {
+          "doc": "Length of the reveal window, in ledgers.",
+          "name": "reveal_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "Last ledger in which a reveal is accepted (0 while sealing).",
+          "name": "reveal_until",
+          "type_": "u32"
+        },
+        {
+          "doc": "Set once the round is settled (phase `Done`; a cancelled round stays unsettled).",
+          "name": "settled",
+          "type_": "bool"
+        },
+        {
+          "doc": "Ledger in which the round was settled.",
+          "name": "settled_at",
+          "type_": "u32"
+        },
+        {
+          "doc": "Coins on the table, counting the moves that were opened.",
+          "name": "total",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Move",
+      "fields": [
+        {
+          "doc": "",
+          "name": "coins",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "guess",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NoSuchGame",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "GameExists",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "BadParams",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "WrongPhase",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "NotAPlayer",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "AlreadySealed",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "AlreadyOpened",
+          "value": 7
+        },
+        {
+          "doc": "Reveal after the window, or a reveal that does not match the seal.",
+          "name": "TooLate",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "BadReveal",
+          "value": 9
+        },
+        {
+          "doc": "Coins above `max_coins`, or a guess above what the table could hold.",
+          "name": "BadMove",
+          "value": 10
+        },
+        {
+          "doc": "Settling before the reveal window has passed.",
+          "name": "NotYet",
+          "value": 11
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Phase",
+      "cases": [
+        {
+          "doc": "Players are sealing their moves.",
+          "name": "Commit",
+          "value": 0
+        },
+        {
+          "doc": "Every active player has sealed; moves are being opened.",
+          "name": "Reveal",
+          "value": 1
+        },
+        {
+          "doc": "Settled (see `settled`) or cancelled (fewer than two players sealed a move).",
+          "name": "Done",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "An opened move, as relayed to `reveal_many`.",
+      "lib": "",
+      "name": "Opened",
+      "fields": [
+        {
+          "doc": "",
+          "name": "coins",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "guess",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "player",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Reason",
+      "cases": [
+        {
+          "doc": "The loser did not open their move in time.",
+          "name": "NoReveal",
+          "value": 0
+        },
+        {
+          "doc": "The loser's guess was the furthest from the real total.",
+          "name": "Furthest",
+          "value": 1
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "A sealed move, as relayed to `commit_many`.",
+      "lib": "",
+      "name": "Sealed",
+      "fields": [
+        {
+          "doc": "",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "player",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sig",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Created",
+      "prefix_topics": [
+        "created"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "players",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "max_coins",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Opening",
+      "prefix_topics": [
+        "opening"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "players",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reveal_until",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Settled",
+      "prefix_topics": [
+        "settled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "loser",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "total",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reason",
+          "type_": {
+            "udt": {
+              "name": "Reason"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "drawn",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "OpenedEv",
+      "prefix_topics": [
+        "opened"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "player",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "coins",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "guess",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SealedEv",
+      "prefix_topics": [
+        "sealed"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "player",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Cancelled",
+      "prefix_topics": [
+        "cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The round's state, until its hour in temporary storage runs out.",
+      "name": "game",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Game"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Ends the sealing phase without waiting for everyone: players who have not sealed are\\ndropped from the round. Anyone may call it after `commit_until`; before that, only the admin.\\nWith fewer than two sealed moves the round is cancelled.",
+      "name": "close",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Game"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Seals one move. `sig` is the player's Ed25519 signature of `\"QUITS/commit\" || game || commitment`;\\nan invalid signature traps. Anyone may relay a sealed move.",
+      "name": "commit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "player",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "commitment",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sig",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Game"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Opens a round. `commit_ledgers`: how long the sealing phase stays protected from a\\npermissionless close. `reveal_ledgers`: the reveal window once everyone has sealed.",
+      "name": "create",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "players",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 32
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "max_coins",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "commit_ledgers",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "reveal_ledgers",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Opens one move. The last reveal settles the round.",
+      "name": "reveal",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "player",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "coins",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "guess",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Game"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Settles a round once the reveal window has passed: whoever stayed silent loses.",
+      "name": "settle",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Game"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The commitment a browser must compute for a move (same bytes as the contract hashes).",
+      "name": "commitment",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "player",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "coins",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "guess",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "bytes_n": {
+            "n": 32
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Seals several moves in one transaction (all or nothing).",
+      "name": "commit_many",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sealed",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Sealed"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Game"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Opens several moves in one transaction (all or nothing).",
+      "name": "reveal_many",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "game",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "opened",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Opened"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Game"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "`admin` creates rounds and may close the sealing phase early. Everything else is open to anyone.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  }
+]

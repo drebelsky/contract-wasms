@@ -1,0 +1,95 @@
+[
+  {
+    "function_v0": {
+      "doc": "Returns the look a seed draws: one part per trait, in the order of\\n`traits`.",
+      "name": "look",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seed",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bytes"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the key of each trait of a look, in the order of its bytes:\\nchassis, ground, antenna, eyes, mouth, body, hat, arms, boots.",
+      "name": "traits",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "string"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ArtError",
+      "cases": [
+        {
+          "doc": "The art does not decode.",
+          "name": "InvalidArt",
+          "value": 1
+        },
+        {
+          "doc": "The look names a part the art does not hold.",
+          "name": "InvalidLook",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the picture of a member as an SVG in a data URI.\\n\\n# Arguments\\n* `token_id` - The token; with the look it places the slipped rows.\\n* `look` - The look drawn by `look` when the member minted.\\n* `role` - The role: 1 adds the boots, 2 the vest, 3 the hat and turns\\nthe arms gold.\\n\\n# Panics\\n* `InvalidLook` - When the look is not one part per trait within the art.",
+      "name": "picture",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "token_id",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "look",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "role",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Stores the art.\\n\\n# Arguments\\n* `art` - The art, as laid out in `art.rs`.\\n\\n# Panics\\n* `InvalidArt` - When the art is longer than `MAX_ART`, a trait has no\\npart or a part does not decode inside the picture.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "art",
+          "type_": "bytes"
+        }
+      ],
+      "outputs": []
+    }
+  }
+]

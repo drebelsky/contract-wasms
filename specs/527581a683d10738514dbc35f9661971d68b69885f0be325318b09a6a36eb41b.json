@@ -1,0 +1,298 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "init",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "participation",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Seller must have already transferred `units` into this contract via participation.transfer_units\\n(legacy two-tx path) OR via `deposit_for_list` (credited). When a deposit credit exists for\\n(seller, offer_id), it is consumed; otherwise behavior matches the legacy uncredited escrow.",
+      "name": "list",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "offer_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "payment_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "unit_price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "units",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Secondary marketplace: escrow units (held by this contract via participation.transfer_units)\\nor whole-NFT style unit amounts against an offer_id from participation.",
+      "lib": "",
+      "name": "Listing",
+      "fields": [
+        {
+          "doc": "",
+          "name": "active",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "listing_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "offer_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "payment_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "remaining",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "unit_price",
+          "type_": "i128"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Partial fill: pay seller + deliver escrowed units from marketplace contract balance.",
+      "name": "buy_partial",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "buyer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "listing_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "units",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_listing",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "listing_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Listing"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "cancel_listing",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "listing_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "deposit_credit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "offer_id",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Explicit escrow deposit that credits the depositor. Prefer `list_with_deposit` for\\na single Freighter signature; use this when splitting deposit and list intentionally.",
+      "name": "deposit_for_list",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "offer_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "units",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Atomic escrow + list in one invocation (single Freighter signature).\\nPulls `units` from seller into this contract, then opens the listing.",
+      "name": "list_with_deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "offer_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "payment_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "unit_price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "units",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "u64"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Return credited deposit units that were never listed (owner recovery).\\nOnly units tracked under Deposit(seller, offer_id) can be recovered this way.",
+      "name": "recover_orphaned_units",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "seller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "offer_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "units",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Platform return of uncredited legacy escrow (transfer_units without list / without deposit credit).\\nUsed for Testnet remediation of trapped units after interrupt between the two Freighter txs.",
+      "name": "admin_return_orphaned_units",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "offer_id",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "units",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  }
+]
