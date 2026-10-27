@@ -1,0 +1,677 @@
+[
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Admin"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "RwaKeeper"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Operator"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "VaultV4"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "AquariusRouter"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "UsdcToken"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Usdt0Token"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "XldToken"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "SpyToken"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Usdt0PegStroops"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "XldUsdcRateStroops"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Paused"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "RetailFeeBps"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "PartnerWholesaleFeeBps"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "CompanyBotFeeBps"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "CallerTier",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "WhitelistedStock",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "StockQuote",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "CumVaultFeesStroops"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "CumOperatorFeesStroops"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "AgentFactory"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "StockMultiplier",
+            "type_": [
+              "address"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "extend_ttl",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "initialize",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "rwa_keeper",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "operator",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "vault_v4",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "aquarius_router",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "usdc_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "usdt0_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "xld_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "spy_token",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_paused",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RwaCallerTier",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Retail",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "PartnerWholesale",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "CompanyBot",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Atomic multi-stock portfolio purchase in a single Soroban transaction (`swap_basket`).\\nEach tuple in `legs` is `(stock_token, pay_amount_in, min_stock_out)`.",
+      "name": "swap_basket",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "buyer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pay_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "legs",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "tuple": {
+                  "value_types": [
+                    "address",
+                    "i128",
+                    "i128"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "i128"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Atomic purchase of a Robinhood stock SAC (`stock_token`) paying in `USDC`, `USDT0` (`LayerZero`),\\n`XLD`, or `SPY` (correlated index asset) from the RWA Router's non-custodial liquidity buffer, enforcing:\\n- Stock-Split / Gap Halt check (`!quote.split_or_gap_halted`)\\n- `USDT0` Peg Health Guard (`usdt0_peg_stroops >= $0.9850 USDC`)\\n- 3-Tier Dynamic Fee (`0 bps` CompanyBot, `15 bps` PartnerWholesale, `30 bps` Retail) split 50/50 to `Vault V4` & `OperatorWallet`.",
+      "name": "buy_rwa_stock",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "buyer",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pay_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "stock_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "pay_amount_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_stock_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_fee_tiers",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "retail_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "partner_wholesale_bps",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "company_bot_bps",
+          "type_": "u32"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_caller_tier",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "target",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "tier",
+          "type_": {
+            "udt": {
+              "name": "RwaCallerTier"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "update_peg_rates",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "usdt0_peg_stroops",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "xld_usdc_rate_stroops",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RwaStockOracleQuote",
+      "fields": [
+        {
+          "doc": "",
+          "name": "ask_usd_stroops",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "bid_usd_stroops",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "split_or_gap_halted",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "stock_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "updated_ledger_seq",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_fee_telemetry",
+      "inputs": [],
+      "outputs": [
+        {
+          "tuple": {
+            "value_types": [
+              "i128",
+              "i128"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Updates or queries the corporate-action share multiplier (splits / dividend reinvestment)\\nfor a tokenized equity. Default is `10_000_000` (`1.0000000x`).",
+      "name": "rebase_multiplier",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "stock_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "multiplier_stroops",
+          "type_": "i128"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "set_agent_factory",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "agent_factory",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_caller_fee_bps",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_stock_multiplier",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "stock_token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Routes an RWA swap through Aquarius AMM / CLMM v200 (`swap_chained`) with 3-tier dynamic fees\\n(`0 bps` CompanyBot, `15 bps` PartnerWholesale, `30 bps` Retail)\\nand 50/50 fee streaming to `Vault V4` and `OperatorWallet`.",
+      "name": "swap_rwa_via_aquarius",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "user",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token_in",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "swaps_chain",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "tuple": {
+                  "value_types": [
+                    {
+                      "vec": {
+                        "element_type": "address"
+                      }
+                    },
+                    {
+                      "bytes_n": {
+                        "n": 32
+                      }
+                    },
+                    "address"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_amount_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        "i128"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "get_stock_oracle_quote",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "stock_token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "RwaStockOracleQuote"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "upsert_stock_oracle_quote",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "stock_token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "bid_usd_stroops",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "ask_usd_stroops",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "split_or_gap_halted",
+          "type_": "bool"
+        }
+      ],
+      "outputs": []
+    }
+  }
+]
