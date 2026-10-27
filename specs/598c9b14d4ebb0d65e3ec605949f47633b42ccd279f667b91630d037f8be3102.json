@@ -1,0 +1,392 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "What `post` and the constructor refuse.",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "`post` was given a price at or below zero. Not a judgement about the value: a price\\nthat is not positive is not a price, and the pool would refuse it anyway (E-003 \\xc2\\xa73.2).\\nRefusing here keeps it out of storage, where it would sit as the newest reading and\\nblock every later post of the same second.",
+          "name": "BadPrice",
+          "value": 300
+        },
+        {
+          "doc": "`post` was given a timestamp older than the stored one. The adapter holds the newest\\npublication, and accepting an older time would let a keeper that is looping on a cached\\nread overwrite a fresher price with a staler one. An equal timestamp is not this error\\nsince the amendment of 2026-09-16 (spec \\xc2\\xa73.3): a corrected price under an unchanged\\npublication time is something the issuer said, and only the keeper can tell whether it\\nis worth posting.",
+          "name": "NotNewer",
+          "value": 301
+        },
+        {
+          "doc": "`post` was given a timestamp later than the ledger's. A publication time in the future\\nis not a publication time; it would also poison the entry, because no honest later\\nreading could then be newer.",
+          "name": "FromTheFuture",
+          "value": 302
+        },
+        {
+          "doc": "The constructor was given more than 18 decimals, which the pool refuses (E-003 \\xc2\\xa73.2),\\nso the adapter could only ever be a source the pool skips.",
+          "name": "BadDecimals",
+          "value": 303
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The instance storage keys.",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "The address that may replace the keeper and hand its own role on.",
+            "name": "Governance"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The address that may `post`, and nothing else.",
+            "name": "Keeper"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The scale every posted price is at, fixed by the constructor.",
+            "name": "Decimals"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The newest posted `(price, timestamp)`; absent before the first post.",
+            "name": "Latest"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "The newest posting: the price at the adapter's scale, and the issuer's own publication\\ntime in seconds, not the time the keeper read it and not the NAV's valuation time (spec\\n\\xc2\\xa73.3). Nothing on chain can check which of the three a keeper sent; the keeper's readers\\ncarry that rule and its tests hold them to it (spec \\xc2\\xa74 test 5).",
+      "lib": "",
+      "name": "Posting",
+      "fields": [
+        {
+          "doc": "",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "`(\"init\")`: the two roles and the scale the constructor fixed (spec \\xc2\\xa73.3, ADR-013 point 2),\\nso that a watcher that follows the roles through `keeper` and `governance` starts from the\\nones the deployment stored rather than from nothing.",
+      "lib": "",
+      "name": "Init",
+      "prefix_topics": [
+        "init"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "decimals",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "`(\"post\", keeper)`: the price and the issuer's publication time, exactly as stored.",
+      "lib": "",
+      "name": "Post",
+      "prefix_topics": [
+        "post"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "price",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "`(\"keeper\")`: the rotation of the operational key, with both sides of it, so that a watcher\\ncan tell a planned rotation from one it did not order.",
+      "lib": "",
+      "name": "KeeperChanged",
+      "prefix_topics": [
+        "keeper"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "old",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "`(\"governance\")`: the handover of the governance role, with both sides of it.",
+      "lib": "",
+      "name": "GovernanceChanged",
+      "prefix_topics": [
+        "governance"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "old",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "new",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The keeper's one entry point: store what it read at the issuer (spec \\xc2\\xa73.3).\\n\\n`timestamp` is the issuer's own publication time in seconds -- for Ondo the block time\\nof the Ethereum read, for Etherfuse `current_time` of the response, for Centrifuge the\\nblock time of the event -- never the moment the keeper read and never the NAV's\\nvaluation time. This contract cannot check which of the three it was given; nothing on\\nchain can. The keeper's readers carry that rule and its tests hold them to it (spec\\n\\xc2\\xa73.4, \\xc2\\xa74 test 5).\\n\\nIt refuses three things and three only. A price at or below zero is not a price. A\\ntimestamp older than the stored one would let a keeper looping on a cached read\\noverwrite a fresher price with an older one. A timestamp later than the ledger's is not\\na publication time, and would poison the entry, because no honest later reading could\\nthen be newer.\\n\\nAn equal timestamp is accepted (spec \\xc2\\xa73.3, amended 2026-09-16). It used to be refused\\nwith the older ones, which meant an issuer that corrected a ",
+      "name": "post",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The address that may `post` (spec \\xc2\\xa73.3). `None` only for an instance that holds\\nnothing, which cannot be observed; see `role`.",
+      "name": "keeper",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The newest posting, or `None` before the first post (spec \\xc2\\xa73.3).",
+      "name": "latest",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Posting"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The adapter interface of E-007 \\xc2\\xa75: the newest posting with the adapter's scale (spec\\n\\xc2\\xa73.3).\\n\\n`None` before the first post, which is a source without an observation as far as a pool\\nis concerned (E-007 \\xc2\\xa73.2). The missing-`Decimals` branch answers `None` too and cannot\\nbe observed, for the reason given on `role`. It converts nothing and bounds nothing:\\nthe three numbers are what the keeper posted and what the constructor fixed.",
+      "name": "observe",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "tuple": {
+                "value_types": [
+                  "i128",
+                  "u32",
+                  "u64"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The spec revision of this Wasm (spec \\xc2\\xa73.3).",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The scale every posted price is at (spec \\xc2\\xa73.3). `None` under the same unobservable\\ncondition as [`Self::keeper`].",
+      "name": "decimals",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "u32"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The address that may rotate the keeper and hand its own role on (spec \\xc2\\xa73.3). `None`\\nunder the same unobservable condition as [`Self::keeper`].",
+      "name": "governance",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Rotation of the operational key (spec \\xc2\\xa73.3, ADR-007 point 5).\\n\\nThe keeper's key sits on an unattended machine, so this is the one transaction that\\nends an incident with it: after it the old key can do nothing at all, because `post` is\\nthe only thing a keeper could ever do and it is checked against the stored address on\\nevery call. It does not touch `Latest`: a price the old keeper posted stays, and\\nwhether it is still to be trusted is a matter for the guardian and the engine's gates,\\nnot for a key rotation.\\n\\nErrors: none of its own; a caller who is not governance fails on the authorisation.",
+      "name": "set_keeper",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Fixes the two roles and the scale (spec \\xc2\\xa73.3).\\n\\n`decimals` above [`DECIMALS_MAX`] is refused: the pool refuses more (E-003 \\xc2\\xa73.2), so\\nsuch an adapter could only ever be a source the pool skips. Every source of Rhumb is\\ndeployed at 18 and the keeper scales every reading to 18 before posting (spec \\xc2\\xa73.4),\\nso that one number means the same thing at every source of every pool; a coarser scale\\nis accepted here because the pool accepts it, and is reported unchanged so that the\\npool does the scaling.\\n\\n`Latest` is not written: the adapter holds no price until the keeper posts one, and\\n`observe` answers `None` until then, which a pool reads as a source without an\\nobservation (E-007 \\xc2\\xa73.2). A placeholder price would be a rate nobody published.\\n\\nNeither role signs: the roles are stored with the deployer's authorisation alone (spec\\n\\xc2\\xa73.3, ADR-013 point 3, the rule of the engine's pool and router). Anyone can deploy an\\nadapter naming the brand's addresses, and such an adapter is not the brand's: the\\nregistry is `chain-co",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "keeper",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "decimals",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Handover of the governance role (spec \\xc2\\xa73.3): the old governance signs, for the move to\\na multisig (E-007 \\xc2\\xa73.6).\\n\\nErrors: none of its own; a caller who is not the current governance fails on the\\nauthorisation.",
+      "name": "set_governance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,637 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NoLegs",
+          "value": 200
+        },
+        {
+          "doc": "",
+          "name": "TooManyLegs",
+          "value": 201
+        },
+        {
+          "doc": "",
+          "name": "DuplicatePool",
+          "value": 202
+        },
+        {
+          "doc": "",
+          "name": "ZeroAmount",
+          "value": 203
+        },
+        {
+          "doc": "",
+          "name": "OutOfRange",
+          "value": 204
+        },
+        {
+          "doc": "",
+          "name": "SlippageExceeded",
+          "value": 205
+        },
+        {
+          "doc": "",
+          "name": "NoCandidates",
+          "value": 206
+        },
+        {
+          "doc": "",
+          "name": "TooManyCandidates",
+          "value": 207
+        },
+        {
+          "doc": "",
+          "name": "TooManyParts",
+          "value": 208
+        },
+        {
+          "doc": "",
+          "name": "Unauthorised",
+          "value": 209
+        },
+        {
+          "doc": "",
+          "name": "StorageMissing",
+          "value": 210
+        },
+        {
+          "doc": "",
+          "name": "PoolReadFailed",
+          "value": 211
+        },
+        {
+          "doc": "",
+          "name": "MixedPairs",
+          "value": 212
+        },
+        {
+          "doc": "",
+          "name": "SumOverflow",
+          "value": 213
+        },
+        {
+          "doc": "",
+          "name": "Unreachable",
+          "value": 214
+        },
+        {
+          "doc": "",
+          "name": "PlannerBand",
+          "value": 300
+        },
+        {
+          "doc": "",
+          "name": "PlannerStable",
+          "value": 301
+        },
+        {
+          "doc": "",
+          "name": "PlannerNoCandidates",
+          "value": 302
+        },
+        {
+          "doc": "",
+          "name": "PlannerTooManyCandidates",
+          "value": 303
+        },
+        {
+          "doc": "",
+          "name": "PlannerZeroAmount",
+          "value": 304
+        },
+        {
+          "doc": "",
+          "name": "PlannerNoRoute",
+          "value": 305
+        },
+        {
+          "doc": "",
+          "name": "PlannerBadPlan",
+          "value": 306
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Leg",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "Direction"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Plan",
+      "fields": [
+        {
+          "doc": "",
+          "name": "legs",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Leg"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Quote",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "amount_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "parts",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "plan",
+          "type_": {
+            "udt": {
+              "name": "Plan"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Candidate",
+      "fields": [
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "Direction"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "pool",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Route",
+      "prefix_topics": [
+        "route"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "legs",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "pools",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount_out",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "exact_in",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Upgrade",
+      "prefix_topics": [
+        "upgrade"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "GovernanceChanged",
+      "prefix_topics": [
+        "governance"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "new",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Replaces the Wasm: `caller` authorises and must be governance; emits `upgrade`.",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The spec revision this Wasm implements.",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The stored governance (a view: writes nothing, extends no TTL).",
+      "name": "governance",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Stores governance and extends the instance TTL (spec \\xc2\\xa73.2); refuses nothing else.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`execute::swap_exact_in`].",
+      "name": "swap_exact_in",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "plan",
+          "type_": {
+            "udt": {
+              "name": "Plan"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`quote::quote`].",
+      "name": "quote_exact_in",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "candidates",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Candidate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "parts",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Quote"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Hands governance over: `caller` authorises and must be governance; emits `governance`.",
+      "name": "set_governance",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "new",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`execute::swap_exact_out`].",
+      "name": "swap_exact_out",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "plan",
+          "type_": {
+            "udt": {
+              "name": "Plan"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "max_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`quote::quote`].",
+      "name": "quote_exact_out",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "candidates",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "Candidate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amount_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "parts",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Quote"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Direction",
+      "cases": [
+        {
+          "doc": "",
+          "name": "AssetIn",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "QuoteIn",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "AtoB",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "BtoA",
+          "value": 3
+        }
+      ]
+    }
+  }
+]

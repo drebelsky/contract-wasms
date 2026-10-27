@@ -1,0 +1,206 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "The error this adapter can return.",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "The feed's `decimals()` is above the 18 the pool accepts (E-003 \\xc2\\xa73.2), so a pool could\\nnever accept this source; the constructor refuses rather than leave a dead adapter.",
+          "name": "BadDecimals",
+          "value": 303
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "SEP-40's asset: `Stellar(Address)` names a token by its contract id, `Other(Symbol)` names\\na feed by its ticker. Every pool of Rhumb uses `Stellar(<token contract id>)`, the same id\\n`chain-config/` records for the token, so that the feed an adapter reads is tied to the\\ntoken the pool holds and not to a name that could be pointed elsewhere.",
+      "lib": "",
+      "name": "Asset",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stellar",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Other",
+            "type_": [
+              "symbol"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "SEP-40's reading: `price` at the scale `decimals()` returns, `timestamp` the feed's own\\npublication time. The standard defines the timestamp in seconds; this adapter does not\\ncheck that and does not convert (spec A-001 \\xc2\\xa73.2), because a conversion would be a\\ndecision about the source.",
+      "lib": "",
+      "name": "PriceData",
+      "fields": [
+        {
+          "doc": "",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "The instance storage keys. There is no key for a price: this adapter stores no reading,\\nit forwards the feed's (spec \\xc2\\xa73.2).",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "The SEP-40 contract this adapter reads.",
+            "name": "Oracle"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "The asset it asks that contract for.",
+            "name": "Asset"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "`(\"init\")`: the SEP-40 contract the adapter reads and the asset it asks that contract for,\\nexactly as stored.",
+      "lib": "",
+      "name": "Init",
+      "prefix_topics": [
+        "init"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The asset it asks that contract for (spec \\xc2\\xa73.2).\\n\\n`None` under the same unobservable condition as [`Self::oracle`].",
+      "name": "asset",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "Asset"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The SEP-40 contract this adapter reads (spec \\xc2\\xa73.2).\\n\\n`None` only when the instance holds nothing, which cannot be observed: an instance entry can only be gone because its TTL\\nlapsed, and when that happens the contract instance itself is archived and every\\ninvocation fails before this body runs, so the branch is unreachable on a live network.\\nIt is kept because it is the safe answer if it is ever reached,\\nand because there is no fifth error code to say it with (spec \\xc2\\xa76).",
+      "name": "oracle",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The adapter interface of E-007 \\xc2\\xa75: the feed's newest reading for the asset, unchanged.\\n\\nIt asks the feed for its scale and for its reading and hands back the three numbers\\nexactly as received: `None` when the feed holds no reading, and a failure of the\\nadapter's own call when the feed fails, which the pool treats as a source without an\\nobservation (E-007 \\xc2\\xa73.2). It rounds nothing, scales nothing, bounds nothing and\\nconverts no unit -- in particular not the timestamp, whatever unit the feed publishes\\nit in -- and writes nothing to storage, because every judgement about a reading belongs\\nto `Observation::from_sep40` and the gates of E-003, and a bound applied here would\\nturn a reading the pool would have reported as ignored into a source that merely looks\\nsilent.\\n\\nThe feed's scale is read on every call rather than taken from the constructor's check,\\nbecause a feed may change it and the pool must see what the feed says now.\\n\\nThe two `?` on the stored oracle and asset answer `None` for an instance that holds\\nnot",
+      "name": "observe",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "tuple": {
+                "value_types": [
+                  "i128",
+                  "u32",
+                  "u64"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The spec revision of this Wasm (spec \\xc2\\xa73.2).",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Fixes the feed and the asset for the life of the contract (spec \\xc2\\xa73.2).\\n\\nIt reads the feed's `decimals()` once, and refuses when the call fails or the answer is\\nabove [`DECIMALS_MAX`]: the pool refuses more than 18 decimals (E-003 \\xc2\\xa73.2), so such an\\nadapter could only ever be a source the pool skips, and a source that can never work is\\nbetter never created than discovered once a pool is live on it. The check is on the\\nfeed's answer at this moment only; a feed that changes its scale later is reported as\\nit then is, because what the pool accepts is the pool's to decide on every `refresh`.\\n\\nThere is no setter and no upgrade: a source is replaced by deploying a new adapter and\\ncalling the pool's `set_rate` (E-007 \\xc2\\xa73.2), so what a pool reads cannot change under it\\nwithout governance having signed for the change.\\n\\nNothing is signed but the deployment: the feed and the asset are stored with the\\ndeployer's authorisation alone (spec \\xc2\\xa73.2, ADR-013 point 3). It publishes `init` with\\nthe two, because the deployment is ",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  }
+]
