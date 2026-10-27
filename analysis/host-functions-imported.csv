@@ -1,8 +1,8 @@
 function,count
-vec_new_from_linear_memory,5340
-has_contract_data,5166
-put_contract_data,5166
-get_contract_data,5157
+vec_new_from_linear_memory,5341
+has_contract_data,5167
+put_contract_data,5167
+get_contract_data,5158
 require_auth,5089
 symbol_new_from_linear_memory,5035
 map_new_from_linear_memory,4392
@@ -11,7 +11,7 @@ obj_to_i128_hi64,4176
 obj_to_i128_lo64,4176
 call,4044
 map_unpack_to_linear_memory,3938
-bytes_len,3891
+bytes_len,3892
 obj_cmp,3868
 get_current_contract_address,3541
 contract_event,3519
@@ -47,8 +47,8 @@ bytes_slice,787
 compute_hash_sha256,779
 serialize_to_bytes,777
 vec_first_index_of,740
+bytes_copy_to_linear_memory,715
 try_call,715
-bytes_copy_to_linear_memory,714
 string_len,577
 bytes_front,549
 u256_val_from_be_bytes,524
