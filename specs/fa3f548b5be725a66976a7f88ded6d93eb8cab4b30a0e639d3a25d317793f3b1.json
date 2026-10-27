@@ -1,0 +1,3618 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "WrongKind",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "Unauthorised",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "SameAsset",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "TooManyDecimals",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "SourcesMismatch",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "MainnetNeedsTwoSources",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "OutOfRange",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "SlippageExceeded",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "CapExceeded",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "TransferMismatch",
+          "value": 13
+        },
+        {
+          "doc": "",
+          "name": "NothingToWriteDown",
+          "value": 14
+        },
+        {
+          "doc": "",
+          "name": "NotPaused",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "NotAnnounced",
+          "value": 16
+        },
+        {
+          "doc": "",
+          "name": "TooEarly",
+          "value": 17
+        },
+        {
+          "doc": "",
+          "name": "NotPoolToken",
+          "value": 18
+        },
+        {
+          "doc": "",
+          "name": "WriteDownPending",
+          "value": 19
+        },
+        {
+          "doc": "",
+          "name": "NotSuspended",
+          "value": 20
+        },
+        {
+          "doc": "",
+          "name": "StorageMissing",
+          "value": 21
+        },
+        {
+          "doc": "",
+          "name": "DuplicateSource",
+          "value": 22
+        },
+        {
+          "doc": "",
+          "name": "BandBadConfig",
+          "value": 100
+        },
+        {
+          "doc": "",
+          "name": "BandBadState",
+          "value": 101
+        },
+        {
+          "doc": "",
+          "name": "BandOutOfDomain",
+          "value": 102
+        },
+        {
+          "doc": "",
+          "name": "BandNoConvergence",
+          "value": 103
+        },
+        {
+          "doc": "",
+          "name": "BandZeroInput",
+          "value": 104
+        },
+        {
+          "doc": "",
+          "name": "BandZeroOutput",
+          "value": 105
+        },
+        {
+          "doc": "",
+          "name": "BandInsufficientLiquidity",
+          "value": 106
+        },
+        {
+          "doc": "",
+          "name": "BandZeroShares",
+          "value": 107
+        },
+        {
+          "doc": "",
+          "name": "BandTooManyShares",
+          "value": 108
+        },
+        {
+          "doc": "",
+          "name": "StableBadConfig",
+          "value": 120
+        },
+        {
+          "doc": "",
+          "name": "StableBadState",
+          "value": 121
+        },
+        {
+          "doc": "",
+          "name": "StablePaused",
+          "value": 122
+        },
+        {
+          "doc": "",
+          "name": "StableZeroInput",
+          "value": 123
+        },
+        {
+          "doc": "",
+          "name": "StableZeroOutput",
+          "value": 124
+        },
+        {
+          "doc": "",
+          "name": "StableInsufficientLiquidity",
+          "value": 125
+        },
+        {
+          "doc": "",
+          "name": "StableOutOfDomain",
+          "value": 126
+        },
+        {
+          "doc": "",
+          "name": "StableInvariantDecreased",
+          "value": 127
+        },
+        {
+          "doc": "",
+          "name": "StableCapExceeded",
+          "value": 128
+        },
+        {
+          "doc": "",
+          "name": "StableZeroShares",
+          "value": 129
+        },
+        {
+          "doc": "",
+          "name": "StableTooManyShares",
+          "value": 130
+        },
+        {
+          "doc": "",
+          "name": "RateUnknownSource",
+          "value": 140
+        },
+        {
+          "doc": "",
+          "name": "RateNotNewer",
+          "value": 141
+        },
+        {
+          "doc": "",
+          "name": "RateBadObservation",
+          "value": 142
+        },
+        {
+          "doc": "",
+          "name": "RateStale",
+          "value": 143
+        },
+        {
+          "doc": "",
+          "name": "RateSourceLost",
+          "value": 144
+        },
+        {
+          "doc": "",
+          "name": "RateSuspendedStepTooLarge",
+          "value": 145
+        },
+        {
+          "doc": "",
+          "name": "RateSuspendedOutsideDriftBand",
+          "value": 146
+        },
+        {
+          "doc": "",
+          "name": "RateSuspendedSourcesDisagree",
+          "value": 147
+        },
+        {
+          "doc": "",
+          "name": "RateSuspendedManual",
+          "value": 148
+        },
+        {
+          "doc": "",
+          "name": "RateBadConfig",
+          "value": 149
+        },
+        {
+          "doc": "",
+          "name": "CurveNoConvergence",
+          "value": 160
+        },
+        {
+          "doc": "",
+          "name": "CurveInsufficientLiquidity",
+          "value": 161
+        },
+        {
+          "doc": "",
+          "name": "MathOverflow",
+          "value": 180
+        },
+        {
+          "doc": "",
+          "name": "MathDivisionByZero",
+          "value": 181
+        },
+        {
+          "doc": "",
+          "name": "MathOutOfRange",
+          "value": 182
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Kind",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Band",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "Stable",
+          "value": 1
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Roles",
+      "fields": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "sentinel",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Factor",
+      "fields": [
+        {
+          "doc": "",
+          "name": "balance",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "reserve",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Scales",
+      "fields": [
+        {
+          "doc": "",
+          "name": "first",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "second",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Tokens",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Band",
+            "type_": [
+              {
+                "udt": {
+                  "name": "BandTokens"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stable",
+            "type_": [
+              {
+                "udt": {
+                  "name": "StableTokens"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "DataKey",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Kind",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "Tokens",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "Scales",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Roles",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "Config",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "State",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "Cap",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "Paused",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "RateConfig",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "RateState",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "Sources",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "ProtocolShare",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "ProtocolOwed",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "UpgradeAt",
+          "value": 13
+        },
+        {
+          "doc": "",
+          "name": "RateAt",
+          "value": 14
+        },
+        {
+          "doc": "",
+          "name": "RolesAt",
+          "value": 15
+        },
+        {
+          "doc": "",
+          "name": "CapAt",
+          "value": 16
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "BandArgs",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "BandConfig"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "genesis_rate",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "rate_config",
+          "type_": {
+            "bytes_n": {
+              "n": 119
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sentinel",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sources",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolArgs",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Band",
+            "type_": [
+              {
+                "udt": {
+                  "name": "BandArgs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stable",
+            "type_": [
+              {
+                "udt": {
+                  "name": "StableArgs"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "BandState",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "quote",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolState",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Band",
+            "type_": [
+              {
+                "udt": {
+                  "name": "BandState"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stable",
+            "type_": [
+              {
+                "udt": {
+                  "name": "StableState"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AddressKey",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "WriteDownAt",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Shares",
+            "type_": [
+              "address"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "BandConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "bump_max",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "bump_per_day",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "width",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "BandTokens",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "quote",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolConfig",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Band",
+            "type_": [
+              {
+                "udt": {
+                  "name": "BandConfig"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stable",
+            "type_": [
+              {
+                "udt": {
+                  "name": "StableConfig"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RateStatus",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Active"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Suspended",
+            "type_": [
+              {
+                "udt": {
+                  "name": "SuspendReason"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "StableArgs",
+      "fields": [
+        {
+          "doc": "",
+          "name": "a",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "b",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "StableConfig"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "sentinel",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SwapDetail",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Rate",
+            "type_": [
+              "u128"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Invariant",
+            "type_": [
+              "u128",
+              "u128"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "StableState",
+      "fields": [
+        {
+          "doc": "",
+          "name": "a",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "b",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "paused",
+          "type_": "bool"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ProtocolOwed",
+      "fields": [
+        {
+          "doc": "",
+          "name": "first",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "second",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "StableConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "amp",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "StableTokens",
+      "fields": [
+        {
+          "doc": "",
+          "name": "a",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "b",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SourceOutcome",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Accepted"
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "NotNewer"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Ignored",
+            "type_": [
+              "u32"
+            ]
+          }
+        },
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "NoObservation"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SuspendReason",
+      "cases": [
+        {
+          "doc": "",
+          "name": "StepTooLarge",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "OutsideDriftBand",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "SourcesDisagree",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Manual",
+          "value": 3
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WithdrawFactor",
+      "cases": [
+        {
+          "void_v0": {
+            "doc": "",
+            "name": "Unscaled"
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Scaled",
+            "type_": [
+              {
+                "udt": {
+                  "name": "Factor"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CapAnnouncement",
+      "fields": [
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RateAnnouncement",
+      "fields": [
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "bytes_n": {
+              "n": 119
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sources",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RateStatusChange",
+      "fields": [
+        {
+          "doc": "",
+          "name": "after",
+          "type_": {
+            "udt": {
+              "name": "RateStatus"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "before",
+          "type_": {
+            "udt": {
+              "name": "RateStatus"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RolesAnnouncement",
+      "fields": [
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "sentinel",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UpgradeAnnouncement",
+      "fields": [
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WriteDownAnnouncement",
+      "fields": [
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64"
+        },
+        {
+          "doc": "",
+          "name": "balance",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "reserve",
+          "type_": "u128"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Init",
+      "prefix_topics": [
+        "init"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "tokens",
+          "type_": {
+            "udt": {
+              "name": "Tokens"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "roles",
+          "type_": {
+            "udt": {
+              "name": "Roles"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "udt": {
+              "name": "PoolConfig"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "rate_config",
+          "type_": {
+            "option": {
+              "value_type": {
+                "bytes_n": {
+                  "n": 119
+                }
+              }
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sources",
+          "type_": {
+            "option": {
+              "value_type": {
+                "vec": {
+                  "element_type": "address"
+                }
+              }
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Rate",
+      "prefix_topics": [
+        "rate"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "status_after",
+          "type_": {
+            "udt": {
+              "name": "RateStatus"
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "status_before",
+          "type_": {
+            "udt": {
+              "name": "RateStatus"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "low",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "high",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "updated_at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Swap",
+      "prefix_topics": [
+        "swap"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "Direction"
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "amount_out",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "fee",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "protocol_fee",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "detail",
+          "type_": {
+            "udt": {
+              "name": "SwapDetail"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Pause",
+      "prefix_topics": [
+        "pause"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Collect",
+      "prefix_topics": [
+        "collect"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "first",
+          "type_": "i128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "second",
+          "type_": "i128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Deposit",
+      "prefix_topics": [
+        "deposit"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "first",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "second",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Refresh",
+      "prefix_topics": [
+        "refresh"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "outcomes",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "SourceOutcome"
+                }
+              }
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Unpause",
+      "prefix_topics": [
+        "unpause"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Upgrade",
+      "prefix_topics": [
+        "upgrade"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Withdraw",
+      "prefix_topics": [
+        "withdraw"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "first",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "second",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "first_factor",
+          "type_": {
+            "udt": {
+              "name": "WithdrawFactor"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "second_factor",
+          "type_": {
+            "udt": {
+              "name": "WithdrawFactor"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WriteDown",
+      "prefix_topics": [
+        "write_down"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reserve_before",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "balance",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "announced_reserve",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "announced_balance",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "owed_before",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "owed_after",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CapChanged",
+      "prefix_topics": [
+        "cap"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CapAnnounced",
+      "prefix_topics": [
+        "cap_announced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CapCancelled",
+      "prefix_topics": [
+        "cap_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RolesChanged",
+      "prefix_topics": [
+        "roles"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "roles",
+          "type_": {
+            "udt": {
+              "name": "Roles"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RateAnnounced",
+      "prefix_topics": [
+        "rate_announced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "bytes_n": {
+              "n": 119
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sources",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RateCancelled",
+      "prefix_topics": [
+        "rate_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "bytes_n": {
+              "n": 119
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sources",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RolesAnnounced",
+      "prefix_topics": [
+        "roles_announced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "roles",
+          "type_": {
+            "udt": {
+              "name": "Roles"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RolesCancelled",
+      "prefix_topics": [
+        "roles_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "roles",
+          "type_": {
+            "udt": {
+              "name": "Roles"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SourcesChanged",
+      "prefix_topics": [
+        "sources"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "sources",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UpgradeAnnounced",
+      "prefix_topics": [
+        "upgrade_announced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "UpgradeCancelled",
+      "prefix_topics": [
+        "upgrade_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RateConfigChanged",
+      "prefix_topics": [
+        "rate_config"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "bytes_n": {
+              "n": 119
+            }
+          },
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WriteDownAnnounced",
+      "prefix_topics": [
+        "write_down_announced"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reserve",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "balance",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "at",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "owed_before",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "owed_after",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WriteDownCancelled",
+      "prefix_topics": [
+        "write_down_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "reserve",
+          "type_": "u128",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "balance",
+          "type_": "u128",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ProtocolShareChanged",
+      "prefix_topics": [
+        "protocol_share"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "kind",
+          "type_": {
+            "udt": {
+              "name": "Kind"
+            }
+          },
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "share",
+          "type_": "u32",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The cap, normalised.",
+      "name": "cap",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The pool's kind.",
+      "name": "kind",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Kind"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::pause`].",
+      "name": "pause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The roles.",
+      "name": "roles",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Roles"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The stored state.",
+      "name": "state",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "PoolState"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The stored config.",
+      "name": "config",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "PoolConfig"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Whether the pool is paused.",
+      "name": "paused",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "bool",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`rates::resume`].",
+      "name": "resume",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "rate",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The shares of `lp`.",
+      "name": "shares",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "lp",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The pool's tokens.",
+      "name": "tokens",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "Tokens"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`liquidity::deposit`].",
+      "name": "deposit",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "first_max",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "second_max",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_shares",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`rates::refresh`].",
+      "name": "refresh",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "RateStatusChange"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::set_cap`].",
+      "name": "set_cap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The adapters of a band pool.",
+      "name": "sources",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "vec": {
+                "element_type": "address"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`rates::suspend`].",
+      "name": "suspend",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::unpause`].",
+      "name": "unpause",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`upgrade::execute`].",
+      "name": "upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The spec revision this Wasm implements.",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`rates::set_rate`].",
+      "name": "set_rate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`liquidity::withdraw`].",
+      "name": "withdraw",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "shares",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_first",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_second",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "i128",
+                  "i128"
+                ]
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::lower_cap`].",
+      "name": "lower_cap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::set_roles`].",
+      "name": "set_roles",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::cancel_cap`].",
+      "name": "cancel_cap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The stored rate state, encoded (band pools).",
+      "name": "rate_state",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "bytes_n": {
+                "n": 153
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`write_down::execute`].",
+      "name": "write_down",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`rates::cancel_rate`].",
+      "name": "cancel_rate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The stored rate config, encoded (band pools).",
+      "name": "rate_config",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "bytes_n": {
+                "n": 119
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::announce_cap`].",
+      "name": "announce_cap",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "cap",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::cancel_roles`].",
+      "name": "cancel_roles",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The pool's share count.",
+      "name": "total_shares",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`init::create`].",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "args",
+          "type_": {
+            "udt": {
+              "name": "PoolArgs"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`rates::announce_rate`].",
+      "name": "announce_rate",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "config",
+          "type_": {
+            "bytes_n": {
+              "n": 119
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sources",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The protocol fees owed, normalised.",
+      "name": "protocol_owed",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "ProtocolOwed"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`swap::swap`].",
+      "name": "swap_exact_in",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "Direction"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "min_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::announce_roles`].",
+      "name": "announce_roles",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "governance",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "guardian",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "sentinel",
+          "type_": {
+            "option": {
+              "value_type": "address"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`upgrade::cancel`].",
+      "name": "cancel_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::clear_sentinel`].",
+      "name": "clear_sentinel",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "The protocol share in basis points.",
+      "name": "protocol_share",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`swap::quote`].",
+      "name": "quote_exact_in",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "Direction"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`storage::extend_shares`].",
+      "name": "restore_shares",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "lp",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`swap::swap`].",
+      "name": "swap_exact_out",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "Direction"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amount_out",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "max_in",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`swap::quote`].",
+      "name": "quote_exact_out",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "direction",
+          "type_": {
+            "udt": {
+              "name": "Direction"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amount_out",
+          "type_": "i128"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "i128",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`upgrade::announce`].",
+      "name": "announce_upgrade",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`write_down::cancel`].",
+      "name": "cancel_write_down",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::set_protocol_share`].",
+      "name": "set_protocol_share",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "share",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`write_down::announce`].",
+      "name": "announce_write_down",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "See [`switches::collect_protocol_fees`].",
+      "name": "collect_protocol_fees",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "caller",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "to",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  "i128",
+                  "i128"
+                ]
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Direction",
+      "cases": [
+        {
+          "doc": "",
+          "name": "AssetIn",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "QuoteIn",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "AtoB",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "BtoA",
+          "value": 3
+        }
+      ]
+    }
+  }
+]

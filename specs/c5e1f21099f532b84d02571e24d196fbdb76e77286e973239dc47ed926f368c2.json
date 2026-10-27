@@ -1,0 +1,716 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "AdapterError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "AlreadyInitialized",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "InvalidConfig",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "ParentUnavailable",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "ParentMismatch",
+          "value": 4
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PoolOracleConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "base",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "decimals",
+          "type_": "u32"
+        },
+        {
+          "doc": "Construction-time parent owner snapshot, never live authority.",
+          "name": "deployment_owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "parent_oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "resolution",
+          "type_": "u32"
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "base",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "Asset"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "price",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PriceData"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Exact parent vector, including order; parent failure traps, never an empty fallback.",
+      "name": "assets",
+      "inputs": [],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": {
+              "udt": {
+                "name": "Asset"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "config",
+      "inputs": [],
+      "outputs": [
+        {
+          "udt": {
+            "name": "PoolOracleConfig"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "prices",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "records",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "vec": {
+                "element_type": {
+                  "udt": {
+                    "name": "PriceData"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "decimals",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "lastprice",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "option": {
+            "value_type": {
+              "udt": {
+                "name": "PriceData"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "extend_ttl",
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "resolution",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "deployment_owner",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "parent_oracle",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "decimals",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "resolution",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "base",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": {
+              "udt": {
+                "name": "AdapterError"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "storage_version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "interface_version",
+      "inputs": [],
+      "outputs": [
+        "u32"
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Asset",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Stellar",
+            "type_": [
+              "address"
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "Other",
+            "type_": [
+              "symbol"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "PriceData",
+      "fields": [
+        {
+          "doc": "",
+          "name": "price",
+          "type_": "i128"
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ProxyConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "max_age_secs",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "max_clock_drift_secs",
+          "type_": {
+            "option": {
+              "value_type": "u64"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "min_sources",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "sources",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "udt": {
+                  "name": "SourceConfig"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "RearmConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "arming_delay_secs",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SourceConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "asset",
+          "type_": {
+            "udt": {
+              "name": "Asset"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "oracle",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "ContractError",
+      "cases": [
+        {
+          "doc": "",
+          "name": "AlreadyInitialized",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "MissingConfig",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "Unauthorized",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "InvalidInput",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "StorageError",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "SourceUnavailable",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "ResolveFailed",
+          "value": 7
+        },
+        {
+          "doc": "",
+          "name": "ConversionOverflow",
+          "value": 8
+        },
+        {
+          "doc": "",
+          "name": "TooManySources",
+          "value": 9
+        },
+        {
+          "doc": "",
+          "name": "TooManyBreakers",
+          "value": 10
+        },
+        {
+          "doc": "",
+          "name": "BreakerError",
+          "value": 11
+        },
+        {
+          "doc": "",
+          "name": "TooManyAssets",
+          "value": 12
+        },
+        {
+          "doc": "",
+          "name": "TooFewSources",
+          "value": 13
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Soroban wire format for a 512-bit `Decimal`. Wrapping `BytesN<64>` (the\\n8 \\xc3\\x97 `u64` words of `Decimal::as_repr` laid out little-endian) gives a\\ncompile-time length guarantee at the contract boundary \\xe2\\x80\\x94 unlike a raw\\n`Vec<u64>` field, which could arrive empty, short, or oversized and\\nwould have to be re-validated by every consumer.",
+      "lib": "",
+      "name": "SorobanDecimal",
+      "fields": [
+        {
+          "doc": "",
+          "name": "0",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Decimals-free price representation used internally and across the\\nproxy-oracle \\xe2\\x86\\x94 SEP-40 adapter boundary. Adapters convert this to\\nSEP-40 `PriceData` using their own configured decimals.",
+      "lib": "",
+      "name": "NormalizedPrice",
+      "fields": [
+        {
+          "doc": "",
+          "name": "expo",
+          "type_": "i32"
+        },
+        {
+          "doc": "",
+          "name": "mantissa",
+          "type_": "i64"
+        },
+        {
+          "doc": "",
+          "name": "timestamp",
+          "type_": "u64"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "SetEnforcedConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "is_enforced",
+          "type_": "bool"
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "MonotonicRunConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "max_streak",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "min_relative_step_change",
+          "type_": {
+            "udt": {
+              "name": "SorobanDecimal"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_union_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CircuitBreakerConfig",
+      "cases": [
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "StepwiseChange",
+            "type_": [
+              {
+                "udt": {
+                  "name": "StepwiseChangeConfig"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "MonotonicRun",
+            "type_": [
+              {
+                "udt": {
+                  "name": "MonotonicRunConfig"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "WindowedChangeDelta",
+            "type_": [
+              {
+                "udt": {
+                  "name": "WindowedChangeDeltaConfig"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tuple_v0": {
+            "doc": "",
+            "name": "CumulativeChange",
+            "type_": [
+              {
+                "udt": {
+                  "name": "CumulativeChangeConfig"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "StepwiseChangeConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "max_relative_change",
+          "type_": {
+            "udt": {
+              "name": "SorobanDecimal"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "CumulativeChangeConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "max_relative_change",
+          "type_": {
+            "udt": {
+              "name": "SorobanDecimal"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "WindowedChangeDeltaConfig",
+      "fields": [
+        {
+          "doc": "",
+          "name": "lookback_windows",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "max_relative_mean_change",
+          "type_": {
+            "udt": {
+              "name": "SorobanDecimal"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "window_len",
+          "type_": "u32"
+        }
+      ]
+    }
+  }
+]
