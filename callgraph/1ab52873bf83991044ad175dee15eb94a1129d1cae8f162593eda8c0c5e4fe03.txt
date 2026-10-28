@@ -1,0 +1,7 @@
+quote,obj_from_u128_pieces
+quote,obj_to_u128_hi64
+quote,obj_to_u128_hi64
+quote,obj_to_u128_hi64
+quote,obj_to_u128_lo64
+quote,obj_to_u128_lo64
+quote,obj_to_u128_lo64

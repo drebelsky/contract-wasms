@@ -1,0 +1,9 @@
+deploy,bytes_len
+deploy,bytes_len
+deploy,create_contract_with_constructor
+deploy,get_contract_data
+deploy,get_current_contract_address
+deploy,has_contract_data
+deploy,require_auth
+deploy,vec_new_from_linear_memory
+init,put_contract_data

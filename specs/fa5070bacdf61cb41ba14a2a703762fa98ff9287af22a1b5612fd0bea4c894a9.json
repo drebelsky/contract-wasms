@@ -1,0 +1,43 @@
+[
+  {
+    "function_v0": {
+      "doc": "Move `from`'s approved balances: tokens[i] -> tos[i] by amounts[i].\\nLength mismatch aborts before any pull. Any failing pull aborts\\nthe whole invocation: no half-landing is possible by construction.",
+      "name": "batch",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "from",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "tokens",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "tos",
+          "type_": {
+            "vec": {
+              "element_type": "address"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "amounts",
+          "type_": {
+            "vec": {
+              "element_type": "i128"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  }
+]

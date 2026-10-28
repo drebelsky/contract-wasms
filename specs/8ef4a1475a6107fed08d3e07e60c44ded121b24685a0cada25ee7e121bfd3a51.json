@@ -1,0 +1,103 @@
+[
+  {
+    "function_v0": {
+      "doc": "Verifies a raw P-256 signature over a Soroban authorization payload\\nhash.\\n\\n`key_data` must be a 65-byte uncompressed SEC1 point (`0x04 || X || Y`),\\nand `sig_data` must be a low-S 64-byte compact signature (`r || s`). The\\nsupplied 32-byte `hash` is passed directly to the Soroban host without\\nanother hashing step.\\n\\n# Errors\\n\\n- [`P256VerifierError::InvalidHashLength`] - `hash` is not 32 bytes.\\n- [`P256VerifierError::InvalidKeyEncoding`] - `key_data` does not start\\nwith the uncompressed SEC1 prefix `0x04`.\\n- Native `Error(Crypto, InvalidInput)` - the point, signature\\ncomponents, signature, key, or digest is cryptographically invalid.",
+      "name": "verify",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "hash",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": {
+            "bytes_n": {
+              "n": 65
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sig_data",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "Input-format errors detected before native P-256 verification.\\n\\nError numbering starts at 1 because this verifier is independently\\ndeployed.",
+      "lib": "",
+      "name": "P256VerifierError",
+      "cases": [
+        {
+          "doc": "The Soroban authorization payload hash is not exactly 32 bytes.",
+          "name": "InvalidHashLength",
+          "value": 1
+        },
+        {
+          "doc": "The public key does not use the required uncompressed SEC1 prefix.",
+          "name": "InvalidKeyEncoding",
+          "value": 2
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the canonical 65-byte uncompressed SEC1 public key unchanged.\\n\\n# Errors\\n\\n- [`P256VerifierError::InvalidKeyEncoding`] - `key_data` does not start\\nwith the uncompressed SEC1 prefix `0x04`.",
+      "name": "canonicalize_key",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": {
+            "bytes_n": {
+              "n": 65
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bytes"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Canonicalizes every P-256 key while preserving input order.\\n\\n# Errors\\n\\n- [`P256VerifierError::InvalidKeyEncoding`] - any key does not start\\nwith the uncompressed SEC1 prefix `0x04`.",
+      "name": "batch_canonicalize_key",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key_data",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "bytes_n": {
+                  "n": 65
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "vec": {
+            "element_type": "bytes"
+          }
+        }
+      ]
+    }
+  }
+]

@@ -11,7 +11,6 @@ bytes_pop,0
 dummy0,0
 duration_obj_from_u64,0
 duration_obj_to_u64,0
-extend_contract_data_ttl_v2,0
 get_ledger_version,0
 i256_checked_pow,0
 i256_checked_sub,0

@@ -1,0 +1,480 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "",
+          "name": "NotAuthorized",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "KeyNotFound",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "KeyAlreadyExists",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "InvalidProof",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "NotInitialized",
+          "value": 5
+        },
+        {
+          "doc": "",
+          "name": "Overflow",
+          "value": 6
+        },
+        {
+          "doc": "",
+          "name": "NoPendingAdmin",
+          "value": 7
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Result of a find operation in the sparse Merkle tree",
+      "lib": "",
+      "name": "FindResult",
+      "fields": [
+        {
+          "doc": "Whether the key was found in the tree",
+          "name": "found",
+          "type_": "bool"
+        },
+        {
+          "doc": "Value associated with the key (if found), zero otherwise",
+          "name": "found_value",
+          "type_": "u256"
+        },
+        {
+          "doc": "True if the path ended at an empty branch, false if collision with\\nexisting leaf",
+          "name": "is_old0",
+          "type_": "bool"
+        },
+        {
+          "doc": "Key at the collision point",
+          "name": "not_found_key",
+          "type_": "u256"
+        },
+        {
+          "doc": "Value at the collision point",
+          "name": "not_found_value",
+          "type_": "u256"
+        },
+        {
+          "doc": "Sibling hashes along the path from root to leaf",
+          "name": "siblings",
+          "type_": {
+            "vec": {
+              "element_type": "u256"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LeafDeletedEvent",
+      "prefix_topics": [
+        "LeafDeleted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "key",
+          "type_": "u256",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "root",
+          "type_": "u256",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "LeafInsertedEvent",
+      "prefix_topics": [
+        "LeafInserted"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "key",
+          "type_": "u256",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "value",
+          "type_": "u256",
+          "location": "data"
+        },
+        {
+          "doc": "",
+          "name": "root",
+          "type_": "u256",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Find a key in the tree\\n\\nPublic entry point for searching the tree. Returns comprehensive\\ninformation about the key including whether it exists, its value,\\nand the Merkle path siblings required for proof generation.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `key` - Key to search for in the tree\\n\\n# Returns\\n\\nReturns `Ok(FindResult)` containing whether the key was found, siblings\\nalong the path, and collision information for non-membership proofs,\\nor an error if database operations fail.\\n\\n# Errors\\n\\n* `Error::KeyNotFound` - Database operations failed or invalid node\\nstructure",
+      "name": "find_key",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "udt": {
+                "name": "FindResult"
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Get the current root of the tree\\n\\nReturns the root hash of the Sparse Merkle tree. Returns zero if the\\ntree is empty. Renews the contract by at most a day, since a blocklist\\npool reads the root on every transaction.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n\\n# Returns\\n\\nReturns the current root hash as a U256 value, or zero if empty\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the constructor has not run.",
+      "name": "get_root",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u256",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the contract administrator.\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the contract has no admin address\\nstored.",
+      "name": "get_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Delete a key from the tree\\n\\nRemoves a leaf from the Sparse Merkle tree, handling both sparse\\nbranches (single child) and mixed branches (two populated children).\\nWhen a leaf is deleted, its sibling may be promoted to replace the\\nparent node, collapsing the tree structure. Requires admin\\nauthorization.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `key` - Key to delete from the tree\\n\\n# Returns\\n\\nReturns `Ok(())` on success, emitting a `LeafDeletedEvent` with the new\\nroot.\\n\\n# Errors\\n\\n* `Error::KeyNotFound` - Key does not exist in the tree or database\\noperations failed",
+      "name": "delete_leaf",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Insert a new key-value pair into the tree\\n\\nAdds a new leaf to the Sparse Merkle tree, building any missing\\nintermediate nodes. Handles collision cases where a new key shares a\\npath prefix with an existing leaf by extending the tree depth.\\nRequires admin authorization.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `key` - Key to insert\\n* `value` - Value to associate with the key\\n\\n# Returns\\n\\nReturns `Ok(())` on success, emitting a `LeafInsertedEvent` with the new\\nroot.\\n\\n# Errors\\n\\n* `Error::KeyAlreadyExists` - Key already exists in the tree\\n* `Error::KeyNotFound` - Database operations failed",
+      "name": "insert_leaf",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "value",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Installs the pending admin as the contract administrator.\\n\\nThe previous admin loses every power over the tree.\\n\\n# Errors\\n\\nReturns [`Error::NoPendingAdmin`] if no transfer is pending, and\\n[`Error::NotInitialized`] if no admin is stored.\\n\\n# Panics\\n\\nPanics if the pending admin does not authorize the call.",
+      "name": "accept_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Proposes a new contract administrator.\\n\\nReplaces any earlier proposal. The current admin keeps every power until\\n`new_admin` calls `accept_admin`.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `new_admin` - Address proposed as the next administrator\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the contract has no admin address\\nstored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "update_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Constructor: initialize the contract with an admin address and an empty\\ntree\\n\\nSets up the contract with the specified admin and initializes an empty\\nSparse Merkle Tree with root = 0. This function can only be called once.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `admin` - Address that will have permission to modify the tree\\n\\n# Returns\\n\\nReturns `Ok(())` on success",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Inserts several key-value pairs, in order, under one admin\\nauthorization.\\n\\nEach pair publishes its own `LeafInsertedEvent`. A key already in the\\ntree fails the whole call, and an empty list does nothing. Each\\ninsert writes the leaf, its path, and the root, so the write\\nfootprint caps the list: simulate first.\\n\\n# Errors\\n\\nReturns [`Error::KeyAlreadyExists`] if a key is in the tree or repeated,\\n[`Error::KeyNotFound`] if a stored node is missing or malformed, and\\n[`Error::NotInitialized`] if no admin is stored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "insert_leaves",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "entries",
+          "type_": {
+            "vec": {
+              "element_type": {
+                "tuple": {
+                  "value_types": [
+                    "u256",
+                    "u256"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the address proposed as the next administrator, or `None` when\\nno transfer is pending.",
+      "name": "get_pending_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Withdraws the pending admin transfer.\\n\\n# Errors\\n\\nReturns [`Error::NoPendingAdmin`] if no transfer is pending, and\\n[`Error::NotInitialized`] if no admin is stored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "cancel_admin_transfer",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Verify non-membership proof for a key\\n\\nVerifies that a key is NOT in the tree by checking the provided Merkle\\nproof. The proof includes siblings along the path and collision\\ninformation (not_found_key/value at the leaf). Reconstructs the root\\nfrom the proof and compares it with the stored root.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `key` - Key to verify is not in the tree\\n* `siblings` - Sibling hashes along the path from root to leaf\\n* `not_found_key` - Key at the collision point (or queried key if empty\\npath)\\n* `not_found_value` - Value at the collision point (or zero if empty\\npath)\\n\\n# Returns\\n\\nReturns `Ok(true)` if non-membership is verified, `Ok(false)` if the key\\nactually exists in the tree.",
+      "name": "verify_non_membership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "key",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "siblings",
+          "type_": {
+            "vec": {
+              "element_type": "u256"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "not_found_key",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "not_found_value",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "bool",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`accept_admin`] publishes when the proposed address takes over.",
+      "lib": "",
+      "name": "AdminTransferAccepted",
+      "prefix_topics": [
+        "admin_transfer_accepted"
+      ],
+      "params": [
+        {
+          "doc": "The admin replaced by the transfer.",
+          "name": "old_admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The admin installed by the transfer.",
+          "name": "new_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`update_admin`] publishes when the admin proposes a successor.",
+      "lib": "",
+      "name": "AdminTransferProposed",
+      "prefix_topics": [
+        "admin_transfer_proposed"
+      ],
+      "params": [
+        {
+          "doc": "The admin that made the proposal.",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The address that becomes admin if it accepts.",
+          "name": "pending_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`cancel_admin_transfer`] publishes when the admin withdraws a\\nproposal.",
+      "lib": "",
+      "name": "AdminTransferCancelled",
+      "prefix_topics": [
+        "admin_transfer_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "The admin that withdrew the proposal.",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The address that was proposed.",
+          "name": "pending_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  }
+]

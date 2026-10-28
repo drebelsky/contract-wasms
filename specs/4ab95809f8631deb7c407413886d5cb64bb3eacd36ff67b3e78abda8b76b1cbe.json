@@ -1,0 +1,872 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "Contract error types for the privacy pool\\n\\nCodes 15 to 17 are `pool-gvk`'s own and stay unassigned here, so both pools\\nshare every code from 18 on. Code 19 is unassigned.",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "Caller is not authorized to perform this operation",
+          "name": "NotAuthorized",
+          "value": 1
+        },
+        {
+          "doc": "Merkle tree has reached maximum capacity",
+          "name": "MerkleTreeFull",
+          "value": 2
+        },
+        {
+          "doc": "Contract has already been initialized",
+          "name": "AlreadyInitialized",
+          "value": 3
+        },
+        {
+          "doc": "Invalid Merkle tree levels configuration",
+          "name": "WrongLevels",
+          "value": 4
+        },
+        {
+          "doc": "Internal error: next leaf index is not even",
+          "name": "NextIndexNotEven",
+          "value": 5
+        },
+        {
+          "doc": "External amount is invalid (negative or exceeds 2^248)",
+          "name": "WrongExtAmount",
+          "value": 6
+        },
+        {
+          "doc": "Zero-knowledge proof verification failed",
+          "name": "InvalidProof",
+          "value": 7
+        },
+        {
+          "doc": "Provided Merkle root is not in the recent history",
+          "name": "UnknownRoot",
+          "value": 8
+        },
+        {
+          "doc": "Nullifier has already been spent (double-spend attempt)",
+          "name": "AlreadySpentNullifier",
+          "value": 9
+        },
+        {
+          "doc": "External data hash does not match the provided data",
+          "name": "WrongExtHash",
+          "value": 10
+        },
+        {
+          "doc": "Contract is not initialized",
+          "name": "NotInitialized",
+          "value": 11
+        },
+        {
+          "doc": "Arithmetic overflow occurred",
+          "name": "Overflow",
+          "value": 12
+        },
+        {
+          "doc": "Public input is not canonical in the BN254 scalar field",
+          "name": "NonCanonicalPublicInput",
+          "value": 13
+        },
+        {
+          "doc": "Unsupported policy flag bits.",
+          "name": "InvalidPolicyFlags",
+          "value": 14
+        },
+        {
+          "doc": "Deposits are paused",
+          "name": "DepositsPaused",
+          "value": 18
+        },
+        {
+          "doc": "No admin transfer is pending",
+          "name": "NoPendingAdmin",
+          "value": 20
+        },
+        {
+          "doc": "An association set does not run the code fixed at construction",
+          "name": "TreeCodeMismatch",
+          "value": 21
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Zero-knowledge proof data for a transaction\\n\\nContains all the cryptographic data needed to verify a transaction,\\nincluding the proof itself, public inputs, and nullifiers.",
+      "lib": "",
+      "name": "Proof",
+      "fields": [
+        {
+          "doc": "Merkle root the policy membership proof was generated against",
+          "name": "asp_membership_root",
+          "type_": "u256"
+        },
+        {
+          "doc": "Merkle root the policy NON-membership proof was generated against",
+          "name": "asp_non_membership_root",
+          "type_": "u256"
+        },
+        {
+          "doc": "Hash of the external data (binds proof to transaction parameters)",
+          "name": "ext_data_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "Nullifiers for spent input UTXOs (prevents double-spending)",
+          "name": "input_nullifiers",
+          "type_": {
+            "vec": {
+              "element_type": "u256"
+            }
+          }
+        },
+        {
+          "doc": "Commitment for the first output UTXO",
+          "name": "output_commitment0",
+          "type_": "u256"
+        },
+        {
+          "doc": "Commitment for the second output UTXO",
+          "name": "output_commitment1",
+          "type_": "u256"
+        },
+        {
+          "doc": "The serialized zero-knowledge proof",
+          "name": "proof",
+          "type_": {
+            "udt": {
+              "name": "Groth16Proof"
+            }
+          }
+        },
+        {
+          "doc": "Net public amount (deposit - withdrawal, modulo field size)",
+          "name": "public_amount",
+          "type_": "u256"
+        },
+        {
+          "doc": "Merkle root the proof was generated against",
+          "name": "root",
+          "type_": "u256"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a nullifier is spent\\n\\nThis event allows off-chain observers to track which UTXOs have been spent.",
+      "lib": "",
+      "name": "NewNullifierEvent",
+      "prefix_topics": [
+        "new_nullifier_event"
+      ],
+      "params": [
+        {
+          "doc": "The nullifier that was spent",
+          "name": "nullifier",
+          "type_": "u256",
+          "location": "topic_list"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a new commitment is added to the Merkle tree\\n\\nThis event allows off-chain observers to track new UTXOs and decrypt\\noutputs intended for them.",
+      "lib": "",
+      "name": "NewCommitmentEvent",
+      "prefix_topics": [
+        "new_commitment_event"
+      ],
+      "params": [
+        {
+          "doc": "The commitment hash added to the tree",
+          "name": "commitment",
+          "type_": "u256",
+          "location": "topic_list"
+        },
+        {
+          "doc": "Index position in the Merkle tree",
+          "name": "index",
+          "type_": "u32",
+          "location": "data"
+        },
+        {
+          "doc": "Encrypted output data (decryptable by the recipient)",
+          "name": "encrypted_output",
+          "type_": "bytes",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Get the latest root of the Merkle tree that defines the pool",
+      "name": "get_root",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u256",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Check whether a nullifier has already been spent.\\n\\nPresence of the per-nullifier storage key is the spent flag.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `n` - The nullifier to check\\n\\n# Returns\\n\\nReturns `true` if the nullifier has been spent, `false` otherwise",
+      "name": "is_spent",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "n",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "bool",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Executes a shielded transaction.\\n\\nTokens move only after every check and the proof pass and the pool's\\nstate is updated: a deposit pulls `ext_amount` from `sender`, a\\nwithdrawal pays `recipient`. Renews the pool, its tree, and its\\nverifier by at most a day each.\\n\\n# Errors\\n\\nReturns [`Error::DepositsPaused`] for a deposit while paused, before the\\ncap check and any transfer, [`Error::WrongExtAmount`] for a deposit\\nover the cap or an out-of-range or mismatched amount, and\\n[`Error::InvalidProof`] for an empty or refused proof, an ASP root\\nthe trees reject, or a failed tree call. Every other error names the\\nfailed check or marks missing or corrupt state.\\n\\n# Panics\\n\\nPanics if `sender` does not authorize the call or a token transfer\\nfails.",
+      "name": "transact",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "proof",
+          "type_": {
+            "udt": {
+              "name": "Proof"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "ext_data",
+          "type_": {
+            "udt": {
+              "name": "ExtData"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "sender",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the contract administrator.\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the contract has no admin address\\nstored.",
+      "name": "get_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Installs the pending admin as the contract administrator.\\n\\nThe previous admin loses every power over the contract.\\n\\n# Errors\\n\\nReturns [`Error::NoPendingAdmin`] if no transfer is pending, and\\n[`Error::NotInitialized`] if no admin is stored.\\n\\n# Panics\\n\\nPanics if the pending admin does not authorize the call.",
+      "name": "accept_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Proposes a new contract administrator.\\n\\nReplaces any earlier proposal. The current admin keeps every power until\\n`new_admin` calls `accept_admin`.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `new_admin` - Address proposed as the next administrator\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the contract has no admin address\\nstored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "update_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Initializes the pool.\\n\\nEach tree must run the Wasm its hash names, and every later re-point is\\nchecked against the same hash. `levels` is the commitment tree\\ndepth. `policy_flags` is the ASP bitset the transact circuit\\nenforces.\\n\\n# Errors\\n\\nReturns [`Error::InvalidPolicyFlags`] for an unsupported bit,\\n[`Error::TreeCodeMismatch`] if a tree runs other code, and\\n[`Error::WrongLevels`] if `levels` is outside 1 to 32.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "token",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "verifier",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asp_membership",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asp_non_membership",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "asp_membership_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "asp_non_membership_wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "maximum_deposit_amount",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "levels",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "policy_flags",
+          "type_": "u32"
+        },
+        {
+          "doc": "",
+          "name": "kdf_domain",
+          "type_": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Check whether a pool Merkle root is still in the recent root history.\\n\\n# Arguments\\n\\n* `env` - The Soroban environment\\n* `root` - Pool Merkle root to check",
+      "name": "is_known_root",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "root",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "bool",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Get the deployment's privacy key derivation domain.",
+      "name": "get_kdf_domain",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "string",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Pauses deposits.\\n\\nWhile paused, `transact` refuses `ext_amount > 0` before any token\\nmoves. Transfers and withdrawals still go through. Publishes\\n[`DepositPauseChanged`], or [`DepositPauseRepeated`] on a paused pool.\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the admin or the deposit flag is\\nnot stored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "pause_deposits",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Reports whether the pool refuses deposits.\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the deposit flag is not stored.",
+      "name": "deposits_paused",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "bool",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Get the pool's ASP policy flags.",
+      "name": "get_policy_flags",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u32",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Resumes deposits. Publishes [`DepositPauseChanged`], or\\n[`DepositPauseRepeated`] on an open pool.\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the admin or the deposit flag is\\nnot stored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "unpause_deposits",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the address proposed as the next administrator, or `None` when\\nno transfer is pending.",
+      "name": "get_pending_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the Wasm hashes the ASP Membership and ASP Non-Membership trees\\nmust run, in that order.\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if either hash is missing.",
+      "name": "get_asp_wasm_hashes",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": {
+              "tuple": {
+                "value_types": [
+                  {
+                    "bytes_n": {
+                      "n": 32
+                    }
+                  },
+                  {
+                    "bytes_n": {
+                      "n": 32
+                    }
+                  }
+                ]
+              }
+            },
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Withdraws the pending admin transfer.\\n\\n# Errors\\n\\nReturns [`Error::NoPendingAdmin`] if no transfer is pending, and\\n[`Error::NotInitialized`] if no admin is stored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "cancel_admin_transfer",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Points the pool at another ASP Membership tree and publishes\\n[`AspMembershipUpdated`].\\n\\n# Errors\\n\\nReturns [`Error::TreeCodeMismatch`] if the tree does not run the Wasm\\nfixed at construction, and [`Error::NotInitialized`] if the admin,\\nthe hash, or the current tree is not stored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "update_asp_membership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_asp_membership",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the ASP Membership tree's current root.\\n\\n# Errors\\n\\nReturns [`Error::InvalidProof`] if the tree call fails, and\\n[`Error::NotInitialized`] if no tree is stored.",
+      "name": "get_asp_membership_root",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u256",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Points the pool at another ASP Non-Membership tree and publishes\\n[`AspNonMembershipUpdated`].\\n\\n# Errors\\n\\nReturns [`Error::TreeCodeMismatch`] if the tree does not run the Wasm\\nfixed at construction, and [`Error::NotInitialized`] if the admin,\\nthe hash, or the current tree is not stored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "update_asp_non_membership",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_asp_non_membership",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the ASP Non-Membership tree's current root.\\n\\n# Errors\\n\\nReturns [`Error::InvalidProof`] if the tree call fails, and\\n[`Error::NotInitialized`] if no tree is stored.",
+      "name": "get_asp_non_membership_root",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u256",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Groth16 proof composed of points A, B, and C.\\nG2 point B uses Soroban's c1||c0 (imaginary||real) ordering.",
+      "lib": "",
+      "name": "Groth16Proof",
+      "fields": [
+        {
+          "doc": "Point A",
+          "name": "a",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        },
+        {
+          "doc": "Point B",
+          "name": "b",
+          "type_": {
+            "bytes_n": {
+              "n": 128
+            }
+          }
+        },
+        {
+          "doc": "Point C",
+          "name": "c",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event a pool publishes each time its deposit flag changes.",
+      "lib": "",
+      "name": "DepositPauseChanged",
+      "prefix_topics": [
+        "deposit_pause_changed"
+      ],
+      "params": [
+        {
+          "doc": "`true` while the pool refuses deposits.",
+          "name": "paused",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event a pool publishes each time the admin sets the allowlist it reads.",
+      "lib": "",
+      "name": "AspMembershipUpdated",
+      "prefix_topics": [
+        "asp_membership_updated"
+      ],
+      "params": [
+        {
+          "doc": "The allowlist the pool read before the change.",
+          "name": "old_tree",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The allowlist the pool reads after the change.",
+          "name": "new_tree",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event a pool publishes when a pause or unpause leaves its deposit flag\\nunchanged.\\n\\nIt records that the call spent the admin's authorization, such as a\\npre-signed pause.",
+      "lib": "",
+      "name": "DepositPauseRepeated",
+      "prefix_topics": [
+        "deposit_pause_repeated"
+      ],
+      "params": [
+        {
+          "doc": "`true` while the pool refuses deposits.",
+          "name": "paused",
+          "type_": "bool",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event a pool publishes each time the admin sets the blocklist it reads.",
+      "lib": "",
+      "name": "AspNonMembershipUpdated",
+      "prefix_topics": [
+        "asp_non_membership_updated"
+      ],
+      "params": [
+        {
+          "doc": "The blocklist the pool read before the change.",
+          "name": "old_tree",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The blocklist the pool reads after the change.",
+          "name": "new_tree",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "External data for a transaction\\n\\nContains public information about the transaction that is hashed and\\nincluded in the zero-knowledge proof to bind the proof to specific\\ntransaction parameters (e.g. recipient address).",
+      "lib": "",
+      "name": "ExtData",
+      "fields": [
+        {
+          "doc": "Encrypted data for the first output UTXO",
+          "name": "encrypted_output0",
+          "type_": "bytes"
+        },
+        {
+          "doc": "Encrypted data for the second output UTXO",
+          "name": "encrypted_output1",
+          "type_": "bytes"
+        },
+        {
+          "doc": "External amount: positive for deposits, negative for withdrawals",
+          "name": "ext_amount",
+          "type_": "i256"
+        },
+        {
+          "doc": "Recipient address for withdrawals",
+          "name": "recipient",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`accept_admin`] publishes when the proposed address takes over.",
+      "lib": "",
+      "name": "AdminTransferAccepted",
+      "prefix_topics": [
+        "admin_transfer_accepted"
+      ],
+      "params": [
+        {
+          "doc": "The admin replaced by the transfer.",
+          "name": "old_admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The admin installed by the transfer.",
+          "name": "new_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`update_admin`] publishes when the admin proposes a successor.",
+      "lib": "",
+      "name": "AdminTransferProposed",
+      "prefix_topics": [
+        "admin_transfer_proposed"
+      ],
+      "params": [
+        {
+          "doc": "The admin that made the proposal.",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The address that becomes admin if it accepts.",
+          "name": "pending_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`cancel_admin_transfer`] publishes when the admin withdraws a\\nproposal.",
+      "lib": "",
+      "name": "AdminTransferCancelled",
+      "prefix_topics": [
+        "admin_transfer_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "The admin that withdrew the proposal.",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The address that was proposed.",
+          "name": "pending_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  }
+]

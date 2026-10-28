@@ -1,0 +1,331 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "Contract error types",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "Caller is not authorized to perform this operation",
+          "name": "NotAuthorized",
+          "value": 1
+        },
+        {
+          "doc": "Merkle tree has reached maximum capacity",
+          "name": "MerkleTreeFull",
+          "value": 2
+        },
+        {
+          "doc": "Wrong Number of levels specified",
+          "name": "WrongLevels",
+          "value": 3
+        },
+        {
+          "doc": "The contract has not been yet initialized",
+          "name": "NotInitialized",
+          "value": 4
+        },
+        {
+          "doc": "Arithmetic overflow occurred",
+          "name": "Overflow",
+          "value": 5
+        },
+        {
+          "doc": "No admin transfer is pending",
+          "name": "NoPendingAdmin",
+          "value": 6
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a new leaf is added to the Merkle tree",
+      "lib": "",
+      "name": "LeafAddedEvent",
+      "prefix_topics": [
+        "LeafAdded"
+      ],
+      "params": [
+        {
+          "doc": "The leaf value that was inserted",
+          "name": "leaf",
+          "type_": "u256",
+          "location": "data"
+        },
+        {
+          "doc": "Index position where the leaf was inserted",
+          "name": "index",
+          "type_": "u64",
+          "location": "data"
+        },
+        {
+          "doc": "New Merkle root after insertion",
+          "name": "root",
+          "type_": "u256",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Get the current Merkle root\\n\\nReturns the current root hash of the Merkle tree.\\n\\n# Arguments\\n* `env` - The Soroban environment\\n\\n# Returns\\nThe current Merkle root as U256\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the constructor has not run.",
+      "name": "get_root",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "u256",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the contract administrator.\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the contract has no admin address\\nstored.",
+      "name": "get_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "address",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Hash two U256 values using Poseidon2 compression\\n\\nComputes the Poseidon2 hash of two field elements in compression mode.\\nThis is the core hashing function used for Merkle tree operations.\\n\\n# Arguments\\n* `env` - The Soroban environment\\n* `left` - Left input value\\n* `right` - Right input value\\n\\n# Returns\\nThe Poseidon2 hash result as U256",
+      "name": "hash_pair",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "left",
+          "type_": "u256"
+        },
+        {
+          "doc": "",
+          "name": "right",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        "u256"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Insert a new leaf into the Merkle tree\\n\\nAdds a new member to the Merkle tree and updates the root. The leaf is\\ninserted at the next available index and the tree is updated efficiently\\nby only recomputing the hashes along the path to the root. The admin\\nmust authorize the call.\\n\\n# Arguments\\n* `env` - The Soroban environment\\n* `leaf` - The leaf value to insert (typically a commitment or hash)\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the contract is missing the admin\\naddress or any tree state the insertion reads,\\n[`Error::MerkleTreeFull`] if the tree is at capacity, and\\n[`Error::Overflow`] if the next leaf index would exceed `u64::MAX`.",
+      "name": "insert_leaf",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "leaf",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Installs the pending admin as the contract administrator.\\n\\nThe previous admin loses every power over the tree.\\n\\n# Errors\\n\\nReturns [`Error::NoPendingAdmin`] if no transfer is pending, and\\n[`Error::NotInitialized`] if no admin is stored.\\n\\n# Panics\\n\\nPanics if the pending admin does not authorize the call.",
+      "name": "accept_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Proposes a new contract administrator.\\n\\nReplaces any earlier proposal. The current admin keeps every power until\\n`new_admin` calls `accept_admin`.\\n\\n# Arguments\\n* `env` - The Soroban environment\\n* `new_admin` - Address proposed as the next administrator\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the contract has no admin address\\nstored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "update_admin",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "new_admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Constructor: initialize the ASP Membership contract\\n\\nCreates a new Merkle tree with the specified number of levels and sets\\nthe admin address. The tree is initialized with zero hashes at each\\nlevel.\\n\\n# Arguments\\n* `env` - The Soroban environment\\n* `admin` - Address of the contract administrator\\n* `levels` - Number of levels in the Merkle tree (must be in range\\n[1..32])\\n\\n# Returns\\nReturns `Ok(())` on success\\n\\n# Errors\\n\\nReturns [`Error::WrongLevels`] if `levels` is zero or above 32, and\\n[`Error::NotInitialized`] if the zero hash table has no entry for a\\nlevel the tree needs.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        },
+        {
+          "doc": "",
+          "name": "levels",
+          "type_": "u32"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Check if a root is in the recent root history\\n\\nFor any nonzero root, renews the contract and its tree by at most a day,\\nsince an allowlist pool calls this on every transaction.\\n\\n# Arguments\\n* `env` - The Soroban environment\\n* `root` - The Merkle root to check\\n\\n# Returns\\n`true` if the root is among the last `ROOT_HISTORY_SIZE` roots. The\\nzero root is never known.\\n\\n# Errors\\n\\nReturns [`Error::NotInitialized`] if the constructor has not run.",
+      "name": "is_known_root",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "root",
+          "type_": "u256"
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "bool",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the address proposed as the next administrator, or `None` when\\nno transfer is pending.",
+      "name": "get_pending_admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "option": {
+            "value_type": "address"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Withdraws the pending admin transfer.\\n\\n# Errors\\n\\nReturns [`Error::NoPendingAdmin`] if no transfer is pending, and\\n[`Error::NotInitialized`] if no admin is stored.\\n\\n# Panics\\n\\nPanics if the admin does not authorize the call.",
+      "name": "cancel_admin_transfer",
+      "inputs": [],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`accept_admin`] publishes when the proposed address takes over.",
+      "lib": "",
+      "name": "AdminTransferAccepted",
+      "prefix_topics": [
+        "admin_transfer_accepted"
+      ],
+      "params": [
+        {
+          "doc": "The admin replaced by the transfer.",
+          "name": "old_admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The admin installed by the transfer.",
+          "name": "new_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`update_admin`] publishes when the admin proposes a successor.",
+      "lib": "",
+      "name": "AdminTransferProposed",
+      "prefix_topics": [
+        "admin_transfer_proposed"
+      ],
+      "params": [
+        {
+          "doc": "The admin that made the proposal.",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The address that becomes admin if it accepts.",
+          "name": "pending_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "The event [`cancel_admin_transfer`] publishes when the admin withdraws a\\nproposal.",
+      "lib": "",
+      "name": "AdminTransferCancelled",
+      "prefix_topics": [
+        "admin_transfer_cancelled"
+      ],
+      "params": [
+        {
+          "doc": "The admin that withdrew the proposal.",
+          "name": "admin",
+          "type_": "address",
+          "location": "data"
+        },
+        {
+          "doc": "The address that was proposed.",
+          "name": "pending_admin",
+          "type_": "address",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  }
+]

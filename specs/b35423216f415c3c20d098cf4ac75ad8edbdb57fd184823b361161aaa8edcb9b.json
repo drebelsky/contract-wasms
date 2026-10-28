@@ -1,0 +1,50 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "init",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "admin",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Spawn a child whose deployer of record is this contract.\\n`pk` is the child's constructor argument (its PQ verifying\\nkey), matching the S-609/S-616 account constructors.",
+      "name": "deploy",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "wasm_hash",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "salt",
+          "type_": {
+            "bytes_n": {
+              "n": 32
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "pk",
+          "type_": "bytes"
+        }
+      ],
+      "outputs": [
+        "address"
+      ]
+    }
+  }
+]

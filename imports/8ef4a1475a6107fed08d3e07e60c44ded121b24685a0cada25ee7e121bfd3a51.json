@@ -1,0 +1,10 @@
+[
+  "bytes_get",
+  "bytes_len",
+  "fail_with_error",
+  "vec_get",
+  "vec_len",
+  "vec_new",
+  "vec_push_back",
+  "verify_sig_ecdsa_secp256r1"
+]

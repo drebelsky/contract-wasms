@@ -1,0 +1,28 @@
+[
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "quote",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "amount_in",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "reserve_in",
+          "type_": "u128"
+        },
+        {
+          "doc": "",
+          "name": "reserve_out",
+          "type_": "u128"
+        }
+      ],
+      "outputs": [
+        "u128"
+      ]
+    }
+  }
+]

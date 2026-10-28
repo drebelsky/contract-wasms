@@ -1,0 +1,241 @@
+[
+  {
+    "udt_error_enum_v0": {
+      "doc": "Contract error types for the public key registry",
+      "lib": "",
+      "name": "Error",
+      "cases": [
+        {
+          "doc": "A key is not 32 bytes long",
+          "name": "InvalidKeyLength",
+          "value": 1
+        },
+        {
+          "doc": "The owner is a contract address, which has no master key",
+          "name": "OwnerNotAccount",
+          "value": 2
+        },
+        {
+          "doc": "The note key is not a canonical BN254 scalar field element",
+          "name": "NonCanonicalNoteKey",
+          "value": 3
+        },
+        {
+          "doc": "The encryption key's y coordinate is not canonical",
+          "name": "NonCanonicalEncryptionKey",
+          "value": 4
+        },
+        {
+          "doc": "The owner already registered different keys",
+          "name": "AlreadyRegistered",
+          "value": 5
+        },
+        {
+          "doc": "The verifier refused the note key ownership proof",
+          "name": "InvalidProof",
+          "value": 6
+        }
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "User account registration data\\n\\nUsed for registering a user's public key to enable encrypted communication\\nfor receiving transfers.\\nNot required to interact with the pool. But facilitates in-pool transfers\\nvia events. As parties can learn about each other public key.",
+      "lib": "",
+      "name": "Account",
+      "fields": [
+        {
+          "doc": "Edwards encoding of the X25519 encryption public key (32 bytes)",
+          "name": "encryption_key",
+          "type_": "bytes"
+        },
+        {
+          "doc": "BN254 note public key for creating commitments (32 bytes)",
+          "name": "note_key",
+          "type_": "bytes"
+        },
+        {
+          "doc": "Owner address of the account",
+          "name": "owner",
+          "type_": "address"
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a user registers their public keys\\n\\nThis event allows other users to discover keys for sending private\\ntransfers. Two key types are required:\\n- encryption_key: Edwards encoding of the X25519 key for encrypting note\\ndata (amount, blinding)\\n- note_key: BN254 key for creating commitments in the ZK circuit",
+      "lib": "",
+      "name": "PublicKeyEvent",
+      "prefix_topics": [
+        "public_key_event"
+      ],
+      "params": [
+        {
+          "doc": "Address of the account owner",
+          "name": "owner",
+          "type_": "address",
+          "location": "topic_list"
+        },
+        {
+          "doc": "Edwards encoding of the X25519 encryption public key",
+          "name": "encryption_key",
+          "type_": "bytes",
+          "location": "data"
+        },
+        {
+          "doc": "BN254 note public key",
+          "name": "note_key",
+          "type_": "bytes",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Proof that the registrant holds the owner's master key and the private keys\\nof both registered keys (note key + encryption/note_discovery keys).\\n\\nAll three are made over the registration digest `D`",
+      "lib": "",
+      "name": "KeyOwnershipProof",
+      "fields": [
+        {
+          "doc": "Ed25519 signature by the encryption key over\\n`sha256(ENCRYPTION_KEY_TAG || D)`",
+          "name": "encryption_key_signature",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        },
+        {
+          "doc": "`keyOwnership` proof with public inputs `[note_key, D mod r]`",
+          "name": "note_key_proof",
+          "type_": {
+            "udt": {
+              "name": "Groth16Proof"
+            }
+          }
+        },
+        {
+          "doc": "Ed25519 signature by the owner's master key over `D` (SEP-53)",
+          "name": "owner_signature",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Register a user's public encryption and note keys.\\n\\nRegistration is write-once: registering the same keys again changes\\nnothing, and different keys are refused. `proof` must show that the\\nregistrant holds the owner's master key and both private keys.\\n\\nRenews the registry by at most a day.",
+      "name": "register",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "account",
+          "type_": {
+            "udt": {
+              "name": "Account"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "proof",
+          "type_": {
+            "udt": {
+              "name": "KeyOwnershipProof"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "result": {
+            "ok_type": "void",
+            "error_type": "error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Get the `keyOwnership` verifier.",
+      "name": "get_verifier",
+      "inputs": [],
+      "outputs": [
+        "address"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "kdf_domain",
+          "type_": "string"
+        },
+        {
+          "doc": "",
+          "name": "verifier",
+          "type_": "address"
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Get the deployment's privacy key derivation domain.",
+      "name": "get_kdf_domain",
+      "inputs": [],
+      "outputs": [
+        "string"
+      ]
+    }
+  },
+  {
+    "udt_struct_v0": {
+      "doc": "Groth16 proof composed of points A, B, and C.\\nG2 point B uses Soroban's c1||c0 (imaginary||real) ordering.",
+      "lib": "",
+      "name": "Groth16Proof",
+      "fields": [
+        {
+          "doc": "Point A",
+          "name": "a",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        },
+        {
+          "doc": "Point B",
+          "name": "b",
+          "type_": {
+            "bytes_n": {
+              "n": 128
+            }
+          }
+        },
+        {
+          "doc": "Point C",
+          "name": "c",
+          "type_": {
+            "bytes_n": {
+              "n": 64
+            }
+          }
+        }
+      ]
+    }
+  }
+]
