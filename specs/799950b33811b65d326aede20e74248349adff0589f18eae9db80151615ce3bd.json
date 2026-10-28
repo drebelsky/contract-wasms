@@ -1,0 +1,167 @@
+[
+  {
+    "function_v0": {
+      "doc": "Cross-contract target of the confidential token: verifies an\\nUltraHonk proof against the construction-time key.",
+      "name": "verify_proof",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "circuit_type",
+          "type_": {
+            "udt": {
+              "name": "CircuitType"
+            }
+          }
+        },
+        {
+          "doc": "",
+          "name": "public_inputs",
+          "type_": "bytes"
+        },
+        {
+          "doc": "",
+          "name": "proof",
+          "type_": "bytes"
+        }
+      ],
+      "outputs": [
+        "bool"
+      ]
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Writes the six circuit VKs in circuit order:\\nRegister, Withdraw, Transfer, SpenderTransfer, SetSpender,\\nClawback. Panics unless exactly six keys are supplied.",
+      "name": "__constructor",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "vks",
+          "type_": {
+            "vec": {
+              "element_type": "bytes"
+            }
+          }
+        }
+      ],
+      "outputs": []
+    }
+  },
+  {
+    "function_v0": {
+      "doc": "Returns the construction-time verification key for a circuit.",
+      "name": "get_verification_key",
+      "inputs": [
+        {
+          "doc": "",
+          "name": "circuit_type",
+          "type_": {
+            "udt": {
+              "name": "CircuitType"
+            }
+          }
+        }
+      ],
+      "outputs": [
+        "bytes"
+      ]
+    }
+  },
+  {
+    "udt_enum_v0": {
+      "doc": "Identifier of a zero-knowledge circuit whose verification key is stored in\\nthe registry. The numeric values are part of the on-chain interface and\\nMUST NOT change. Core token circuits occupy `0..=4`; circuits shipped by\\noptional extensions start at `100`.",
+      "lib": "",
+      "name": "CircuitType",
+      "cases": [
+        {
+          "doc": "",
+          "name": "Register",
+          "value": 0
+        },
+        {
+          "doc": "",
+          "name": "Withdraw",
+          "value": 1
+        },
+        {
+          "doc": "",
+          "name": "Transfer",
+          "value": 2
+        },
+        {
+          "doc": "",
+          "name": "SpenderTransfer",
+          "value": 3
+        },
+        {
+          "doc": "",
+          "name": "SetSpender",
+          "value": 4
+        },
+        {
+          "doc": "",
+          "name": "Clawback",
+          "value": 100
+        }
+      ]
+    }
+  },
+  {
+    "udt_error_enum_v0": {
+      "doc": "",
+      "lib": "",
+      "name": "VerifierError",
+      "cases": [
+        {
+          "doc": "Indicates `circuit_type` already has a verification key registered.",
+          "name": "VerificationKeyAlreadyRegistered",
+          "value": 3400
+        },
+        {
+          "doc": "Indicates no verification key is registered under `circuit_type`.",
+          "name": "VerificationKeyNotRegistered",
+          "value": 3401
+        },
+        {
+          "doc": "Indicates the proof failed UltraHonk verification.",
+          "name": "InvalidProof",
+          "value": 3402
+        },
+        {
+          "doc": "Indicates the registered verification key could not be parsed as a valid\\nUltraHonk verification key.",
+          "name": "InvalidVerificationKey",
+          "value": 3403
+        }
+      ]
+    }
+  },
+  {
+    "event_v0": {
+      "doc": "Event emitted when a new verification key is registered.",
+      "lib": "",
+      "name": "VerificationKeyRegistered",
+      "prefix_topics": [
+        "verification_key_registered"
+      ],
+      "params": [
+        {
+          "doc": "",
+          "name": "circuit_type",
+          "type_": {
+            "udt": {
+              "name": "CircuitType"
+            }
+          },
+          "location": "topic_list"
+        },
+        {
+          "doc": "",
+          "name": "verification_key",
+          "type_": "bytes",
+          "location": "data"
+        }
+      ],
+      "data_format": "map"
+    }
+  }
+]
